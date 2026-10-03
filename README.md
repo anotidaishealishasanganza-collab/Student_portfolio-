@@ -24,11 +24,6 @@ This is a **rapid prototype**: it demonstrates the screens and the flow, not a f
 | `school.jpeg` | School photo used as the page background |
 | `README.md` | This file |
 
-## How to run it
-
-1. Download or clone this repository.
-2. Open `index.html` in any web browser. No installation is needed.
-
 ## How to try it out
 
 1. Choose **Student** and click **Log in**. Any ID and password work in the prototype.
