@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Africa University Student Portfolio</title>
+
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: #1d2a24;
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background-image:
+        linear-gradient(rgba(246, 247, 244, 0.3), rgba(246, 247, 244, 0.3)),
+        url("school.jpeg");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+    header { background: #1f6f4a; color: white; padding: 12px 16px; }
+    main { max-width: 860px; margin: 0 auto; padding: 16px; }
+    .card {
+      background: white;
+      border: 1px solid #dde3dd;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+    input, select {
+      width: 100%;
+      padding: 9px;
+      border: 1px solid #dde3dd;
+      border-radius: 8px;
+      font: inherit;
+      margin: 4px 0 12px;
+    }
+    .btn {
+      background: #1f6f4a;
+      color: white;
+      border: 0;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font: inherit;
+      cursor: pointer;
+      width: 100%;
+    }
+    .btn.outline { background: white; color: #1f6f4a; border: 1px solid #1f6f4a; }
+    .roles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
+    .roles button {
+      padding: 12px;
+      border: 1px solid #dde3dd;
+      background: white;
+      border-radius: 10px;
+      font: inherit;
+      cursor: pointer;
+    }
+    .muted { color: #66736c; font-size: 13px; }
+    .roles button.on { border-color: #1f6f4a; background: #e3f1ea; color: #1f6f4a; font-weight: 600; }
+    .hidden { display: none !important; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+    .stat { text-align: center; }
+    .stat b { display: block; font-size: 26px; color: #1f6f4a; }
+    .top { display: flex; gap: 14px; align-items: center; }
+    .av { width: 64px; height: 64px; border-radius: 50%; background: #1f6f4a; color: white; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 600; flex: none; }
+    .menu { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+    .tab, .sub { border: 1px solid #dde3dd; background: white; padding: 7px 14px; border-radius: 20px; font: inherit; cursor: pointer; }
+    .tab.on, .sub.on { background: #1f6f4a; color: white; border-color: #1f6f4a; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { text-align: left; padding: 8px; border-bottom: 1px solid #dde3dd; }
+    .row { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid #dde3dd; flex-wrap: wrap; }
+    .row:last-child { border-bottom: 0; }
+    .tag { font-size: 12px; padding: 3px 10px; border-radius: 12px; background: #e3f1ea; color: #1f6f4a; white-space: nowrap; }
+    .tag.p { background: #fbf0dc; color: #b7791f; }
+    .form-box { margin-top: 16px; padding-top: 14px; border-top: 1px solid #dde3dd; }
+    .qa { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+    .qa input { width: 170px; margin: 0; }
+    .qa .btn { width: auto; }
+    .banner { background: #e3f1ea; color: #1f6f4a; padding: 8px 12px; border-radius: 8px; font-size: 13px; margin-bottom: 14px; }
+    .section-title { margin: 16px 0 4px; font-size: 16px; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <b> Africa University · Student Portfolio</b>
+  </header>
+
+  <main>
+
+    <div class="card" id="login-screen" style="max-width: 420px; margin: 30px auto;">
+      <h2>Welcome back</h2>
+      <p class="muted">Choose your role, then log in.</p>
+
+      <div class="roles">
+        <button class="on">Student</button>
+        <button>Staff</button>
+        <button>Admin</button>
+      </div>
+
+      <label class="muted">School email or ID</label>
+      <input type="text" placeholder="e.g. AU2201234">
+
+      <label class="muted">Password</label>
+      <input type="password" placeholder="Password">
+
+      <button class="btn" id="login-btn">Log in</button>
+
+      <p class="muted" style="margin-top: 12px;">
+        New student? Sign up with your phone number, school ID, school email and a password.
+      </p>
+    </div>
+
+    <div id="dashboard" class="hidden">
+
+      <div class="menu">
+        <button class="tab" data-page="home" data-roles="student">Dashboard</button>
+        <button class="tab" data-page="record" data-roles="student">Academic record</button>
+        <button class="tab" data-page="items" data-roles="student">Achievements</button>
+        <button class="tab" data-page="recs" data-roles="student">Recommendations</button>
+        <button class="tab" data-page="public" data-roles="student">Job profile</button>
+        <button class="tab" data-page="queue" data-roles="staff">Review queue</button>
+        <button class="tab" data-page="reqs" data-roles="staff">Letter requests</button>
+        <button class="tab" data-page="admin" data-roles="admin">Admin overview</button>
+      </div>
+
+      <div class="page" id="page-home">
+        <div class="card top">
+          <div class="av">TM</div>
+          <div>
+            <h2 style="margin: 0;">Tendai Moyo</h2>
+            <p class="muted" id="subtitle"></p>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="card stat"><b>3.4</b><span class="muted">Current GPA</span></div>
+          <div class="card stat"><b>3.2</b><span class="muted">Cumulative GPA</span></div>
+          <div class="card stat"><b id="verified-count">0</b><span class="muted">Verified items</span></div>
+          <div class="card stat"><b id="pending-count">0</b><span class="muted">Awaiting review</span></div>
+        </div>
+      </div>
+
+      <div class="page hidden" id="page-record">
+        <div class="card">
+          <h2>Academic record</h2>
+          <select id="semester">
+            <option value="1">Year 1 · Semester 1</option>
+            <option value="2">Year 1 · Semester 2</option>
+          </select>
+          <table>
+            <thead><tr><th>Course</th><th>Grade</th></tr></thead>
+            <tbody id="course-rows"></tbody>
+          </table>
+          <p class="muted" style="margin-top: 10px;">Five courses per semester · results certified by the Registry</p>
+        </div>
+      </div>
+
+      <div class="page hidden" id="page-items">
+        <div class="card">
+          <h2>Achievements, leadership &amp; activities</h2>
+          <div class="menu">
+            <button class="sub on" data-type="Achievement">Achievements</button>
+            <button class="sub" data-type="Leadership">Leadership</button>
+            <button class="sub" data-type="Activity">Activities</button>
+          </div>
+          <div id="item-list"></div>
+
+          <div class="form-box">
+            <h3 style="margin: 0 0 6px;" id="form-title">Add a new achievement</h3>
+            <label class="muted">Title</label>
+            <input type="text" id="new-title" placeholder="e.g. Best Student in Food Safety">
+            <label class="muted">Year</label>
+            <select id="new-year">
+              <option>Year 1</option>
+              <option>Year 2</option>
+              <option>Year 3</option>
+              <option>Year 4</option>
+            </select>
+            <button class="btn" id="submit-item">Submit for verification</button>
+          </div>
+
+          <p class="muted" style="margin-top: 10px;">Only items verified by school staff appear on your job profile.</p>
+        </div>
+      </div>
+
+      <div class="page hidden" id="page-recs">
+        <div class="card">
+          <h2>Recommendation letters</h2>
+          <div id="rec-list"></div>
+
+          <div class="form-box">
+            <h3 style="margin: 0 0 6px;">Request a letter</h3>
+            <label class="muted">Lecturer</label>
+            <select id="rec-to">
+              <option>Dr. Chikwanha</option>
+              <option>Mrs. Ncube</option>
+            </select>
+            <label class="muted">Purpose</label>
+            <input type="text" id="rec-purpose" placeholder="e.g. Internship application">
+            <button class="btn" id="rec-btn">Send request</button>
+          </div>
+
+          <p class="muted" style="margin-top: 10px;">Issued letters stay available after you leave the university.</p>
+        </div>
+      </div>
+
+      <div class="page hidden" id="page-public">
+        <div class="banner">Employer view · only school-verified information is shown</div>
+        <div class="card">
+          <div class="top">
+            <div class="av">TM</div>
+            <div>
+              <h2 style="margin: 0;">Tendai Moyo</h2>
+              <p class="muted">BSc Hospitality Management · Africa University</p>
+            </div>
+          </div>
+          <p style="margin-top: 12px;"><b>Cumulative GPA 3.2</b> <span class="tag">✓ Certified by Africa University</span></p>
+          <div id="public-list"></div>
+          <button class="btn outline" id="share-btn" style="margin-top: 16px;">Share profile link</button>
+        </div>
+      </div>
+
+      <div class="page hidden" id="page-queue">
+        <div class="card">
+          <h2>Pending verification</h2>
+          <p class="muted">Review each item, add a comment if you like, then click Verify.</p>
+          <div id="queue-list"></div>
+        </div>
+      </div>
+
+      <div class="page hidden" id="page-reqs">
+        <div class="card">
+          <h2>Letter requests</h2>
+          <p class="muted">Approve a request to issue the recommendation letter.</p>
+          <div id="reqs-list"></div>
+        </div>
+      </div>
+
+      <div class="page hidden" id="page-admin">
+        <div class="grid">
+          <div class="card stat"><b>2</b><span class="muted">Staff accounts</span></div>
+          <div class="card stat"><b id="a-verified">0</b><span class="muted">Verified items</span></div>
+          <div class="card stat"><b id="a-pending">0</b><span class="muted">Awaiting review</span></div>
+        </div>
+        <div class="card">
+          <h3>Account management</h3>
+          <p class="muted">Creating staff accounts and viewing reports will be added in a later step.</p>
+        </div>
+      </div>
+
+      <button class="btn" id="logout-btn" style="max-width: 200px;">Log out</button>
+    </div>
+
+  </main>
+
+  <script>
+    let role = 'student';
+    const buttons = document.querySelectorAll('.roles button');
+
+    buttons.forEach(function (b) {
+      b.addEventListener('click', function () {
+        buttons.forEach(function (x) { x.classList.remove('on'); });
+        b.classList.add('on');
+        role = b.textContent.toLowerCase();
+      });
+    });
+
+    // Keep user-typed text safe when we put it on the page
+    function esc(text) {
+      return String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    // Menu tabs: show one page at a time
+    const tabs = document.querySelectorAll('.tab');
+
+    function openPage(name) {
+      tabs.forEach(function (t) { t.classList.toggle('on', t.dataset.page === name); });
+      document.querySelectorAll('.page').forEach(function (p) { p.classList.add('hidden'); });
+      document.getElementById('page-' + name).classList.remove('hidden');
+    }
+
+    tabs.forEach(function (t) {
+      t.addEventListener('click', function () { openPage(t.dataset.page); });
+    });
+
+    // Show only the menu buttons that belong to the chosen role
+    function applyRole() {
+      let first = null;
+      tabs.forEach(function (t) {
+        const allowed = t.dataset.roles.split(' ').indexOf(role) !== -1;
+        t.classList.toggle('hidden', !allowed);
+        if (allowed && first === null) { first = t.dataset.page; }
+      });
+      openPage(first);
+    }
+
+    document.getElementById('login-btn').addEventListener('click', function () {
+      document.getElementById('login-screen').classList.add('hidden');
+      document.getElementById('dashboard').classList.remove('hidden');
+      document.getElementById('subtitle').textContent = 'Logged in as ' + role;
+      applyRole();
+    });
+
+    document.getElementById('logout-btn').addEventListener('click', function () {
+      document.getElementById('dashboard').classList.add('hidden');
+      document.getElementById('login-screen').classList.remove('hidden');
+    });
+
+    // Academic record: five courses per semester
+    const semesters = {
+      '1': [['Intro to Hospitality', 'A'], ['Food & Beverage Basics', 'B+'], ['Business Communication', 'A-'], ['Tourism Studies', 'B'], ['Computer Applications', 'A']],
+      '2': [['Front Office Operations', 'B+'], ['Housekeeping Management', 'A-'], ['Principles of Accounting', 'B'], ['Customer Service', 'A'], ['Hospitality Law', 'B+']]
+    };
+
+    function showSemester(n) {
+      let rows = '';
+      semesters[n].forEach(function (c) {
+        rows += '<tr><td>' + c[0] + '</td><td>' + c[1] + '</td></tr>';
+      });
+      document.getElementById('course-rows').innerHTML = rows;
+    }
+
+    document.getElementById('semester').addEventListener('change', function () {
+      showSemester(this.value);
+    });
+    showSemester('1');
+
+    // Achievements, leadership and activities
+    const items = [
+      { type: 'Achievement', title: "Dean's List – Year 1", year: 'Year 1', verified: true },
+      { type: 'Achievement', title: 'Hospitality Management Certificate', year: 'Year 2', verified: true },
+      { type: 'Achievement', title: 'Best Presentation Award', year: 'Year 3', verified: false },
+      { type: 'Leadership', title: 'Class Representative', year: 'Year 2', verified: true },
+      { type: 'Leadership', title: 'Hospitality Club Treasurer', year: 'Year 3', verified: false },
+      { type: 'Activity', title: 'Campus Food Festival Volunteer', year: 'Year 2', verified: true }
+    ];
+    let currentType = 'Achievement';
+    const typeNames = { 'Achievement': 'achievement', 'Leadership': 'leadership role', 'Activity': 'activity' };
+
+    function showItems() {
+      let html = '';
+      items.filter(function (i) { return i.type === currentType; }).forEach(function (i) {
+        const tag = i.verified
+          ? '<span class="tag">✓ Verified</span>'
+          : '<span class="tag p">Pending</span>';
+        const note = i.comment ? ' · Staff comment: ' + esc(i.comment) : '';
+        html += '<div class="row"><div><b>' + esc(i.title) + '</b><div class="muted">' + i.year + note + '</div></div>' + tag + '</div>';
+      });
+      document.getElementById('item-list').innerHTML = html;
+      document.getElementById('form-title').textContent = 'Add a new ' + typeNames[currentType];
+
+      const done = items.filter(function (i) { return i.verified; }).length;
+      const waiting = items.length - done;
+      document.getElementById('verified-count').textContent = done;
+      document.getElementById('pending-count').textContent = waiting;
+      document.getElementById('a-verified').textContent = done;
+      document.getElementById('a-pending').textContent = waiting;
+    }
+
+    const subs = document.querySelectorAll('.sub');
+    subs.forEach(function (s) {
+      s.addEventListener('click', function () {
+        subs.forEach(function (x) { x.classList.remove('on'); });
+        s.classList.add('on');
+        currentType = s.dataset.type;
+        showItems();
+      });
+    });
+
+    // Student submits a new item for verification
+    document.getElementById('submit-item').addEventListener('click', function () {
+      const titleBox = document.getElementById('new-title');
+      const title = titleBox.value.trim();
+      if (title === '') {
+        titleBox.focus();
+        return;
+      }
+      items.push({
+        type: currentType,
+        title: title,
+        year: document.getElementById('new-year').value,
+        verified: false
+      });
+      titleBox.value = '';
+      refresh();
+    });
+
+    // Staff review queue
+    function showQueue() {
+      let html = '';
+      items.forEach(function (i, index) {
+        if (i.verified) { return; }
+        html += '<div class="row">' +
+          '<div><b>' + esc(i.title) + '</b><div class="muted">Tendai Moyo · ' + i.type + ' · ' + i.year + '</div></div>' +
+          '<div class="qa"><input type="text" id="c' + index + '" placeholder="Comment (optional)">' +
+          '<button class="btn verify-btn" data-i="' + index + '">Verify</button></div>' +
+          '</div>';
+      });
+      if (html === '') { html = '<p class="muted">Nothing is waiting for review. 🎉</p>'; }
+      document.getElementById('queue-list').innerHTML = html;
+    }
+
+    document.getElementById('queue-list').addEventListener('click', function (e) {
+      if (!e.target.classList.contains('verify-btn')) { return; }
+      const index = e.target.dataset.i;
+      const comment = document.getElementById('c' + index).value.trim();
+      items[index].verified = true;
+      if (comment !== '') { items[index].comment = comment; }
+      refresh();
+    });
+
+    // Recommendation letters
+    const letters = [
+      { to: 'Dr. Chikwanha', purpose: 'Internship application', ready: true },
+      { to: 'Mrs. Ncube', purpose: 'Job application', ready: false }
+    ];
+
+    function showRecs() {
+      let html = '';
+      letters.forEach(function (l) {
+        const tag = l.ready
+          ? '<span class="tag">✓ Letter ready</span>'
+          : '<span class="tag p">Requested</span>';
+        html += '<div class="row"><div><b>' + esc(l.to) + '</b><div class="muted">' + esc(l.purpose) + '</div></div>' + tag + '</div>';
+      });
+      document.getElementById('rec-list').innerHTML = html;
+    }
+
+    document.getElementById('rec-btn').addEventListener('click', function () {
+      const purposeBox = document.getElementById('rec-purpose');
+      const purpose = purposeBox.value.trim();
+      if (purpose === '') {
+        purposeBox.focus();
+        return;
+      }
+      letters.push({ to: document.getElementById('rec-to').value, purpose: purpose, ready: false });
+      purposeBox.value = '';
+      refresh();
+    });
+
+    // Staff: approve letter requests
+    function showReqs() {
+      let html = '';
+      letters.forEach(function (l, index) {
+        if (l.ready) { return; }
+        html += '<div class="row"><div><b>Tendai Moyo</b><div class="muted">To: ' + esc(l.to) + ' · ' + esc(l.purpose) + '</div></div>' +
+          '<button class="btn issue-btn" style="width:auto" data-i="' + index + '">Approve &amp; issue</button></div>';
+      });
+      if (html === '') { html = '<p class="muted">No open requests.</p>'; }
+      document.getElementById('reqs-list').innerHTML = html;
+    }
+
+    document.getElementById('reqs-list').addEventListener('click', function (e) {
+      if (!e.target.classList.contains('issue-btn')) { return; }
+      letters[e.target.dataset.i].ready = true;
+      refresh();
+    });
+
+    // Job profile: only verified items and issued letters are shown to employers
+    function showPublic() {
+      const groups = [['Achievement', 'Achievements'], ['Leadership', 'Leadership'], ['Activity', 'Activities']];
+      let html = '';
+      groups.forEach(function (g) {
+        html += '<h3 class="section-title">' + g[1] + '</h3>';
+        const list = items.filter(function (i) { return i.type === g[0] && i.verified; });
+        if (list.length === 0) {
+          html += '<p class="muted">None verified yet</p>';
+        }
+        list.forEach(function (i) {
+          html += '<div class="row"><span>' + esc(i.title) + ' <span class="muted">(' + i.year + ')</span></span><span class="tag">✓ Verified</span></div>';
+        });
+      });
+
+      html += '<h3 class="section-title">Recommendation letters</h3>';
+      const ready = letters.filter(function (l) { return l.ready; });
+      if (ready.length === 0) {
+        html += '<p class="muted">None issued yet</p>';
+      }
+      ready.forEach(function (l) {
+        html += '<div class="row"><span>' + esc(l.to) + ' <span class="muted">(' + esc(l.purpose) + ')</span></span><span class="tag">✓ Available</span></div>';
+      });
+
+      document.getElementById('public-list').innerHTML = html;
+    }
+
+    document.getElementById('share-btn').addEventListener('click', function () {
+      this.textContent = 'Link copied (demo): africau.edu/profile/AU2201234';
+    });
+
+    // Update every list and counter after any change
+    function refresh() {
+      showItems();
+      showQueue();
+      showRecs();
+      showReqs();
+      showPublic();
+    }
+    refresh();
+  </script>
+
+</body>
+</html>
