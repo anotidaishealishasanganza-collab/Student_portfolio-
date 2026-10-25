@@ -1,21 +1,80 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Africa University Student Portfolio</title>
 
+  <!-- Apply saved theme before first paint (prevents a flash) -->
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('au-theme');
+        if (!t) {
+          t = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
+
   <style>
+    /* =========================================================
+       THEME COLOURS  (Africa University: green · red · black)
+       ========================================================= */
+    :root {
+      --green: #0b7a3b;
+      --btn: #0b7a3b;
+      --btn-h: #08622f;
+      --green-soft: #e2f3e8;
+      --on-soft: #0a6a33;
+      --red: #c8102e;
+      --red-soft: #fbe4e8;
+      --red-text: #b00d28;
+      --black: #0d0f0e;
+      --header: #0d0f0e;
+      --surface: #ffffff;
+      --surface-2: #f4f7f4;
+      --border: #dfe5df;
+      --text: #17201b;
+      --muted: #5f6c64;
+      --shadow: 0 6px 18px rgba(13, 15, 14, 0.10);
+      color-scheme: light;
+    }
+
+    html[data-theme="dark"] {
+      --green: #2bb264;
+      --btn: #168043;
+      --btn-h: #1a9650;
+      --green-soft: #12301f;
+      --on-soft: #6ee09a;
+      --red: #e0334d;
+      --red-soft: #3a1a20;
+      --red-text: #ff8a99;
+      --header: #050606;
+      --surface: #151a17;
+      --surface-2: #1d2420;
+      --border: #2b362f;
+      --text: #e9f0eb;
+      --muted: #9aa8a0;
+      --shadow: 0 8px 22px rgba(0, 0, 0, 0.45);
+      color-scheme: dark;
+    }
+
     * { box-sizing: border-box; }
 
     body {
       margin: 0;
-      color: #1d2a24;
+      color: var(--text);
       font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
       font-size: 15px;
       line-height: 1.5;
+      transition: color 0.35s ease;
     }
 
+    /* ---- BACKGROUND IMAGE (unchanged) ---- */
     body::before {
       content: "";
       position: fixed;
@@ -32,12 +91,102 @@
       background-repeat: no-repeat;
     }
 
-    header {
-      background: #1f6f4a;
-      color: white;
-      padding: 12px 16px;
+    /* Dark-mode tint sits on top of the background without touching it */
+    body::after {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background: rgba(6, 10, 8, 0.68);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.45s ease;
     }
 
+    html[data-theme="dark"] body::after { opacity: 1; }
+
+    /* =========================================================
+       HEADER
+       ========================================================= */
+    header {
+      background: var(--header);
+      color: #fff;
+      padding: 12px 16px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      transition: background-color 0.35s ease;
+    }
+
+    header::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--green) 0 50%, var(--red) 50% 100%);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .crest {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--red);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: none;
+    }
+
+    .brand b { font-size: 15px; }
+
+    .theme-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.10);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font: inherit;
+      font-size: 13px;
+      cursor: pointer;
+      flex: none;
+      transition: background-color 0.25s ease, transform 0.2s ease;
+    }
+
+    .theme-toggle:hover { background: rgba(255, 255, 255, 0.2); }
+    .theme-toggle:active { transform: scale(0.95); }
+
+    .theme-toggle .ti {
+      display: inline-block;
+      transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    html[data-theme="dark"] .theme-toggle .ti { transform: rotate(360deg); }
+
+    /* =========================================================
+       LAYOUT + CARDS
+       ========================================================= */
     main {
       max-width: 860px;
       margin: 0 auto;
@@ -45,39 +194,68 @@
     }
 
     .card {
-      background: white;
-      border: 1px solid #dde3dd;
+      background: var(--surface);
+      border: 1px solid var(--border);
       border-radius: 12px;
       padding: 16px;
       margin-bottom: 14px;
+      transition: background-color 0.35s ease, border-color 0.35s ease, box-shadow 0.25s ease;
     }
+
+    h2, h3 { margin-top: 0; }
 
     input,
     select {
       width: 100%;
       padding: 9px;
-      border: 1px solid #dde3dd;
+      border: 1px solid var(--border);
       border-radius: 8px;
       font: inherit;
       margin: 4px 0 12px;
+      background: var(--surface-2);
+      color: var(--text);
+      transition: border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.35s ease, color 0.35s ease;
+    }
+
+    input::placeholder { color: var(--muted); opacity: 0.8; }
+
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(11, 122, 59, 0.22);
+    }
+
+    button:focus-visible {
+      outline: 2px solid var(--green);
+      outline-offset: 2px;
     }
 
     .btn {
-      background: #1f6f4a;
-      color: white;
+      background: var(--btn);
+      color: #fff;
       border: 0;
       padding: 10px 16px;
       border-radius: 8px;
       font: inherit;
       cursor: pointer;
       width: 100%;
+      transition: background-color 0.25s ease, transform 0.15s ease, box-shadow 0.25s ease;
     }
 
+    .btn:hover { background: var(--btn-h); box-shadow: 0 4px 12px rgba(11, 122, 59, 0.3); }
+    .btn:active { transform: scale(0.97); }
+
     .btn.outline {
-      background: white;
-      color: #1f6f4a;
-      border: 1px solid #1f6f4a;
+      background: transparent;
+      color: var(--green);
+      border: 1px solid var(--green);
     }
+
+    .btn.outline:hover { background: var(--green-soft); box-shadow: none; }
+
+    .btn.danger { background: var(--red); }
+    .btn.danger:hover { background: #a30d26; box-shadow: 0 4px 12px rgba(200, 16, 46, 0.3); }
 
     .roles {
       display: grid;
@@ -88,28 +266,30 @@
 
     .roles button {
       padding: 12px;
-      border: 1px solid #dde3dd;
-      background: white;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
       border-radius: 10px;
       font: inherit;
       cursor: pointer;
+      transition: all 0.25s ease;
     }
 
+    .roles button:hover { border-color: var(--green); transform: translateY(-2px); }
+
     .muted {
-      color: #66736c;
+      color: var(--muted);
       font-size: 13px;
     }
 
     .roles button.on {
-      border-color: #1f6f4a;
-      background: #e3f1ea;
-      color: #1f6f4a;
+      border-color: var(--green);
+      background: var(--green-soft);
+      color: var(--on-soft);
       font-weight: 600;
     }
 
-    .hidden {
-      display: none !important;
-    }
+    .hidden { display: none !important; }
 
     .grid {
       display: grid;
@@ -117,14 +297,14 @@
       gap: 12px;
     }
 
-    .stat {
-      text-align: center;
-    }
+    .stat { text-align: center; }
+
+    .stat:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
 
     .stat b {
       display: block;
       font-size: 26px;
-      color: #1f6f4a;
+      color: var(--green);
     }
 
     .top {
@@ -137,8 +317,9 @@
       width: 64px;
       height: 64px;
       border-radius: 50%;
-      background: #1f6f4a;
-      color: white;
+      background: linear-gradient(135deg, var(--green), var(--black));
+      border: 3px solid var(--red);
+      color: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -146,6 +327,8 @@
       font-weight: 600;
       flex: none;
     }
+
+    .av.sm { width: 40px; height: 40px; font-size: 14px; border-width: 2px; }
 
     .menu {
       display: flex;
@@ -156,20 +339,28 @@
 
     .tab,
     .sub {
-      border: 1px solid #dde3dd;
-      background: white;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
       padding: 7px 14px;
       border-radius: 20px;
       font: inherit;
       cursor: pointer;
+      transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease, transform 0.2s ease;
     }
+
+    .tab:hover,
+    .sub:hover { border-color: var(--green); transform: translateY(-2px); }
 
     .tab.on,
     .sub.on {
-      background: #1f6f4a;
-      color: white;
-      border-color: #1f6f4a;
+      background: var(--green);
+      color: #fff;
+      border-color: var(--green);
     }
+
+    html[data-theme="dark"] .tab.on,
+    html[data-theme="dark"] .sub.on { color: #06130b; }
 
     table {
       width: 100%;
@@ -180,8 +371,17 @@
     td {
       text-align: left;
       padding: 8px;
-      border-bottom: 1px solid #dde3dd;
+      border-bottom: 1px solid var(--border);
     }
+
+    th {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+    }
+
+    .grade { font-weight: 700; color: var(--green); }
 
     .row {
       display: flex;
@@ -189,32 +389,38 @@
       align-items: center;
       gap: 10px;
       padding: 10px 0;
-      border-bottom: 1px solid #dde3dd;
+      border-bottom: 1px solid var(--border);
       flex-wrap: wrap;
     }
 
-    .row:last-child {
-      border-bottom: 0;
+    .row:last-child { border-bottom: 0; }
+
+    .linkcell { min-width: 0; flex: 1 1 220px; }
+
+    .linkcell a {
+      color: var(--green);
+      font-size: 13px;
+      word-break: break-all;
     }
 
     .tag {
       font-size: 12px;
       padding: 3px 10px;
       border-radius: 12px;
-      background: #e3f1ea;
-      color: #1f6f4a;
+      background: var(--green-soft);
+      color: var(--on-soft);
       white-space: nowrap;
     }
 
     .tag.p {
-      background: #fbf0dc;
-      color: #b7791f;
+      background: var(--red-soft);
+      color: var(--red-text);
     }
 
     .form-box {
       margin-top: 16px;
       padding-top: 14px;
-      border-top: 1px solid #dde3dd;
+      border-top: 1px solid var(--border);
     }
 
     .qa {
@@ -229,13 +435,12 @@
       margin: 0;
     }
 
-    .qa .btn {
-      width: auto;
-    }
+    .qa .btn { width: auto; }
 
     .banner {
-      background: #e3f1ea;
-      color: #1f6f4a;
+      background: var(--green-soft);
+      color: var(--on-soft);
+      border-left: 4px solid var(--red);
       padding: 8px 12px;
       border-radius: 8px;
       font-size: 13px;
@@ -247,7 +452,7 @@
       font-size: 16px;
     }
 
-    /* NEW: Verified student profile styling */
+    /* Verified student profile styling */
     .profile-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
@@ -256,25 +461,96 @@
     }
 
     .profile-field {
-      background: #f7f9f7;
-      border: 1px solid #e2e8e3;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
       border-radius: 9px;
       padding: 10px;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.35s ease, border-color 0.35s ease;
     }
+
+    .profile-field:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
 
     .profile-field strong {
       display: block;
-      color: #66736c;
+      color: var(--muted);
       font-size: 12px;
       margin-bottom: 2px;
     }
 
+    .profile-field .big {
+      display: block;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--green);
+    }
+
     .verified-box {
-      border: 1px solid #b8d8c5;
-      background: #f1f8f4;
+      border: 1px solid var(--green);
+      background: var(--green-soft);
       border-radius: 10px;
       padding: 12px;
       margin-top: 14px;
+      transition: background-color 0.35s ease, border-color 0.35s ease;
+    }
+
+    .verified-box > b { color: var(--on-soft); }
+
+    .verified-box.pending {
+      border-color: var(--red);
+      background: var(--red-soft);
+    }
+
+    .verified-box.pending > b { color: var(--red-text); }
+
+    #result-status { margin: 0 0 14px; }
+
+    .pick-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 10px;
+      margin: 10px 0 14px;
+    }
+
+    .msg {
+      font-size: 13px;
+      min-height: 18px;
+      margin: -4px 0 10px;
+    }
+
+    .msg.ok { color: var(--on-soft); }
+    .msg.err { color: var(--red-text); }
+
+    .staff-row { display: flex; align-items: center; gap: 12px; }
+
+    @media (max-width: 520px) {
+      .pick-row { grid-template-columns: 1fr; }
+      .brand b { font-size: 13px; }
+    }
+
+    /* =========================================================
+       ANIMATIONS
+       ========================================================= */
+    @keyframes popIn {
+      0%   { opacity: 0; transform: translateY(24px) scale(0.95); }
+      60%  { opacity: 1; }
+      100% { opacity: 1; transform: none; }
+    }
+
+    .pop {
+      animation: popIn 0.55s cubic-bezier(0.22, 1, 0.36, 1) var(--d, 0ms) backwards;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+      }
     }
   </style>
 </head>
@@ -282,13 +558,22 @@
 <body>
 
   <header>
-    <b>Africa University · Student Portfolio</b>
+    <div class="brand">
+      <span class="crest">AU</span>
+      <b>Africa University · Student Portfolio</b>
+    </div>
+
+    <button class="theme-toggle" id="theme-toggle" type="button"
+            aria-pressed="false" aria-label="Switch between dark and light theme">
+      <span class="ti" id="theme-icon">🌙</span>
+      <span id="theme-label">Dark</span>
+    </button>
   </header>
 
   <main>
 
     <!-- LOGIN -->
-    <div class="card" id="login-screen" style="max-width: 420px; margin: 30px auto;">
+    <div class="card pop" id="login-screen" style="max-width: 420px; margin: 30px auto;">
 
       <h2>Welcome back</h2>
 
@@ -297,9 +582,9 @@
       </p>
 
       <div class="roles">
-        <button class="on">Student</button>
-        <button>Staff</button>
-        <button>Admin</button>
+        <button class="on" data-role="student">Student</button>
+        <button data-role="staff">Staff</button>
+        <button data-role="admin">Admin</button>
       </div>
 
       <label class="muted">School email or ID</label>
@@ -331,63 +616,16 @@
     <div id="dashboard" class="hidden">
 
       <!-- NAVIGATION -->
-      <div class="menu">
+      <div class="menu" id="main-menu">
 
-        <button
-          class="tab"
-          data-page="home"
-          data-roles="student">
-          Dashboard
-        </button>
-
-        <button
-          class="tab"
-          data-page="record"
-          data-roles="student">
-          Academic record
-        </button>
-
-        <button
-          class="tab"
-          data-page="items"
-          data-roles="student">
-          Achievements
-        </button>
-
-        <button
-          class="tab"
-          data-page="recs"
-          data-roles="student">
-          Recommendations
-        </button>
-
-        <button
-          class="tab"
-          data-page="public"
-          data-roles="student">
-          Job profile
-        </button>
-
-        <button
-          class="tab"
-          data-page="queue"
-          data-roles="staff">
-          Review queue
-        </button>
-
-        <button
-          class="tab"
-          data-page="reqs"
-          data-roles="staff">
-          Letter requests
-        </button>
-
-        <button
-          class="tab"
-          data-page="admin"
-          data-roles="admin">
-          Admin overview
-        </button>
+        <button class="tab" data-page="home" data-roles="student">Dashboard</button>
+        <button class="tab" data-page="record" data-roles="student staff">Academic record</button>
+        <button class="tab" data-page="items" data-roles="student">Achievements</button>
+        <button class="tab" data-page="recs" data-roles="student">Recommendations</button>
+        <button class="tab" data-page="public" data-roles="student">Job profile</button>
+        <button class="tab" data-page="queue" data-roles="staff">Review queue</button>
+        <button class="tab" data-page="reqs" data-roles="staff">Letter requests</button>
+        <button class="tab" data-page="admin" data-roles="admin">Admin overview</button>
 
       </div>
 
@@ -401,29 +639,20 @@
         <!-- Student heading -->
         <div class="card top">
 
-          <div class="av">
-            TM
-          </div>
+          <div class="av">TM</div>
 
           <div>
-
-            <h2 style="margin: 0;">
-              Tendai Moyo
-            </h2>
-
+            <h2 style="margin: 0;">Tendai Moyo</h2>
             <p class="muted" id="subtitle"></p>
-
           </div>
 
         </div>
 
 
-        <!-- NEW: VERIFIED STUDENT PROFILE -->
+        <!-- VERIFIED STUDENT PROFILE -->
         <div class="card">
 
-          <h2 style="margin-top: 0;">
-            Verified student profile
-          </h2>
+          <h2 style="margin-top: 0;">Verified student profile</h2>
 
           <div class="profile-grid">
 
@@ -471,39 +700,18 @@
             </div>
 
             <div class="row">
-
-              <span>
-                Student ID verification
-              </span>
-
-              <span class="tag">
-                ✓ Verified
-              </span>
-
+              <span>Student ID verification</span>
+              <span class="tag">✓ Verified</span>
             </div>
 
             <div class="row">
-
-              <span>
-                Academic record verification
-              </span>
-
-              <span class="tag">
-                ✓ Verified
-              </span>
-
+              <span>Academic record verification</span>
+              <span class="tag" id="acad-verif-tag">✓ Verified</span>
             </div>
 
             <div class="row">
-
-              <span>
-                Achievement verification
-              </span>
-
-              <span class="tag">
-                ✓ School verified
-              </span>
-
+              <span>Achievement verification</span>
+              <span class="tag">✓ School verified</span>
             </div>
 
           </div>
@@ -511,35 +719,27 @@
         </div>
 
 
-        <!-- Existing statistics -->
+        <!-- Statistics -->
         <div class="grid">
 
           <div class="card stat">
-            <b>3.4</b>
-            <span class="muted">
-              Current GPA
-            </span>
+            <b data-target="3.4">3.4</b>
+            <span class="muted">Current GPA</span>
           </div>
 
           <div class="card stat">
-            <b>3.2</b>
-            <span class="muted">
-              Cumulative GPA
-            </span>
+            <b data-target="3.2">3.2</b>
+            <span class="muted">Cumulative GPA</span>
           </div>
 
           <div class="card stat">
-            <b id="verified-count">0</b>
-            <span class="muted">
-              Verified items
-            </span>
+            <b id="verified-count" data-target="0">0</b>
+            <span class="muted">Verified items</span>
           </div>
 
           <div class="card stat">
-            <b id="pending-count">0</b>
-            <span class="muted">
-              Awaiting review
-            </span>
+            <b id="pending-count" data-target="0">0</b>
+            <span class="muted">Awaiting review</span>
           </div>
 
         </div>
@@ -555,58 +755,91 @@
 
         <div class="card">
 
-          <h2>
-            Academic record
-          </h2>
+          <h2>Academic record</h2>
 
+          <!-- Dynamic verification status (depends on submitted portal link) -->
+          <div class="verified-box pending" id="result-status"></div>
 
-          <!-- NEW: Registry verification -->
-          <div class="verified-box">
+          <div class="pick-row">
 
-            <b>
-              ✓ Registry verified
-            </b>
+            <div>
+              <label class="muted">Student</label>
+              <select id="student"></select>
+            </div>
 
-            <div class="muted">
-              Academic results shown here are certified
-              for this prototype.
+            <div>
+              <label class="muted">Semester</label>
+              <select id="semester">
+                <option value="1">Year 1 · Semester 1</option>
+                <option value="2">Year 1 · Semester 2</option>
+              </select>
             </div>
 
           </div>
 
+          <p class="muted" id="student-line" style="margin: 0;"></p>
 
-          <select id="semester">
+          <div class="summary">
 
-            <option value="1">
-              Year 1 · Semester 1
-            </option>
+            <div class="profile-field">
+              <strong>Semester GPA</strong>
+              <span class="big" id="gpa-sem">–</span>
+            </div>
 
-            <option value="2">
-              Year 1 · Semester 2
-            </option>
+            <div class="profile-field">
+              <strong>Year 1 average</strong>
+              <span class="big" id="gpa-year">–</span>
+            </div>
 
-          </select>
-
+          </div>
 
           <table>
 
             <thead>
-
               <tr>
                 <th>Course</th>
                 <th>Grade</th>
+                <th>Points</th>
               </tr>
-
             </thead>
 
             <tbody id="course-rows"></tbody>
 
           </table>
 
-
           <p class="muted" style="margin-top: 10px;">
-            Five courses per semester · results certified by the Registry
+            Five courses per semester · demo records
           </p>
+
+
+          <!-- Portal link verification -->
+          <div class="form-box">
+
+            <h3 style="margin: 0 0 6px;">Verify these results with your student portal</h3>
+
+            <p class="muted" style="margin-top: 0;">
+              Paste the link to your results page on the student portal.
+              Staff will open it and confirm that the grades match.
+            </p>
+
+            <label class="muted">Student portal results link</label>
+
+            <input
+              type="url"
+              id="portal-link"
+              placeholder="https://your-student-portal/results/..."
+              autocomplete="off"
+            >
+
+            <div class="msg" id="link-msg" role="status"></div>
+
+            <button class="btn" id="link-btn">
+              Submit link for verification
+            </button>
+
+            <div id="link-list" style="margin-top: 10px;"></div>
+
+          </div>
 
         </div>
 
@@ -621,29 +854,13 @@
 
         <div class="card">
 
-          <h2>
-            Achievements, leadership &amp; activities
-          </h2>
+          <h2>Achievements, leadership &amp; activities</h2>
 
           <div class="menu">
 
-            <button
-              class="sub on"
-              data-type="Achievement">
-              Achievements
-            </button>
-
-            <button
-              class="sub"
-              data-type="Leadership">
-              Leadership
-            </button>
-
-            <button
-              class="sub"
-              data-type="Activity">
-              Activities
-            </button>
+            <button class="sub on" data-type="Achievement">Achievements</button>
+            <button class="sub" data-type="Leadership">Leadership</button>
+            <button class="sub" data-type="Activity">Activities</button>
 
           </div>
 
@@ -653,15 +870,11 @@
 
           <div class="form-box">
 
-            <h3
-              style="margin: 0 0 6px;"
-              id="form-title">
+            <h3 style="margin: 0 0 6px;" id="form-title">
               Add a new achievement
             </h3>
 
-            <label class="muted">
-              Title
-            </label>
+            <label class="muted">Title</label>
 
             <input
               type="text"
@@ -669,22 +882,16 @@
               placeholder="e.g. Best Student in Food Safety"
             >
 
-            <label class="muted">
-              Year
-            </label>
+            <label class="muted">Year</label>
 
             <select id="new-year">
-
               <option>Year 1</option>
               <option>Year 2</option>
               <option>Year 3</option>
               <option>Year 4</option>
-
             </select>
 
-            <button
-              class="btn"
-              id="submit-item">
+            <button class="btn" id="submit-item">
               Submit for verification
             </button>
 
@@ -708,38 +915,23 @@
 
         <div class="card">
 
-          <h2>
-            Recommendation letters
-          </h2>
+          <h2>Recommendation letters</h2>
 
           <div id="rec-list"></div>
 
 
           <div class="form-box">
 
-            <h3 style="margin: 0 0 6px;">
-              Request a letter
-            </h3>
+            <h3 style="margin: 0 0 6px;">Request a letter</h3>
 
-            <label class="muted">
-              Lecturer
-            </label>
+            <label class="muted">Lecturer</label>
 
             <select id="rec-to">
-
-              <option>
-                Dr. Chikwanha
-              </option>
-
-              <option>
-                Mrs. Ncube
-              </option>
-
+              <option>Dr. Chikwanha</option>
+              <option>Mrs. Ncube</option>
             </select>
 
-            <label class="muted">
-              Purpose
-            </label>
+            <label class="muted">Purpose</label>
 
             <input
               type="text"
@@ -747,9 +939,7 @@
               placeholder="e.g. Internship application"
             >
 
-            <button
-              class="btn"
-              id="rec-btn">
+            <button class="btn" id="rec-btn">
               Send request
             </button>
 
@@ -780,90 +970,48 @@
 
           <div class="top">
 
-            <div class="av">
-              TM
-            </div>
+            <div class="av">TM</div>
 
             <div>
-
-              <h2 style="margin: 0;">
-                Tendai Moyo
-              </h2>
-
-              <p class="muted">
-                Verified student profile · Africa University
-              </p>
-
+              <h2 style="margin: 0;">Tendai Moyo</h2>
+              <p class="muted">Verified student profile · Africa University</p>
             </div>
 
           </div>
 
 
-          <!-- NEW: Employer-visible verified details -->
+          <!-- Employer-visible verified details -->
           <div class="profile-grid">
 
             <div class="profile-field">
-
-              <strong>
-                Student ID
-              </strong>
-
+              <strong>Student ID</strong>
               AU2201234
-
-              <span class="tag">
-                ✓ Verified
-              </span>
-
+              <span class="tag">✓ Verified</span>
             </div>
 
             <div class="profile-field">
-
-              <strong>
-                Programme
-              </strong>
-
+              <strong>Programme</strong>
               BSc Hospitality Management
-
             </div>
 
             <div class="profile-field">
-
-              <strong>
-                College
-              </strong>
-
+              <strong>College</strong>
               College of Business and Management Sciences (CBMS)
-
             </div>
 
             <div class="profile-field">
-
-              <strong>
-                Year
-              </strong>
-
+              <strong>Year</strong>
               Year 2
-
             </div>
 
             <div class="profile-field">
-
-              <strong>
-                Expected graduation
-              </strong>
-
+              <strong>Expected graduation</strong>
               2028
-
             </div>
 
             <div class="profile-field">
-
-              <strong>
-                Cumulative GPA
-              </strong>
-
+              <strong>Cumulative GPA</strong>
               3.2
-
             </div>
 
           </div>
@@ -871,9 +1019,7 @@
 
           <div class="verified-box">
 
-            <b>
-              ✓ Certified by Africa University
-            </b>
+            <b>✓ Certified by Africa University</b>
 
             <div class="muted">
               Only verified academic information, achievements
@@ -887,10 +1033,7 @@
           <div id="public-list"></div>
 
 
-          <button
-            class="btn outline"
-            id="share-btn"
-            style="margin-top: 16px;">
+          <button class="btn outline" id="share-btn" style="margin-top: 16px;">
             Share profile link
           </button>
 
@@ -907,9 +1050,7 @@
 
         <div class="card">
 
-          <h2>
-            Pending verification
-          </h2>
+          <h2>Pending verification</h2>
 
           <p class="muted">
             Review each item, add a comment if you like,
@@ -931,9 +1072,7 @@
 
         <div class="card">
 
-          <h2>
-            Letter requests
-          </h2>
+          <h2>Letter requests</h2>
 
           <p class="muted">
             Approve a request to issue the recommendation letter.
@@ -955,37 +1094,18 @@
         <div class="grid">
 
           <div class="card stat">
-
-            <b>2</b>
-
-            <span class="muted">
-              Staff accounts
-            </span>
-
+            <b data-target="2">2</b>
+            <span class="muted">Staff accounts</span>
           </div>
 
           <div class="card stat">
-
-            <b id="a-verified">
-              0
-            </b>
-
-            <span class="muted">
-              Verified items
-            </span>
-
+            <b id="a-verified" data-target="0">0</b>
+            <span class="muted">Verified items</span>
           </div>
 
           <div class="card stat">
-
-            <b id="a-pending">
-              0
-            </b>
-
-            <span class="muted">
-              Awaiting review
-            </span>
-
+            <b id="a-pending" data-target="0">0</b>
+            <span class="muted">Awaiting review</span>
           </div>
 
         </div>
@@ -993,9 +1113,36 @@
 
         <div class="card">
 
-          <h3>
-            Account management
-          </h3>
+          <h3>Staff accounts</h3>
+
+          <div class="row">
+            <div class="staff-row">
+              <div class="av sm">DC</div>
+              <div>
+                <b>Dr. Chikwanha</b>
+                <div class="muted">Lecturer · CBMS</div>
+              </div>
+            </div>
+            <span class="tag">Active</span>
+          </div>
+
+          <div class="row">
+            <div class="staff-row">
+              <div class="av sm">MN</div>
+              <div>
+                <b>Mrs. Ncube</b>
+                <div class="muted">Lecturer · CBMS</div>
+              </div>
+            </div>
+            <span class="tag">Active</span>
+          </div>
+
+        </div>
+
+
+        <div class="card">
+
+          <h3>Account management</h3>
 
           <p class="muted">
             Creating staff accounts and viewing reports
@@ -1009,10 +1156,7 @@
 
       <!-- LOGOUT -->
 
-      <button
-        class="btn"
-        id="logout-btn"
-        style="max-width: 200px;">
+      <button class="btn danger" id="logout-btn" style="max-width: 200px;">
         Log out
       </button>
 
@@ -1022,6 +1166,125 @@
 
 
   <script>
+
+    /* =========================================================
+       HELPERS
+       ========================================================= */
+
+    // Security: escape user text before putting it in HTML
+    function esc(text) {
+      return String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function reduceMotion() {
+      return window.matchMedia &&
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    }
+
+
+    /* =========================================================
+       ANIMATIONS
+       ========================================================= */
+
+    // Pop a list of elements in one after another
+    function popIn(els, step) {
+
+      if (reduceMotion()) { return; }
+
+      const list = Array.prototype.slice.call(els);
+
+      list.forEach(function (e) { e.classList.remove('pop'); });
+
+      void document.body.offsetWidth; // restart the animation
+
+      list.forEach(function (e, i) {
+        e.style.setProperty('--d', Math.min(i, 14) * (step || 45) + 'ms');
+        e.classList.add('pop');
+      });
+
+    }
+
+    // Count a number up to its target
+    function countUp(el) {
+
+      if (el.dataset.target === undefined) { return; }
+
+      if (reduceMotion()) {
+        el.textContent = el.dataset.target;
+        return;
+      }
+
+      cancelAnimationFrame(el._raf);
+
+      const start = performance.now();
+      const duration = 900;
+
+      function tick(now) {
+
+        const raw = el.dataset.target;
+        const target = parseFloat(raw);
+        const decimals = (raw.split('.')[1] || '').length;
+        const p = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - p, 3);
+
+        el.textContent = (target * eased).toFixed(decimals);
+
+        if (p < 1) {
+          el._raf = requestAnimationFrame(tick);
+        } else {
+          el.textContent = raw;
+        }
+
+      }
+
+      el._raf = requestAnimationFrame(tick);
+
+    }
+
+    // Update a number (and its count-up target)
+    function setNum(id, value) {
+      const el = document.getElementById(id);
+      el.dataset.target = String(value);
+      el.textContent = String(value);
+    }
+
+
+    /* =========================================================
+       DARK / LIGHT THEME
+       ========================================================= */
+
+    const root = document.documentElement;
+    const themeBtn = document.getElementById('theme-toggle');
+
+    function syncThemeButton() {
+
+      const dark = root.getAttribute('data-theme') === 'dark';
+
+      document.getElementById('theme-icon').textContent = dark ? '☀️' : '🌙';
+      document.getElementById('theme-label').textContent = dark ? 'Light' : 'Dark';
+      themeBtn.setAttribute('aria-pressed', dark ? 'true' : 'false');
+
+    }
+
+    themeBtn.addEventListener('click', function () {
+
+      const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+
+      root.setAttribute('data-theme', next);
+
+      try { localStorage.setItem('au-theme', next); } catch (e) { /* ignore */ }
+
+      syncThemeButton();
+
+    });
+
+    syncThemeButton();
+
 
     /* =========================================================
        ROLE SELECTION
@@ -1035,31 +1298,15 @@
 
       b.addEventListener('click', function () {
 
-        buttons.forEach(function (x) {
-          x.classList.remove('on');
-        });
+        buttons.forEach(function (x) { x.classList.remove('on'); });
 
         b.classList.add('on');
 
-        role = b.textContent.toLowerCase();
+        role = b.dataset.role;
 
       });
 
     });
-
-
-    /* =========================================================
-       SECURITY: ESCAPE USER TEXT
-       ========================================================= */
-
-    function esc(text) {
-
-      return String(text)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;');
-
-    }
 
 
     /* =========================================================
@@ -1068,41 +1315,33 @@
 
     const tabs = document.querySelectorAll('.tab');
 
-
     function openPage(name) {
 
       tabs.forEach(function (t) {
-
-        t.classList.toggle(
-          'on',
-          t.dataset.page === name
-        );
-
+        t.classList.toggle('on', t.dataset.page === name);
       });
 
+      document.querySelectorAll('.page').forEach(function (p) {
+        p.classList.add('hidden');
+      });
 
-      document
-        .querySelectorAll('.page')
-        .forEach(function (p) {
+      const page = document.getElementById('page-' + name);
 
-          p.classList.add('hidden');
+      page.classList.remove('hidden');
 
-        });
+      // Pop-up animation for the page and its content
+      popIn(page.querySelectorAll(
+        ':scope > *, .row, tbody tr, .profile-field, .grid > .card'
+      ), 45);
 
-
-      document
-        .getElementById('page-' + name)
-        .classList.remove('hidden');
+      page.querySelectorAll('.stat b').forEach(countUp);
 
     }
-
 
     tabs.forEach(function (t) {
 
       t.addEventListener('click', function () {
-
         openPage(t.dataset.page);
-
       });
 
     });
@@ -1112,134 +1351,366 @@
        ROLE-BASED MENU
        ========================================================= */
 
+    const startPage = { student: 'home', staff: 'queue', admin: 'admin' };
+
     function applyRole() {
 
-      let first = null;
+      const visibleTabs = [];
 
       tabs.forEach(function (t) {
 
-        const allowed =
-          t.dataset.roles
-            .split(' ')
-            .indexOf(role) !== -1;
+        const allowed = t.dataset.roles.split(' ').indexOf(role) !== -1;
 
-        t.classList.toggle(
-          'hidden',
-          !allowed
-        );
+        t.classList.toggle('hidden', !allowed);
 
-        if (allowed && first === null) {
-          first = t.dataset.page;
-        }
+        if (allowed) { visibleTabs.push(t); }
 
       });
 
-      openPage(first);
+      openPage(startPage[role]);
+
+      // menu tabs and the logout button pop in too
+      popIn(visibleTabs, 50);
+      popIn([document.getElementById('logout-btn')], 0);
 
     }
 
 
     /* =========================================================
-       LOGIN
+       LOGIN / LOGOUT
        ========================================================= */
 
-    document
-      .getElementById('login-btn')
-      .addEventListener('click', function () {
+    document.getElementById('login-btn').addEventListener('click', function () {
 
-        document
-          .getElementById('login-screen')
-          .classList.add('hidden');
+      document.getElementById('login-screen').classList.add('hidden');
 
-        document
-          .getElementById('dashboard')
-          .classList.remove('hidden');
+      document.getElementById('dashboard').classList.remove('hidden');
 
-        document
-          .getElementById('subtitle')
-          .textContent =
-            'Logged in as ' + role;
+      document.getElementById('subtitle').textContent = 'Logged in as ' + role;
 
-        applyRole();
+      applyRole();
 
-      });
+    });
+
+    document.getElementById('logout-btn').addEventListener('click', function () {
+
+      document.getElementById('dashboard').classList.add('hidden');
+
+      // login card pops back in automatically when it is shown again
+      document.getElementById('login-screen').classList.remove('hidden');
+
+    });
 
 
     /* =========================================================
-       LOGOUT
+       STUDENTS + ACADEMIC RECORD
        ========================================================= */
 
-    document
-      .getElementById('logout-btn')
-      .addEventListener('click', function () {
+    const students = [
 
-        document
-          .getElementById('dashboard')
-          .classList.add('hidden');
+      {
+        id: 'AU2201234',
+        name: 'Tendai Moyo',
+        programme: 'BSc Hospitality Management',
+        sems: {
+          '1': [
+            ['Intro to Hospitality', 'A'],
+            ['Food & Beverage Basics', 'B+'],
+            ['Business Communication', 'A-'],
+            ['Tourism Studies', 'B'],
+            ['Computer Applications', 'A']
+          ],
+          '2': [
+            ['Front Office Operations', 'B+'],
+            ['Housekeeping Management', 'A-'],
+            ['Principles of Accounting', 'B'],
+            ['Customer Service', 'A'],
+            ['Hospitality Law', 'B+']
+          ]
+        }
+      },
 
-        document
-          .getElementById('login-screen')
-          .classList.remove('hidden');
+      {
+        id: 'AU2201318',
+        name: 'Rudo Chitsa',
+        programme: 'BSc Accounting',
+        sems: {
+          '1': [
+            ['Financial Accounting I', 'A'],
+            ['Business Mathematics', 'A-'],
+            ['Microeconomics', 'A'],
+            ['Business Law', 'B+'],
+            ['Computer Applications', 'A']
+          ],
+          '2': [
+            ['Cost Accounting', 'A'],
+            ['Macroeconomics', 'A-'],
+            ['Principles of Auditing', 'A'],
+            ['Business Statistics', 'B+'],
+            ['Communication Skills', 'A-']
+          ]
+        }
+      },
 
-      });
+      {
+        id: 'AU2201455',
+        name: 'Farai Mutasa',
+        programme: 'BSc Computer Science',
+        sems: {
+          '1': [
+            ['Intro to Programming', 'A'],
+            ['Discrete Mathematics', 'B+'],
+            ['Computer Applications', 'A'],
+            ['Digital Logic', 'A-'],
+            ['Communication Skills', 'B+']
+          ],
+          '2': [
+            ['Data Structures', 'A'],
+            ['Calculus II', 'B+'],
+            ['Web Development', 'A'],
+            ['Databases', 'A-'],
+            ['Statistics', 'B']
+          ]
+        }
+      }
 
+    ];
 
-    /* =========================================================
-       ACADEMIC RECORD
-       ========================================================= */
-
-    const semesters = {
-
-      '1': [
-        ['Intro to Hospitality', 'A'],
-        ['Food & Beverage Basics', 'B+'],
-        ['Business Communication', 'A-'],
-        ['Tourism Studies', 'B'],
-        ['Computer Applications', 'A']
-      ],
-
-      '2': [
-        ['Front Office Operations', 'B+'],
-        ['Housekeeping Management', 'A-'],
-        ['Principles of Accounting', 'B'],
-        ['Customer Service', 'A'],
-        ['Hospitality Law', 'B+']
-      ]
-
+    const gradePoints = {
+      'A': 4.0, 'A-': 3.7,
+      'B+': 3.3, 'B': 3.0, 'B-': 2.7,
+      'C+': 2.3, 'C': 2.0
     };
 
+    function average(rows) {
 
-    function showSemester(n) {
+      let sum = 0;
+
+      rows.forEach(function (c) { sum += gradePoints[c[1]]; });
+
+      return sum / rows.length;
+
+    }
+
+    function currentStudent() {
+      return students[document.getElementById('student').value];
+    }
+
+    function getStudent(id) {
+      return students.filter(function (s) { return s.id === id; })[0];
+    }
+
+    // fill the student drop-down
+    (function () {
+
+      let opts = '';
+
+      students.forEach(function (s, i) {
+        opts += '<option value="' + i + '">' + esc(s.name) + ' · ' + esc(s.id) + '</option>';
+      });
+
+      document.getElementById('student').innerHTML = opts;
+
+    })();
+
+
+    /* ---- Portal links submitted for result verification ---- */
+
+    const resultLinks = [];   // { student: id, url: '...', verified: false }
+
+    function linkHtml(url) {
+      return '<a href="' + esc(url) + '" target="_blank" rel="noopener noreferrer">' +
+        esc(url) + '</a>';
+    }
+
+    function renderResultStatus() {
+
+      const s = currentStudent();
+
+      const mine = resultLinks.filter(function (l) { return l.student === s.id; });
+
+      const box = document.getElementById('result-status');
+
+      if (mine.some(function (l) { return l.verified; })) {
+
+        box.className = 'verified-box';
+
+        box.innerHTML =
+          '<b>✓ Results verified</b>' +
+          '<div class="muted">Staff confirmed these results against the student portal link.</div>';
+
+      } else if (mine.length) {
+
+        box.className = 'verified-box pending';
+
+        box.innerHTML =
+          '<b>Awaiting verification</b>' +
+          '<div class="muted">The portal link has been sent to staff. These results show as verified once they confirm it.</div>';
+
+      } else {
+
+        box.className = 'verified-box pending';
+
+        box.innerHTML =
+          '<b>Not verified yet</b>' +
+          '<div class="muted">Add your student portal results link below so staff can verify these results.</div>';
+
+      }
+
+    }
+
+    function renderLinks() {
+
+      const s = currentStudent();
+
+      const mine = resultLinks.filter(function (l) { return l.student === s.id; });
+
+      let html = '';
+
+      mine.forEach(function (l) {
+
+        const tag = l.verified
+          ? '<span class="tag">✓ Verified</span>'
+          : '<span class="tag p">Pending</span>';
+
+        html +=
+          '<div class="row">' +
+            '<div class="linkcell">' +
+              linkHtml(l.url) +
+              '<div class="muted">Submitted for ' + esc(s.name) + '</div>' +
+            '</div>' +
+            tag +
+          '</div>';
+
+      });
+
+      if (html === '') {
+        html = '<p class="muted">No links submitted yet.</p>';
+      }
+
+      document.getElementById('link-list').innerHTML = html;
+
+    }
+
+    function showRecord() {
+
+      const s = currentStudent();
+
+      const sem = document.getElementById('semester').value;
 
       let rows = '';
 
-      semesters[n].forEach(function (c) {
+      s.sems[sem].forEach(function (c) {
 
         rows +=
           '<tr>' +
-          '<td>' + esc(c[0]) + '</td>' +
-          '<td>' + c[1] + '</td>' +
+            '<td>' + esc(c[0]) + '</td>' +
+            '<td><span class="grade">' + esc(c[1]) + '</span></td>' +
+            '<td>' + gradePoints[c[1]].toFixed(1) + '</td>' +
           '</tr>';
 
       });
 
-      document
-        .getElementById('course-rows')
-        .innerHTML = rows;
+      document.getElementById('course-rows').innerHTML = rows;
+
+      document.getElementById('student-line').textContent =
+        s.id + ' · ' + s.programme;
+
+      document.getElementById('gpa-sem').textContent =
+        average(s.sems[sem]).toFixed(2);
+
+      document.getElementById('gpa-year').textContent =
+        average(s.sems['1'].concat(s.sems['2'])).toFixed(2);
+
+      renderResultStatus();
+
+      renderLinks();
 
     }
 
+    function changeRecord() {
 
-    document
-      .getElementById('semester')
-      .addEventListener('change', function () {
+      showRecord();
 
-        showSemester(this.value);
+      popIn(document.querySelectorAll(
+        '#course-rows tr, #page-record .summary .profile-field'
+      ), 50);
 
+    }
+
+    document.getElementById('student').addEventListener('change', changeRecord);
+
+    document.getElementById('semester').addEventListener('change', changeRecord);
+
+
+    /* ---- Submit a portal link ---- */
+
+    function setLinkMsg(text, type) {
+
+      const m = document.getElementById('link-msg');
+
+      m.textContent = text;
+
+      m.className = 'msg ' + (type || '');
+
+    }
+
+    function submitLink() {
+
+      const box = document.getElementById('portal-link');
+
+      const raw = box.value.trim();
+
+      if (raw === '') {
+        setLinkMsg('Please paste the link from your student portal.', 'err');
+        box.focus();
+        return;
+      }
+
+      let url;
+
+      try {
+        url = new URL(raw);
+      } catch (e) {
+        setLinkMsg('That does not look like a valid link. Start with https://', 'err');
+        box.focus();
+        return;
+      }
+
+      if (url.protocol !== 'https:' && url.protocol !== 'http:') {
+        setLinkMsg('Only http or https links are accepted.', 'err');
+        box.focus();
+        return;
+      }
+
+      const s = currentStudent();
+
+      const duplicate = resultLinks.some(function (l) {
+        return l.student === s.id && l.url === url.href;
       });
 
+      if (duplicate) {
+        setLinkMsg('You already submitted this link.', 'err');
+        return;
+      }
 
-    showSemester('1');
+      resultLinks.push({ student: s.id, url: url.href, verified: false });
+
+      box.value = '';
+
+      setLinkMsg('Link submitted. Staff will verify your results.', 'ok');
+
+      refresh();
+
+      popIn(document.querySelectorAll('#link-list .row'), 50);
+
+    }
+
+    document.getElementById('link-btn').addEventListener('click', submitLink);
+
+    document.getElementById('portal-link').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') { submitLink(); }
+    });
 
 
     /* =========================================================
@@ -1248,240 +1719,118 @@
 
     const items = [
 
-      {
-        type: 'Achievement',
-        title: "Dean's List – Year 1",
-        year: 'Year 1',
-        verified: true
-      },
+      { type: 'Achievement', title: "Dean's List – Year 1", year: 'Year 1', verified: true },
 
-      {
-        type: 'Achievement',
-        title: 'Hospitality Management Certificate',
-        year: 'Year 2',
-        verified: true
-      },
+      { type: 'Achievement', title: 'Hospitality Management Certificate', year: 'Year 2', verified: true },
 
-      {
-        type: 'Achievement',
-        title: 'Best Presentation Award',
-        year: 'Year 3',
-        verified: false
-      },
+      { type: 'Achievement', title: 'Best Presentation Award', year: 'Year 3', verified: false },
 
-      {
-        type: 'Leadership',
-        title: 'Class Representative',
-        year: 'Year 2',
-        verified: true
-      },
+      { type: 'Leadership', title: 'Class Representative', year: 'Year 2', verified: true },
 
-      {
-        type: 'Leadership',
-        title: 'Hospitality Club Treasurer',
-        year: 'Year 3',
-        verified: false
-      },
+      { type: 'Leadership', title: 'Hospitality Club Treasurer', year: 'Year 3', verified: false },
 
-      {
-        type: 'Activity',
-        title: 'Campus Food Festival Volunteer',
-        year: 'Year 2',
-        verified: true
-      }
+      { type: 'Activity', title: 'Campus Food Festival Volunteer', year: 'Year 2', verified: true }
 
     ];
 
-
     let currentType = 'Achievement';
 
-
     const typeNames = {
-
       'Achievement': 'achievement',
-
       'Leadership': 'leadership role',
-
       'Activity': 'activity'
-
     };
-
 
     function showItems() {
 
       let html = '';
 
       items
-        .filter(function (i) {
-
-          return i.type === currentType;
-
-        })
+        .filter(function (i) { return i.type === currentType; })
         .forEach(function (i) {
 
           const tag = i.verified
-
             ? '<span class="tag">✓ Verified</span>'
-
             : '<span class="tag p">Pending</span>';
 
-
           const note = i.comment
-
-            ? ' · Staff comment: ' +
-              esc(i.comment)
-
+            ? ' · Staff comment: ' + esc(i.comment)
             : '';
 
-
           html +=
-
             '<div class="row">' +
-
               '<div>' +
-
-                '<b>' +
-                  esc(i.title) +
-                '</b>' +
-
-                '<div class="muted">' +
-                  i.year +
-                  note +
-                '</div>' +
-
+                '<b>' + esc(i.title) + '</b>' +
+                '<div class="muted">' + esc(i.year) + note + '</div>' +
               '</div>' +
-
               tag +
-
             '</div>';
 
         });
 
+      document.getElementById('item-list').innerHTML = html;
 
-      document
-        .getElementById('item-list')
-        .innerHTML = html;
+      document.getElementById('form-title').textContent =
+        'Add a new ' + typeNames[currentType];
 
+      const done = items.filter(function (i) { return i.verified; }).length;
 
-      document
-        .getElementById('form-title')
-        .textContent =
-          'Add a new ' +
-          typeNames[currentType];
+      const waiting = items.length - done;
 
-
-      const done =
-        items.filter(function (i) {
-          return i.verified;
-        }).length;
-
-
-      const waiting =
-        items.length - done;
-
-
-      document
-        .getElementById('verified-count')
-        .textContent = done;
-
-
-      document
-        .getElementById('pending-count')
-        .textContent = waiting;
-
-
-      document
-        .getElementById('a-verified')
-        .textContent = done;
-
-
-      document
-        .getElementById('a-pending')
-        .textContent = waiting;
+      setNum('verified-count', done);
+      setNum('pending-count', waiting);
+      setNum('a-verified', done);
+      setNum('a-pending', waiting);
 
     }
 
-
-    /* =========================================================
-       ACHIEVEMENT TABS
-       ========================================================= */
-
-    const subs =
-      document.querySelectorAll('.sub');
-
+    // Achievement tabs
+    const subs = document.querySelectorAll('.sub');
 
     subs.forEach(function (s) {
 
       s.addEventListener('click', function () {
 
-        subs.forEach(function (x) {
-
-          x.classList.remove('on');
-
-        });
-
+        subs.forEach(function (x) { x.classList.remove('on'); });
 
         s.classList.add('on');
 
-
-        currentType =
-          s.dataset.type;
-
+        currentType = s.dataset.type;
 
         showItems();
+
+        popIn(document.querySelectorAll('#item-list .row'), 55);
 
       });
 
     });
 
+    // Submit a new achievement
+    document.getElementById('submit-item').addEventListener('click', function () {
 
-    /* =========================================================
-       SUBMIT NEW ACHIEVEMENT
-       ========================================================= */
+      const titleBox = document.getElementById('new-title');
 
-    document
-      .getElementById('submit-item')
-      .addEventListener('click', function () {
+      const title = titleBox.value.trim();
 
-        const titleBox =
-          document.getElementById('new-title');
+      if (title === '') {
+        titleBox.focus();
+        return;
+      }
 
-
-        const title =
-          titleBox.value.trim();
-
-
-        if (title === '') {
-
-          titleBox.focus();
-
-          return;
-
-        }
-
-
-        items.push({
-
-          type: currentType,
-
-          title: title,
-
-          year:
-            document
-              .getElementById('new-year')
-              .value,
-
-          verified: false
-
-        });
-
-
-        titleBox.value = '';
-
-
-        refresh();
-
+      items.push({
+        type: currentType,
+        title: title,
+        year: document.getElementById('new-year').value,
+        verified: false
       });
+
+      titleBox.value = '';
+
+      refresh();
+
+      popIn(document.querySelectorAll('#item-list .row'), 40);
+
+    });
 
 
     /* =========================================================
@@ -1490,116 +1839,95 @@
 
     function showQueue() {
 
-      let html = '';
-
+      let itemsHtml = '';
 
       items.forEach(function (i, index) {
 
-        if (i.verified) {
-          return;
-        }
+        if (i.verified) { return; }
 
-
-        html +=
-
+        itemsHtml +=
           '<div class="row">' +
 
             '<div>' +
-
-              '<b>' +
-                esc(i.title) +
-              '</b>' +
-
+              '<b>' + esc(i.title) + '</b>' +
               '<div class="muted">' +
-
-                'Tendai Moyo · ' +
-                i.type +
-                ' · ' +
-                i.year +
-
+                'Tendai Moyo · ' + esc(i.type) + ' · ' + esc(i.year) +
               '</div>' +
-
             '</div>' +
 
-
             '<div class="qa">' +
-
-              '<input ' +
-                'type="text" ' +
-                'id="c' + index + '" ' +
-                'placeholder="Comment (optional)">' +
-
-              '<button ' +
-                'class="btn verify-btn" ' +
-                'data-i="' + index + '">' +
-
-                'Verify' +
-
-              '</button>' +
-
+              '<input type="text" id="c' + index + '" placeholder="Comment (optional)">' +
+              '<button class="btn verify-btn" data-i="' + index + '">Verify</button>' +
             '</div>' +
 
           '</div>';
 
       });
 
-
-      if (html === '') {
-
-        html =
-          '<p class="muted">' +
-          'Nothing is waiting for review. 🎉' +
-          '</p>';
-
+      if (itemsHtml === '') {
+        itemsHtml = '<p class="muted">Nothing is waiting for review. 🎉</p>';
       }
 
+      let linksHtml = '';
 
-      document
-        .getElementById('queue-list')
-        .innerHTML = html;
+      resultLinks.forEach(function (l, index) {
+
+        if (l.verified) { return; }
+
+        const s = getStudent(l.student);
+
+        linksHtml +=
+          '<div class="row">' +
+
+            '<div class="linkcell">' +
+              '<b>' + esc(s.name) + '</b> ' +
+              '<span class="muted">· ' + esc(s.id) + ' · Results link</span>' +
+              '<div>' + linkHtml(l.url) + '</div>' +
+            '</div>' +
+
+            '<button class="btn link-verify-btn" style="width:auto" data-l="' + index + '">' +
+              'Verify results' +
+            '</button>' +
+
+          '</div>';
+
+      });
+
+      if (linksHtml === '') {
+        linksHtml = '<p class="muted">No results links waiting.</p>';
+      }
+
+      document.getElementById('queue-list').innerHTML =
+        '<h3 class="section-title">Achievements &amp; activities</h3>' + itemsHtml +
+        '<h3 class="section-title">Results links</h3>' + linksHtml;
 
     }
 
+    document.getElementById('queue-list').addEventListener('click', function (e) {
 
-    document
-      .getElementById('queue-list')
-      .addEventListener('click', function (e) {
+      const t = e.target;
 
-        if (
-          !e.target.classList
-            .contains('verify-btn')
-        ) {
+      if (t.classList.contains('verify-btn')) {
 
-          return;
+        const index = t.dataset.i;
 
-        }
-
-
-        const index =
-          e.target.dataset.i;
-
-
-        const comment =
-          document
-            .getElementById('c' + index)
-            .value
-            .trim();
-
+        const comment = document.getElementById('c' + index).value.trim();
 
         items[index].verified = true;
 
-
-        if (comment !== '') {
-
-          items[index].comment =
-            comment;
-
-        }
-
+        if (comment !== '') { items[index].comment = comment; }
 
         refresh();
 
-      });
+      } else if (t.classList.contains('link-verify-btn')) {
+
+        resultLinks[t.dataset.l].verified = true;
+
+        refresh();
+
+      }
+
+    });
 
 
     /* =========================================================
@@ -1608,106 +1936,61 @@
 
     const letters = [
 
-      {
-        to: 'Dr. Chikwanha',
-        purpose: 'Internship application',
-        ready: true
-      },
+      { to: 'Dr. Chikwanha', purpose: 'Internship application', ready: true },
 
-      {
-        to: 'Mrs. Ncube',
-        purpose: 'Job application',
-        ready: false
-      }
+      { to: 'Mrs. Ncube', purpose: 'Job application', ready: false }
 
     ];
-
 
     function showRecs() {
 
       let html = '';
 
-
       letters.forEach(function (l) {
 
         const tag = l.ready
-
           ? '<span class="tag">✓ Letter ready</span>'
-
           : '<span class="tag p">Requested</span>';
 
-
         html +=
-
           '<div class="row">' +
-
             '<div>' +
-
-              '<b>' +
-                esc(l.to) +
-              '</b>' +
-
-              '<div class="muted">' +
-                esc(l.purpose) +
-              '</div>' +
-
+              '<b>' + esc(l.to) + '</b>' +
+              '<div class="muted">' + esc(l.purpose) + '</div>' +
             '</div>' +
-
             tag +
-
           '</div>';
 
       });
 
-
-      document
-        .getElementById('rec-list')
-        .innerHTML = html;
+      document.getElementById('rec-list').innerHTML = html;
 
     }
 
+    document.getElementById('rec-btn').addEventListener('click', function () {
 
-    document
-      .getElementById('rec-btn')
-      .addEventListener('click', function () {
+      const purposeBox = document.getElementById('rec-purpose');
 
-        const purposeBox =
-          document.getElementById('rec-purpose');
+      const purpose = purposeBox.value.trim();
 
+      if (purpose === '') {
+        purposeBox.focus();
+        return;
+      }
 
-        const purpose =
-          purposeBox.value.trim();
-
-
-        if (purpose === '') {
-
-          purposeBox.focus();
-
-          return;
-
-        }
-
-
-        letters.push({
-
-          to:
-            document
-              .getElementById('rec-to')
-              .value,
-
-          purpose: purpose,
-
-          ready: false
-
-        });
-
-
-        purposeBox.value = '';
-
-
-        refresh();
-
+      letters.push({
+        to: document.getElementById('rec-to').value,
+        purpose: purpose,
+        ready: false
       });
+
+      purposeBox.value = '';
+
+      refresh();
+
+      popIn(document.querySelectorAll('#rec-list .row'), 40);
+
+    });
 
 
     /* =========================================================
@@ -1718,92 +2001,40 @@
 
       let html = '';
 
-
       letters.forEach(function (l, index) {
 
-        if (l.ready) {
-          return;
-        }
-
+        if (l.ready) { return; }
 
         html +=
-
           '<div class="row">' +
-
             '<div>' +
-
               '<b>Tendai Moyo</b>' +
-
-              '<div class="muted">' +
-
-                'To: ' +
-                esc(l.to) +
-                ' · ' +
-                esc(l.purpose) +
-
-              '</div>' +
-
+              '<div class="muted">To: ' + esc(l.to) + ' · ' + esc(l.purpose) + '</div>' +
             '</div>' +
-
-
-            '<button ' +
-
-              'class="btn issue-btn" ' +
-
-              'style="width:auto" ' +
-
-              'data-i="' +
-              index +
-              '">' +
-
+            '<button class="btn issue-btn" style="width:auto" data-i="' + index + '">' +
               'Approve &amp; issue' +
-
             '</button>' +
-
           '</div>';
 
       });
 
-
       if (html === '') {
-
-        html =
-          '<p class="muted">' +
-          'No open requests.' +
-          '</p>';
-
+        html = '<p class="muted">No open requests.</p>';
       }
 
-
-      document
-        .getElementById('reqs-list')
-        .innerHTML = html;
+      document.getElementById('reqs-list').innerHTML = html;
 
     }
 
+    document.getElementById('reqs-list').addEventListener('click', function (e) {
 
-    document
-      .getElementById('reqs-list')
-      .addEventListener('click', function (e) {
+      if (!e.target.classList.contains('issue-btn')) { return; }
 
-        if (
-          !e.target.classList
-            .contains('issue-btn')
-        ) {
+      letters[e.target.dataset.i].ready = true;
 
-          return;
+      refresh();
 
-        }
-
-
-        letters[
-          e.target.dataset.i
-        ].ready = true;
-
-
-        refresh();
-
-      });
+    });
 
 
     /* =========================================================
@@ -1813,136 +2044,62 @@
     function showPublic() {
 
       const groups = [
-
         ['Achievement', 'Achievements'],
-
         ['Leadership', 'Leadership'],
-
         ['Activity', 'Activities']
-
       ];
-
 
       let html = '';
 
-
       groups.forEach(function (g) {
 
-        html +=
+        html += '<h3 class="section-title">' + g[1] + '</h3>';
 
-          '<h3 class="section-title">' +
-            g[1] +
-          '</h3>';
-
-
-        const list =
-          items.filter(function (i) {
-
-            return (
-              i.type === g[0] &&
-              i.verified
-            );
-
-          });
-
+        const list = items.filter(function (i) {
+          return i.type === g[0] && i.verified;
+        });
 
         if (list.length === 0) {
-
-          html +=
-            '<p class="muted">' +
-            'None verified yet' +
-            '</p>';
-
+          html += '<p class="muted">None verified yet</p>';
         }
-
 
         list.forEach(function (i) {
 
           html +=
-
             '<div class="row">' +
-
               '<span>' +
-
                 esc(i.title) +
-
-                ' <span class="muted">' +
-
-                  '(' +
-                  i.year +
-                  ')' +
-
-                '</span>' +
-
+                ' <span class="muted">(' + esc(i.year) + ')</span>' +
               '</span>' +
-
-              '<span class="tag">' +
-                '✓ Verified' +
-              '</span>' +
-
+              '<span class="tag">✓ Verified</span>' +
             '</div>';
 
         });
 
       });
 
+      html += '<h3 class="section-title">Recommendation letters</h3>';
 
-      html +=
-        '<h3 class="section-title">' +
-        'Recommendation letters' +
-        '</h3>';
-
-
-      const ready =
-        letters.filter(function (l) {
-
-          return l.ready;
-
-        });
-
+      const ready = letters.filter(function (l) { return l.ready; });
 
       if (ready.length === 0) {
-
-        html +=
-          '<p class="muted">' +
-          'None issued yet' +
-          '</p>';
-
+        html += '<p class="muted">None issued yet</p>';
       }
-
 
       ready.forEach(function (l) {
 
         html +=
-
           '<div class="row">' +
-
             '<span>' +
-
               esc(l.to) +
-
-              ' <span class="muted">' +
-
-                '(' +
-                esc(l.purpose) +
-                ')' +
-
-              '</span>' +
-
+              ' <span class="muted">(' + esc(l.purpose) + ')</span>' +
             '</span>' +
-
-            '<span class="tag">' +
-              '✓ Available' +
-            '</span>' +
-
+            '<span class="tag">✓ Available</span>' +
           '</div>';
 
       });
 
-
-      document
-        .getElementById('public-list')
-        .innerHTML = html;
+      document.getElementById('public-list').innerHTML = html;
 
     }
 
@@ -1951,14 +2108,30 @@
        SHARE PROFILE
        ========================================================= */
 
-    document
-      .getElementById('share-btn')
-      .addEventListener('click', function () {
+    document.getElementById('share-btn').addEventListener('click', function () {
 
-        this.textContent =
-          'Link copied (demo): africau.edu/profile/AU2201234';
+      this.textContent = 'Link copied (demo): africau.edu/profile/AU2201234';
 
+    });
+
+
+    /* =========================================================
+       DASHBOARD: ACADEMIC RECORD VERIFICATION TAG
+       ========================================================= */
+
+    function updateDashTag() {
+
+      const tag = document.getElementById('acad-verif-tag');
+
+      const ok = resultLinks.some(function (l) {
+        return l.student === 'AU2201234' && l.verified;
       });
+
+      tag.textContent = ok ? '✓ Verified' : 'Portal link needed';
+
+      tag.className = ok ? 'tag' : 'tag p';
+
+    }
 
 
     /* =========================================================
@@ -1977,8 +2150,11 @@
 
       showPublic();
 
-    }
+      showRecord();
 
+      updateDashTag();
+
+    }
 
     refresh();
 
