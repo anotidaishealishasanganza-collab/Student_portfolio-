@@ -1,45 +1,30 @@
-# Africa University Student Portfolio (Rapid Prototype)
+# Africa University Student Success Portal
 
-A verified student profile that follows a student from year 1 to graduation and can be shown to employers when applying for jobs. Every achievement, leadership role, activity and recommendation letter is verified by school staff before it appears on the employer view.
+This repository contains the current front-end demonstration of the Africa University Student Success Portal.
 
-This is a **rapid prototype**: it demonstrates the screens and the flow, not a finished system.
+## Run locally
 
+No XAMPP, PHP or database is required just to preview this front end.
 
-## Features
+1. Open this folder in VS Code.
+2. Open `index.html` in a browser, or run:
+   ```bash
+   python -m http.server 5500
+   ```
+3. Visit `http://localhost:5500`.
 
-- **Login by role:** Student, Staff or Admin
-- **Student dashboard:** current GPA, cumulative GPA (certified by the school), verified and pending counters
-- **Academic record:** five courses per semester, switchable by semester
-- **Achievements, leadership and activities:** each item is marked Verified or Pending, and students can submit new items
-- **Staff review queue:** lecturers verify items and add comments
-- **Recommendation letters:** students request letters, staff approve and issue them
-- **Job profile:** an employer view that shows only school-verified information
-- **Admin overview:** counts of staff accounts, verified items and items awaiting review
+## Images and branding
 
-## Files
+The page uses Africa University-related campus, nursing/health-sciences and graduation photographs. Some image URLs are hosted by the original publishers, so an internet connection is required. The graduation image is from Africa University's official social-media post; the nursing white-coat image is from Africa University's official social-media post. Campus building and library images are from campus photography.
 
-| File | Purpose |
-| --- | --- |
-| `index.html` | The whole prototype: structure (HTML), styling (CSS) and behaviour (JavaScript) |
-| `school.jpeg` | School photo used as the page background |
-| `README.md` | This file |
+The HTML looks for the official logo at:
 
-## How to try it out
+`assets/images/africa-university-logo.png`
 
-1. Choose **Student** and click **Log in**. Any ID and password work in the prototype.
-2. Open **Achievements** and submit a new item. It shows as Pending.
-3. Log out, choose **Staff**, open **Review queue** and verify the item.
-4. Log out, log back in as **Student**, and open **Job profile**. The verified item now appears there.
+Place an authorised copy of the official Africa University logo at that exact path. Until the file is added, the interface displays an `AU` fallback mark; it does not pretend that the fallback is the official logo. Obtain/use the logo in accordance with the University's brand guidance.
 
+## Important system status
 
-## Limitations
+This version is a front-end demonstration. It uses browser `localStorage` and sample records. It is not yet a production university system and does not provide real authentication, shared multi-user records, secure document uploads, server-side permissions, password recovery, or institutional integrations. Do not enter real student personal or academic data.
 
-- There is no real login or security: any ID and password are accepted.
-- Data is kept in the browser page only. Refreshing resets everything.
-- All names, grades and achievements are sample data for demonstration.
-- A real system would need a database, secure login and a way for the Registry to certify results.
-
-
-## Tools used
-
-Visual Studio Code, HTML, CSS, JavaScript, GitHub Pages, and Claude (AI assistant) for guidance and code support.
+The next development stage is the PHP/MySQL backend (or another approved backend), with authenticated accounts, role-based server permissions, audit logs, secure file storage, database migrations and backups.
