@@ -40,3 +40,14 @@ The main objectives of the portal are:
 - To make it easier for students to access important university announcements and updates.
 - To improve communication between students and the university.
 - To support a better student experience through digital services.
+
+## Future Improvements
+
+The following improvements could be considered in future development:
+
+- Integration of a secure student login and authentication system.
+- Development of a PHP/MySQL backend for managing student records.
+- Introduction of notifications for important academic announcements.
+- Implementation of secure document uploads.
+- Development of a mobile-friendly experience across different devices.
+- Integration with existing university systems where appropriate.
