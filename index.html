@@ -1614,11 +1614,11 @@
     function addPortalNotification(recipientRole, title, message, type = "Update", reference = "") {
         db.notifications.unshift({
             id: "NTF-" + Date.now() + "-" + Math.floor(Math.random() * 1000),
-            recipientRole,
-            title,
-            message,
-            type,
-            reference,
+            RecipientRole,
+            Title,
+            Message,
+            Type,
+            Reference,
             createdAt: new Date().toISOString(),
             read: false
         });
