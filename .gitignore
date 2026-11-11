@@ -1,0 +1,4 @@
+﻿/api/config.local.php
+/api/config.local.php.bak
+*.authentication-backup
+*.pre-auth-backup
