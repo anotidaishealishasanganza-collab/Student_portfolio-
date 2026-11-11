@@ -128,3 +128,4 @@ The page looks for the official logo at `assets/images/africa-university-logo.pn
 - Make announcements and updates easy to find
 - Improve communication between students and the university
 - Support a better student experience through digital services
+- Support career development and personal growth
