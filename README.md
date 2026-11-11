@@ -130,3 +130,15 @@ The page looks for the official logo at `assets/images/africa-university-logo.pn
 - Support a better student experience through digital services
 - Support career development and personal growth
 - To provide a secure, centralized digital platform where student achievements, recommendation letters, and placement records are recorded, verified and accessed by the right people.
+
+## System Workflow
+
+The Africa University Student Success Portal follows a role-based workflow that allows different users to interact with the system according to their responsibilities.
+
+1. **Student Registration:** Students create accounts and access their personal dashboards.
+2. **Portfolio Development:** Students build their digital portfolios by maintaining their achievements, skills and academic experiences.
+3. **Verification Process:** Lecturers review and verify relevant student achievements to promote academic integrity.
+4. **Recommendation Requests:** Students request recommendation letters from lecturers, who can review and respond to these requests.
+5. **Career Support:** The Career Office supports students by providing access to employment opportunities, attachments and placement information.
+6. **Alumni Engagement:** Graduates remain connected to the university community and access professional networking opportunities.
+7. **Administration:** Administrators manage user accounts, roles and access to the portal.

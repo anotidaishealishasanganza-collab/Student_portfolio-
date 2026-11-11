@@ -1868,9 +1868,9 @@
                 date: new Date().toISOString(),
                 comment: "Submitted for staff verification."
             }];
-            addPortalNotification("student", "Achievement submitted", latest.title + " has been submitted and is awaiting staff verification.", "Submission", String(latest.id));
-            addPortalNotification("verifier", "New achievement awaiting review", latest.title + " was submitted by " + latest.student + ".", "Review queue", String(latest.id));
-            addPortalNotification("lecturer", "New achievement awaiting review", latest.title + " was submitted by " + latest.student + ".", "Review queue", String(latest.id));
+            addPortalNotification("student", "Achievements submitted", latest.title + " has been submitted and is awaiting staff verification.", "Submission", String(latest.id));
+            addPortalNotification("verifier", "New achievements awaiting review", latest.title + " was submitted by " + latest.student + ".", "Review queue", String(latest.id));
+            addPortalNotification("lecturer", "New achievements awaiting review", latest.title + " was submitted by " + latest.student + ".", "Review queue", String(latest.id));
             save();
             renderPage();
         }
