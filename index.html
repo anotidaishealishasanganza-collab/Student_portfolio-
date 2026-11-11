@@ -1536,7 +1536,7 @@ function loadDB() {
 function save() {
     localStorage.setItem(accountStorageKey(), JSON.stringify(db));
 }
-          
+
 function currentStudentName() {
     return authenticatedUser?.full_name || 'Student';
 }

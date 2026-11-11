@@ -2,3 +2,8 @@
 /api/config.local.php.bak
 *.authentication-backup
 *.pre-auth-backup
+
+# Local backups
+*.backup-*
+*.before-*
+backup_account_isolation_*/
