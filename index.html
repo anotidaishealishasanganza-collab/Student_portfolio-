@@ -1276,7 +1276,24 @@
                     grid-column: auto
                }
           }
-     </style>
+     /* Assessment enhancements */
+.opportunity-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:18px}
+.opportunity-card h3{font:22px Georgia;margin:16px 0 5px;color:var(--wine)}
+.opportunity-card>p{font-size:13px}
+.opportunity-top{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.opportunity-meta{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0;padding:12px;background:#faf8f5;border-radius:10px}
+.opportunity-meta small{display:block;color:var(--muted);font-size:9px;letter-spacing:.08em}
+.opportunity-meta b{font-size:12px}
+.notification-item{display:flex;align-items:flex-start;gap:13px;padding:16px 0;border-bottom:1px solid var(--line)}
+.notification-item:last-child{border-bottom:0}
+.notification-item.is-read{opacity:.62}
+.notification-symbol{width:38px;height:38px;flex:0 0 38px;border-radius:12px;background:#f8eeee;color:var(--wine);display:grid;place-items:center;font-size:18px}
+.notification-copy{flex:1;min-width:0}
+.notification-copy p{margin:4px 0;font-size:13px}
+.notification-copy small{color:var(--muted);font-size:10px}
+@media(max-width:900px){.opportunity-grid{grid-template-columns:1fr}}
+@media(max-width:520px){.notification-item{flex-wrap:wrap}.notification-item .btn{margin-left:51px}}
+</style>
 </head>
 
 <body>
@@ -1525,7 +1542,278 @@
           function exportData() { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(db, null, 2)], { type: 'application/json' })); a.download = 'AU_portal_demo_data.json'; a.click(); URL.revokeObjectURL(a.href) }
           document.getElementById('modal').addEventListener('click', e => { if (e.target.id === 'modal') closeModal() });
           const prior = sessionStorage.getItem('au_demo_session'); if (prior) { try { let s = JSON.parse(prior); document.getElementById('loginRole').value = s.role; document.getElementById('loginId').value = s.id; login() } catch (e) { } }
-     </script>
+
+/* AU_ASSESSMENT_ENHANCEMENTS_V1
+   Prototype-only Opportunities Hub, live notifications and review audit trail.
+   These records remain in this browser's localStorage. They are not server-secured. */
+
+(function installAssessmentEnhancements() {
+    const plusDays = (days) => {
+        const d = new Date();
+        d.setHours(12, 0, 0, 0);
+        d.setDate(d.getDate() + days);
+        return d.toISOString().slice(0, 10);
+    };
+
+    const opportunitySeeds = [
+        {
+            id: "OPP-AU-001",
+            title: "Graduate Trainee Programme",
+            organisation: "Demo Financial Services Partner",
+            category: "Graduate programme",
+            description: "A structured graduate development opportunity for students interested in customer experience, operations and business services.",
+            eligibility: "Final-year students and recent graduates; evidence of leadership or service is an advantage.",
+            deadline: plusDays(3),
+            minVerified: 1,
+            tags: ["Leadership", "Service"]
+        },
+        {
+            id: "OPP-AU-002",
+            title: "Community Impact Internship",
+            organisation: "Demo Community Development Organisation",
+            category: "Internship",
+            description: "Support community projects, programme coordination and impact reporting.",
+            eligibility: "Students with community engagement, volunteering or leadership experience.",
+            deadline: plusDays(10),
+            minVerified: 0,
+            tags: ["Service", "Activity"]
+        },
+        {
+            id: "OPP-AU-003",
+            title: "Student Innovation Challenge",
+            organisation: "Africa University Innovation Showcase (demo)",
+            category: "Competition",
+            description: "Present a practical idea addressing a challenge in your community or professional field.",
+            eligibility: "Currently enrolled students. A short concept summary is required.",
+            deadline: plusDays(18),
+            minVerified: 0,
+            tags: ["Achievement", "Leadership"]
+        }
+    ];
+
+    db.opportunities = Array.isArray(db.opportunities) ? db.opportunities : opportunitySeeds;
+    db.notifications = Array.isArray(db.notifications) ? db.notifications : [];
+    db.applications = Array.isArray(db.applications) ? db.applications : [];
+
+    // Add role-appropriate navigation without replacing the existing menus.
+    Object.keys(roles).forEach(roleKey => {
+        const nav = roles[roleKey].nav;
+        if (!nav.some(item => item[0] === "notifications")) {
+            nav.push(["notifications", "â™§", "Notifications"]);
+        }
+    });
+    ["student", "alumni"].forEach(roleKey => {
+        const nav = roles[roleKey].nav;
+        if (!nav.some(item => item[0] === "opportunities")) {
+            const insertAt = Math.max(1, nav.findIndex(item => item[0] === "career") + 1);
+            nav.splice(insertAt, 0, ["opportunities", "âœ§", "Opportunities hub"]);
+        }
+    });
+
+    function addPortalNotification(recipientRole, title, message, type = "Update", reference = "") {
+        db.notifications.unshift({
+            id: "NTF-" + Date.now() + "-" + Math.floor(Math.random() * 1000),
+            recipientRole,
+            title,
+            message,
+            type,
+            reference,
+            createdAt: new Date().toISOString(),
+            read: false
+        });
+        db.notifications = db.notifications.slice(0, 100);
+        save();
+    }
+
+    function refreshDeadlineNotifications() {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        db.opportunities.forEach(opportunity => {
+            const deadline = new Date(opportunity.deadline + "T23:59:59");
+            const daysLeft = Math.ceil((deadline - today) / 86400000);
+            if (daysLeft >= 0 && daysLeft <= 3) {
+                const ref = "deadline-" + opportunity.id + "-" + opportunity.deadline;
+                const exists = db.notifications.some(n => n.reference === ref);
+                if (!exists) {
+                    addPortalNotification(
+                        "student",
+                        "Application deadline approaching",
+                        opportunity.title + " closes in " + daysLeft + (daysLeft === 1 ? " day." : " days.") + " (" + opportunity.deadline + ").",
+                        "Deadline reminder",
+                        ref
+                    );
+                }
+            }
+        });
+    }
+
+    function opportunityPage() {
+        const verifiedCount = db.items.filter(x => x.status === "Verified").length;
+        refreshDeadlineNotifications();
+        const cards = db.opportunities.map(o => {
+            const suitable = verifiedCount >= (o.minVerified || 0);
+            const applied = db.applications.some(a => a.opportunityId === o.id && a.studentId === currentId);
+            return `<article class="card opportunity-card">
+                <div class="opportunity-top"><span class="badge">${esc(o.category)}</span><span class="badge ${suitable ? '' : 'neutral'}">${suitable ? 'Profile criteria met' : 'Build your verified profile'}</span></div>
+                <h3>${esc(o.title)}</h3><p class="muted"><b>${esc(o.organisation)}</b></p>
+                <p>${esc(o.description)}</p>
+                <div class="opportunity-meta"><div><small>APPLICATION DEADLINE</small><b>${esc(o.deadline)}</b></div><div><small>VERIFIED RECORDS</small><b>${o.minVerified || 0} minimum</b></div></div>
+                <p class="muted"><b>Eligibility:</b> ${esc(o.eligibility)}</p>
+                <button class="btn small ${applied ? 'light' : ''}" ${applied ? 'disabled' : ''} onclick="applyForOpportunity('${esc(o.id)}')">${applied ? 'Application recorded (demo)' : 'Register interest â†’'}</button>
+            </article>`;
+        }).join("");
+        return welcome("Discover your next opportunity.", "Explore internships, graduate programmes and innovation opportunities. Eligibility suggestions use your verified portfolio records in this prototype.")
+            + `<div class="notice">Demonstration opportunities only. Registering interest is a local prototype action; it does not submit an application to an employer.</div>`
+            + `<div class="grid">${stat("Available opportunities", db.opportunities.length, "âœ§", "Illustrative listings")}${stat("Verified portfolio records", verifiedCount, "âœ¦", "Used for basic eligibility suggestions")}${stat("Interest registered", db.applications.filter(a => a.studentId === currentId).length, "âœ“", "Stored in this browser")}${stat("Upcoming deadlines", db.opportunities.filter(o => new Date(o.deadline + "T23:59:59") >= new Date()).length, "â—·", "Check each closing date")}</div>`
+            + `<div class="opportunity-grid">${cards}</div>`;
+    }
+
+    function applyForOpportunity(id) {
+        const opportunity = db.opportunities.find(o => o.id === id);
+        if (!opportunity) return;
+        const already = db.applications.some(a => a.opportunityId === id && a.studentId === currentId);
+        if (already) return toast("You have already registered interest in this opportunity.");
+        db.applications.push({
+            id: "APP-" + Date.now(),
+            opportunityId: id,
+            studentId: currentId,
+            opportunityTitle: opportunity.title,
+            createdAt: new Date().toISOString(),
+            status: "Interest registered (demo)"
+        });
+        addPortalNotification("student", "Interest registered", "Your interest in " + opportunity.title + " has been recorded in this browser. This is not an employer application.", "Opportunity");
+        toast("Your interest has been recorded in this prototype.");
+        renderPage();
+    }
+
+    function notificationsPage() {
+        refreshDeadlineNotifications();
+        const relevant = db.notifications.filter(n =>
+            n.recipientRole === currentRole || n.recipientRole === "all" || currentRole === "admin"
+        );
+        return welcome("Your updates, in one place.", "Review important changes, deadlines and workflow updates.")
+            + `<div class="toolbar"><button class="btn small" onclick="markAllNotificationsRead()">Mark all as read</button><span class="muted">${relevant.filter(n => !n.read).length} unread notification(s)</span></div>`
+            + `<div class="card">${relevant.length ? relevant.map(n => `<div class="notification-item ${n.read ? 'is-read' : ''}">
+                <div class="notification-symbol">${n.type === 'Deadline reminder' ? 'â—·' : n.type === 'Verification' ? 'âœ“' : 'â™§'}</div>
+                <div class="notification-copy"><b>${esc(n.title)}</b><p>${esc(n.message)}</p><small>${esc(n.type)} Â· ${new Date(n.createdAt).toLocaleString()}</small></div>
+                <button class="btn light small" onclick="markNotificationRead('${esc(n.id)}')">${n.read ? 'Read' : 'Mark read'}</button>
+            </div>`).join("") : '<div class="empty">You are all caught up. New workflow updates and deadline reminders will appear here.</div>'}</div>`;
+    }
+
+    function markNotificationRead(id) {
+        const n = db.notifications.find(x => x.id === id);
+        if (n) n.read = true;
+        save();
+        renderPage();
+    }
+
+    function markAllNotificationsRead() {
+        db.notifications.forEach(n => {
+            if (n.recipientRole === currentRole || n.recipientRole === "all" || currentRole === "admin") n.read = true;
+        });
+        save();
+        renderPage();
+        toast("Notifications marked as read.");
+    }
+
+    // Keep the existing renderer and add the two new pages.
+    const originalRenderPage = renderPage;
+    renderPage = function () {
+        if (currentPage === "opportunities") {
+            document.getElementById("pageContent").innerHTML = opportunityPage();
+            return;
+        }
+        if (currentPage === "notifications") {
+            document.getElementById("pageContent").innerHTML = notificationsPage();
+            return;
+        }
+        originalRenderPage();
+        if (currentPage === "review") appendReviewHistory();
+    };
+
+    function appendReviewHistory() {
+        const panel = document.querySelector("#pageContent .card");
+        if (!panel || document.getElementById("reviewAuditHistory")) return;
+        const reviewed = db.items.filter(x => Array.isArray(x.history) && x.history.length);
+        const section = document.createElement("section");
+        section.id = "reviewAuditHistory";
+        section.className = "card";
+        section.style.marginTop = "16px";
+        section.innerHTML = `<h3 class="panel-title">Recent verification activity</h3>` + (
+            reviewed.length
+                ? reviewed.slice().reverse().map(x => `<div class="list-row"><div><b>${esc(x.title)}</b><small>${x.history.map(h => esc(h.status) + " Â· " + esc(h.reviewer) + " Â· " + esc(h.date)).join("<br>")}</small><small>${esc(x.history[x.history.length - 1].comment || "")}</small></div>${badge(x.status)}</div>`).join("")
+                : `<p class="muted">Review decisions and comments will appear here after staff actions.</p>`
+        );
+        panel.parentNode.appendChild(section);
+    }
+
+    // Wrap the existing student submission function so each new record has a
+    // separate evidence reference and generates a real in-browser notification.
+    const originalAddAchievement = addAchievement;
+    addAchievement = function (event) {
+        const form = event.target;
+        const evidenceInput = form.querySelector('[name="evidence"]');
+        const evidenceValue = evidenceInput ? evidenceInput.value.trim() : "";
+        originalAddAchievement(event);
+        const latest = db.items[db.items.length - 1];
+        if (latest) {
+            latest.evidence = evidenceValue || "No evidence reference supplied";
+            latest.history = [{
+                status: "Submitted",
+                reviewer: "Student submission",
+                date: new Date().toISOString(),
+                comment: "Submitted for staff verification."
+            }];
+            addPortalNotification("student", "Achievement submitted", latest.title + " has been submitted and is awaiting staff verification.", "Submission", String(latest.id));
+            addPortalNotification("verifier", "New achievement awaiting review", latest.title + " was submitted by " + latest.student + ".", "Review queue", String(latest.id));
+            addPortalNotification("lecturer", "New achievement awaiting review", latest.title + " was submitted by " + latest.student + ".", "Review queue", String(latest.id));
+            save();
+            renderPage();
+        }
+    };
+
+    // Record reviewer, timestamp, comment and a visible decision history.
+    saveDecision = function (event, id, status) {
+        event.preventDefault();
+        const item = db.items.find(x => x.id === id);
+        if (!item) return;
+        const comment = new FormData(event.target).get("comment");
+        const reviewer = roles[currentRole].name + " (prototype workspace)";
+        item.status = status;
+        item.comment = comment;
+        item.reviewer = reviewer;
+        item.reviewedAt = new Date().toISOString();
+        item.history = Array.isArray(item.history) ? item.history : [];
+        item.history.push({
+            status,
+            reviewer,
+            date: item.reviewedAt,
+            comment
+        });
+        addPortalNotification("student", status === "Verified" ? "Achievement verified" : "Achievement returned for changes",
+            item.title + ": " + comment, "Verification", String(item.id));
+        save();
+        closeModal();
+        toast("Review decision and history saved in this browser.");
+        renderPage();
+    };
+
+    // Turn the header bell into a shortcut to the new notification centre.
+    const notificationButton = document.querySelector(".top-actions .icon-btn");
+    if (notificationButton) {
+        notificationButton.title = "Open notifications";
+        notificationButton.setAttribute("aria-label", "Open notifications");
+        notificationButton.onclick = () => openPage("notifications");
+    }
+
+    // Keep the feature self-contained and persist the migrated data shape.
+    window.applyForOpportunity = applyForOpportunity;
+    window.markNotificationRead = markNotificationRead;
+    window.markAllNotificationsRead = markAllNotificationsRead;
+    window.addPortalNotification = addPortalNotification;
+    save();
+})();
+</script>
 </body>
 
 </html>
