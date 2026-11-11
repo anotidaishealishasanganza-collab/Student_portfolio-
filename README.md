@@ -129,3 +129,4 @@ The page looks for the official logo at `assets/images/africa-university-logo.pn
 - Improve communication between students and the university
 - Support a better student experience through digital services
 - Support career development and personal growth
+- To provide a secure, centralized digital platform where student achievements, recommendation letters, and placement records are recorded, verified and accessed by the right people.
