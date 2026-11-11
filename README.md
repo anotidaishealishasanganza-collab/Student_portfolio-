@@ -1,4 +1,4 @@
-# Africa University Student Success Portal
+# Africa University Student Success Hub
 
 A web portal where Africa University students build a **digital portfolio** and use it to apply for jobs and attachments, before or after graduation. Lecturers, career staff and alumni support them from the same site.
 
