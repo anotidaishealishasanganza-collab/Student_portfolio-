@@ -8,7 +8,7 @@
 
      <meta charset="UTF-8">
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <meta name="description" content="Africa University Student Sucess Hub-A digital patform for students to showcase acadmic achievements, skills, career goals and personal growth."
+     <meta name="description" content="Africa University Student Success Hub - A digital platform for students to showcase academic achievements, skills, career goals and personal growth.">
      <meta name="theme-color" content="#741b2b">
      <title>AU Student Success Hub | Africa University</title>
      <style>
@@ -25,1257 +25,203 @@
                --shadow: 0 18px 55px #27151b12
           }
 
-          * {
-               box-sizing: border-box
-          }
-
-          html {
-               scroll-behavior: smooth
-          }
-
-          body {
-               margin: 0;
-               background: var(--paper);
-               color: var(--ink);
-               font: 15px/1.55 Inter, Segoe UI, Arial, sans-serif
-          }
-
-          button,
-          input,
-          select,
-          textarea {
-               font: inherit
-          }
-
-          button {
-               cursor: pointer
-          }
-
-          a {
-               color: inherit;
-               text-decoration: none
-          }
-
-          .hidden {
-               display: none !important
-          }
-
-          .brand {
-               display: flex;
-               align-items: center;
-               gap: 12px
-          }
-
-          .brand-logo {
-               width: 54px;
-               height: 54px;
-               object-fit: contain;
-               background: #fff;
-               border-radius: 13px;
-               padding: 4px;
-               box-shadow: 0 8px 24px #0002
-          }
-
-          .logo-fallback {
-               width: 54px;
-               height: 54px;
-               border-radius: 13px;
-               background: #fff;
-               display: grid;
-               place-items: center;
-               color: var(--wine);
-               font: 900 21px Georgia;
-               border: 2px solid var(--gold);
-               box-shadow: 0 8px 24px #0002
-          }
-
-          .crest {
-               width: 46px;
-               height: 46px;
-               border-radius: 15px;
-               background: linear-gradient(145deg, var(--gold), #f2d58d);
-               display: grid;
-               place-items: center;
-               color: var(--wine2);
-               font-weight: 900;
-               font-family: Georgia, serif;
-               font-size: 20px;
-               box-shadow: 0 5px 18px #0002
-          }
-
-          .brand strong {
-               display: block;
-               letter-spacing: .09em;
-               font-size: 13px
-          }
-
-          .brand small {
-               display: block;
-               color: #ffffffa8;
-               font-size: 10px;
-               letter-spacing: .15em
-          }
-
-          .landing {
-               min-height: 100vh;
-               background: #24171b;
-               color: white;
-               position: relative;
-               overflow: hidden
-          }
-
-          .landing:before {
-               content: "";
-               position: absolute;
-               inset: 0;
-               background: linear-gradient(90deg, #211318f2 0%, #28151bd9 42%, #21131855 100%), url("https://images.squarespace-cdn.com/content/v1/561f3483e4b0930b096cad9b/1630492599581-7R3G09ZFF220OIGJYP3Z/_DSC5721.jpg") center/cover;
-               transform: scale(1.02)
-          }
-
-          .landing:after {
-               content: "";
-               position: absolute;
-               width: 520px;
-               height: 520px;
-               border: 1px solid #d5a64a55;
-               border-radius: 50%;
-               right: -170px;
-               top: 20%;
-               box-shadow: 0 0 0 45px #d5a64a0b, 0 0 0 90px #d5a64a08
-          }
-
-          .landing-nav,
-          .hero {
-               position: relative;
-               z-index: 1
-          }
-
-          .landing-nav {
-               display: flex;
-               justify-content: space-between;
-               align-items: center;
-               padding: 26px 6vw
-          }
-
-          .landing-nav .brand small {
-               color: #ffffff9c
-          }
-
-          .nav-link {
-               font-size: 13px;
-               color: #fff;
-               opacity: .85
-          }
-
-          .hero {
-               max-width: 1280px;
-               margin: auto;
-               padding: 8vh 6vw 12vh;
-               display: grid;
-               grid-template-columns: 1.15fr .85fr;
-               gap: 6vw;
-               align-items: center
-          }
-
-          .eyebrow {
-               color: var(--gold);
-               font-size: 11px;
-               font-weight: 800;
-               letter-spacing: .2em;
-               text-transform: uppercase
-          }
-
-          .hero h1 {
-               font: clamp(42px, 6vw, 78px)/1.04 Georgia, serif;
-               margin: 18px 0 22px;
-               max-width: 720px
-          }
-
-          .hero h1 span {
-               color: #e5bd6b
-          }
-
-          .hero p {
-               max-width: 600px;
-               color: #ffffffbf;
-               font-size: 17px
-          }
-
-          .hero-actions {
-               display: flex;
-               gap: 12px;
-               flex-wrap: wrap;
-               margin-top: 30px
-          }
-
-          .btn {
-               border: 0;
-               border-radius: 11px;
-               padding: 12px 18px;
-               background: var(--wine);
-               color: white;
-               font-weight: 700;
-               transition: .2s;
-               display: inline-flex;
-               align-items: center;
-               justify-content: center;
-               gap: 8px
-          }
-
-          .btn:hover {
-               transform: translateY(-2px);
-               filter: brightness(1.08)
-          }
-
-          .btn.gold {
-               background: var(--gold);
-               color: #35151b
-          }
-
-          .btn.ghost {
-               background: #ffffff16;
-               border: 1px solid #ffffff55
-          }
-
-          .btn.light {
-               background: #fff;
-               color: var(--wine);
-               border: 1px solid var(--line)
-          }
-
-          .btn.small {
-               padding: 8px 12px;
-               font-size: 12px
-          }
-
-          .hero-card {
-               background: #fffefa;
-               color: var(--ink);
-               border-radius: 24px;
-               padding: 28px;
-               box-shadow: 0 30px 80px #0005;
-               max-width: 420px;
-               justify-self: end;
-               width: 100%
-          }
-
-          .hero-card h2 {
-               font: 30px Georgia;
-               margin: 0 0 5px
-          }
-
-          .hero-card .muted {
-               margin-bottom: 20px
-          }
-
-          .mini-feature {
-               display: flex;
-               gap: 13px;
-               padding: 13px 0;
-               border-top: 1px solid var(--line)
-          }
-
-          .mini-icon {
-               width: 38px;
-               height: 38px;
-               border-radius: 12px;
-               background: #f6e9e9;
-               color: var(--wine);
-               display: grid;
-               place-items: center;
-               font-size: 18px
-          }
-
-          .mini-feature b {
-               display: block;
-               font-size: 13px
-          }
-
-          .mini-feature small {
-               color: var(--muted)
-          }
-
-          .login-overlay {
-               position: fixed;
-               inset: 0;
-               background: #160d10c9;
-               z-index: 20;
-               display: grid;
-               place-items: center;
-               padding: 18px;
-               backdrop-filter: blur(8px)
-          }
-
-          .login-box {
-               background: white;
-               border-radius: 22px;
-               width: min(100%, 1040px);
-               padding: 0;
-               box-shadow: 0 25px 80px #0005;
-               display: grid;
-               grid-template-columns: 1.05fr .95fr;
-               overflow: hidden
-          }
-
-          .login-visual {
-               min-height: 620px;
-               position: relative;
-               background: linear-gradient(180deg, #3c101bd9, #3c101b55), url("https://media.licdn.com/dms/image/v2/D5622AQHCPv-R3TMSag/feedshare-shrink_800/B56Zo5L6VVKEAg-/0/1761896029915?e=2147483647&t=cW8n0HeEw3uZAgX3lhzB3ftzrXkY81sYEENXW5LuwUQ&v=beta") center/cover;
-               display: flex;
-               flex-direction: column;
-               justify-content: flex-end;
-               padding: 38px;
-               color: #fff
-          }
-
-          .login-visual:after {
-               content: "";
-               position: absolute;
-               inset: 18px;
-               border: 1px solid #ffffff65;
-               border-radius: 16px;
-               pointer-events: none
-          }
-
-          .login-visual h2 {
-               font: 42px/1.08 Georgia;
-               margin: 0 0 12px;
-               max-width: 440px
-          }
-
-          .login-visual p {
-               color: #ffffffd9;
-               max-width: 420px
-          }
-
-          .login-form {
-               padding: 34px;
-               max-height: 90vh;
-               overflow: auto
-          }
-
-          .login-box .brand {
-               margin-bottom: 22px
-          }
-
-          .login-box .brand small {
-               color: var(--muted)
-          }
-
-          .login-box h2 {
-               font: 32px Georgia;
-               margin: 14px 0 5px
-          }
-
-          .login-box .brand small {
-               color: var(--muted)
-          }
-
-          .login-box .crest {
-               background: var(--wine);
-               color: var(--gold)
-          }
-
-          .field {
-               margin: 13px 0
-          }
-
-          .field label {
-               display: block;
-               font-size: 12px;
-               font-weight: 750;
-               color: #555d68;
-               margin-bottom: 6px
-          }
-
-          .field input,
-          .field select,
-          .field textarea,
-          .search {
-               width: 100%;
-               padding: 12px 13px;
-               border: 1px solid #dedbd6;
-               border-radius: 10px;
-               background: #fff;
-               outline: none
-          }
-
-          .field input:focus,
-          .field select:focus,
-          .field textarea:focus {
-               border-color: var(--wine);
-               box-shadow: 0 0 0 3px #741b2b13
-          }
-
-          .field textarea {
-               min-height: 90px;
-               resize: vertical
-          }
-
-          .muted {
-               color: var(--muted);
-               font-size: 13px
-          }
-
-          .demo-note {
-               background: #fff5df;
-               border: 1px solid #f0dba9;
-               padding: 11px;
-               border-radius: 10px;
-               font-size: 12px;
-               color: #76531a;
-               margin: 15px 0
-          }
-
-          .app {
-               min-height: 100vh
-          }
-
-          .sidebar {
-               position: fixed;
-               inset: 0 auto 0 0;
-               width: 255px;
-               background: linear-gradient(180deg, #511321, #29151d);
-               color: white;
-               padding: 24px 17px;
-               display: flex;
-               flex-direction: column;
-               z-index: 5
-          }
-
-          .sidebar .brand {
-               padding: 0 9px 25px;
-               border-bottom: 1px solid #ffffff20
-          }
-
-          .sidebar .brand small {
-               color: #ffffff9b
-          }
-
-          .nav-label {
-               font-size: 10px;
-               letter-spacing: .16em;
-               color: #ffffff73;
-               font-weight: 800;
-               padding: 23px 12px 8px
-          }
-
-          .nav-list {
-               display: grid;
-               gap: 5px;
-               overflow: auto
-          }
-
-          .nav-item {
-               border: 0;
-               background: transparent;
-               color: #ffffffb8;
-               text-align: left;
-               padding: 11px 12px;
-               border-radius: 10px;
-               display: flex;
-               align-items: center;
-               gap: 12px;
-               font-size: 13px
-          }
-
-          .nav-item:hover,
-          .nav-item.active {
-               background: #ffffff18;
-               color: white
-          }
-
-          .nav-item.active {
-               box-shadow: inset 3px 0 var(--gold)
-          }
-
-          .nav-item span:first-child {
-               width: 20px;
-               text-align: center;
-               font-size: 16px
-          }
-
-          .side-bottom {
-               margin-top: auto;
-               border-top: 1px solid #ffffff20;
-               padding-top: 15px
-          }
-
-          .user-mini {
-               display: flex;
-               gap: 10px;
-               align-items: center;
-               padding: 10px
-          }
-
-          .avatar {
-               width: 38px;
-               height: 38px;
-               border-radius: 50%;
-               display: grid;
-               place-items: center;
-               background: #e6c67f;
-               color: #4b101d;
-               font-weight: 800
-          }
-
-          .user-mini b {
-               display: block;
-               font-size: 12px
-          }
-
-          .user-mini small {
-               color: #ffffff9b;
-               font-size: 11px
-          }
-
-          .main {
-               margin-left: 255px;
-               min-height: 100vh
-          }
-
-          .topbar {
-               height: 76px;
-               background: #fff;
-               border-bottom: 1px solid var(--line);
-               display: flex;
-               align-items: center;
-               justify-content: space-between;
-               padding: 0 34px;
-               position: sticky;
-               top: 0;
-               z-index: 4
-          }
-
-          .crumb {
-               font-size: 12px;
-               color: var(--muted)
-          }
-
-          .topbar h2 {
-               font: 23px Georgia;
-               margin: 0
-          }
-
-          .top-actions {
-               display: flex;
-               align-items: center;
-               gap: 10px
-          }
-
-          .icon-btn {
-               width: 38px;
-               height: 38px;
-               border: 1px solid var(--line);
-               background: white;
-               border-radius: 11px
-          }
-
-          .content {
-               padding: 30px 34px;
-               max-width: 1500px;
-               margin: auto
-          }
-
-          .welcome {
-               background: linear-gradient(110deg, #541321, #8b2939);
-               color: white;
-               border-radius: 20px;
-               padding: 27px 30px;
-               display: flex;
-               align-items: center;
-               justify-content: space-between;
-               gap: 20px;
-               position: relative;
-               overflow: hidden;
-               margin-bottom: 22px
-          }
-
-          .welcome:after {
-               content: "AU";
-               position: absolute;
-               right: 8%;
-               top: -48px;
-               font: 190px Georgia;
-               color: #ffffff0b
-          }
-
-          .welcome h1 {
-               font: 32px Georgia;
-               margin: 4px 0
-          }
-
-          .welcome p {
-               margin: 0;
-               color: #ffffffb8
-          }
-
-          .welcome .btn {
-               position: relative;
-               z-index: 1
-          }
-
-          .grid {
-               display: grid;
-               grid-template-columns: repeat(4, minmax(0, 1fr));
-               gap: 16px
-          }
-
-          .card {
-               background: white;
-               border: 1px solid var(--line);
-               border-radius: 16px;
-               padding: 20px;
-               box-shadow: 0 5px 22px #24151b06;
-               transition: transform .25s, box-shadow .25s
-          }
-
-          .card:hover {
-               transform: translateY(-3px);
-               box-shadow: 0 14px 32px #24151b12
-          }
-
-          .stat {
-               display: flex;
-               justify-content: space-between;
-               align-items: flex-start
-          }
-
-          .stat .num {
-               font: 34px Georgia;
-               color: var(--wine);
-               margin: 6px 0
-          }
-
-          .stat small {
-               color: var(--muted)
-          }
-
-          .stat-icon {
-               width: 42px;
-               height: 42px;
-               border-radius: 13px;
-               background: #f8eeee;
-               display: grid;
-               place-items: center;
-               font-size: 19px
-          }
-
-          .section-head {
-               display: flex;
-               align-items: center;
-               justify-content: space-between;
-               gap: 12px;
-               margin: 28px 0 14px
-          }
-
-          .section-head h2 {
-               font: 25px Georgia;
-               margin: 0
-          }
-
-          .section-head p {
-               margin: 3px 0 0;
-               color: var(--muted);
-               font-size: 12px
-          }
-
-          .two-col {
-               display: grid;
-               grid-template-columns: 1.3fr .7fr;
-               gap: 16px
-          }
-
-          .three-col {
-               display: grid;
-               grid-template-columns: repeat(3, 1fr);
-               gap: 16px
-          }
-
-          .panel-title {
-               font: 20px Georgia;
-               margin: 0 0 15px
-          }
-
-          .list-row {
-               display: flex;
-               align-items: center;
-               justify-content: space-between;
-               gap: 12px;
-               padding: 13px 0;
-               border-bottom: 1px solid var(--line)
-          }
-
-          .list-row:last-child {
-               border: 0
-          }
-
-          .list-row b {
-               font-size: 13px
-          }
-
-          .list-row small {
-               display: block;
-               color: var(--muted);
-               font-size: 11px
-          }
-
-          .badge {
-               display: inline-flex;
-               align-items: center;
-               padding: 4px 9px;
-               border-radius: 30px;
-               font-size: 10px;
-               font-weight: 800;
-               background: #e7f4ec;
-               color: #23744e;
-               white-space: nowrap
-          }
-
-          .badge.pending {
-               background: #fff2d9;
-               color: #956517
-          }
-
-          .badge.review {
-               background: #fbe7e9;
-               color: #a22b3d
-          }
-
-          .badge.neutral {
-               background: #edf0f3;
-               color: #59616b
-          }
-
-          .progress {
-               height: 8px;
-               background: #eee;
-               border-radius: 20px;
-               overflow: hidden;
-               margin: 10px 0
-          }
-
-          .progress span {
-               display: block;
-               height: 100%;
-               background: linear-gradient(90deg, var(--wine), var(--gold));
-               border-radius: 20px
-          }
-
-          .page {
-               display: none
-          }
-
-          .page.active {
-               display: block;
-               animation: fade .25s ease
-          }
-
-          @keyframes fade {
-               from {
-                    opacity: 0;
-                    transform: translateY(5px)
-               }
-
-               to {
-                    opacity: 1;
-                    transform: none
-               }
-          }
-
-          .toolbar {
-               display: flex;
-               gap: 10px;
-               align-items: center;
-               flex-wrap: wrap;
-               margin-bottom: 15px
-          }
-
-          .toolbar .search {
-               max-width: 300px
-          }
-
-          .table-wrap {
-               overflow: auto
-          }
-
-          table {
-               border-collapse: collapse;
-               width: 100%;
-               min-width: 600px
-          }
-
-          th,
-          td {
-               text-align: left;
-               padding: 13px 12px;
-               border-bottom: 1px solid var(--line);
-               font-size: 12px
-          }
-
-          th {
-               font-size: 10px;
-               color: var(--muted);
-               text-transform: uppercase;
-               letter-spacing: .08em;
-               background: #faf9f7
-          }
-
-          td b {
-               font-size: 12px
-          }
-
-          .empty {
-               padding: 25px;
-               text-align: center;
-               color: var(--muted);
-               font-size: 13px
-          }
-
-          .form-grid {
-               display: grid;
-               grid-template-columns: 1fr 1fr;
-               gap: 0 15px
-          }
-
-          .form-grid .wide {
-               grid-column: 1/-1
-          }
-
-          .notice {
-               border-radius: 12px;
-               padding: 13px 15px;
-               background: #fff6e4;
-               border: 1px solid #f0dfb9;
-               color: #77571d;
-               font-size: 12px;
-               margin-bottom: 16px
-          }
-
-          .success {
-               background: #eaf6ef;
-               border-color: #c9e5d2;
-               color: #236044
-          }
-
-          .profile-cover {
-               background: linear-gradient(110deg, #541321, #8b2939);
-               color: white;
-               padding: 25px;
-               border-radius: 17px;
-               display: flex;
-               gap: 18px;
-               align-items: center
-          }
-
-          .profile-cover .avatar {
-               width: 70px;
-               height: 70px;
-               font-size: 22px
-          }
-
-          .profile-cover h2 {
-               font: 28px Georgia;
-               margin: 0
-          }
-
-          .profile-cover p {
-               margin: 4px 0;
-               color: #ffffffb5
-          }
-
-          .kv {
-               display: grid;
-               grid-template-columns: repeat(3, 1fr);
-               gap: 12px;
-               margin-top: 16px
-          }
-
-          .kv div {
-               padding: 13px;
-               background: #faf9f7;
-               border-radius: 10px
-          }
-
-          .kv small {
-               display: block;
-               color: var(--muted);
-               font-size: 10px
-          }
-
-          .kv b {
-               font-size: 12px
-          }
-
-          .toast {
-               position: fixed;
-               right: 25px;
-               bottom: 25px;
-               background: #24151b;
-               color: white;
-               padding: 13px 18px;
-               border-radius: 12px;
-               box-shadow: var(--shadow);
-               z-index: 50;
-               opacity: 0;
-               transform: translateY(15px);
-               transition: .25s;
-               pointer-events: none
-          }
-
-          .toast.show {
-               opacity: 1;
-               transform: none
-          }
-
-          .modal {
-               position: fixed;
-               inset: 0;
-               background: #160d10a8;
-               z-index: 30;
-               display: grid;
-               place-items: center;
-               padding: 18px
-          }
-
-          .modal-box {
-               width: min(100%, 650px);
-               max-height: 90vh;
-               overflow: auto;
-               background: white;
-               border-radius: 18px;
-               padding: 24px
-          }
-
-          .modal-head {
-               display: flex;
-               justify-content: space-between;
-               align-items: center
-          }
-
-          .modal-head h2 {
-               font: 25px Georgia;
-               margin: 0
-          }
-
-          .close {
-               border: 0;
-               background: #f2eeee;
-               border-radius: 8px;
-               width: 32px;
-               height: 32px
-          }
-
-          .footer-note {
-               text-align: center;
-               color: var(--muted);
-               font-size: 11px;
-               padding: 25px
-          }
-
-          .campus-strip {
-               display: grid;
-               grid-template-columns: 1.3fr 1fr 1fr;
-               gap: 10px;
-               margin-top: 16px
-          }
-
-          .campus-strip img {
-               width: 100%;
-               height: 130px;
-               object-fit: cover;
-               border-radius: 12px
-          }
-
-          .campus-strip img:first-child {
-               height: 270px;
-               grid-row: span 2
-          }
-
-          .login-photo-credit {
-               font-size: 10px;
-               color: #ffffffb0;
-               margin-top: 14px
-          }
-
-          .student-hero-photo {
-               display: grid;
-               grid-template-columns: 1.35fr .65fr;
-               gap: 16px;
-               margin: 18px 0
-          }
-
-          .student-hero-photo .grad-main {
-               min-height: 230px;
-               border-radius: 18px;
-               overflow: hidden;
-               position: relative;
-               background: linear-gradient(0deg, #241018d9, transparent 72%), url("https://media.licdn.com/dms/image/v2/D4D22AQGAAEAEk8TcXQ/feedshare-shrink_800/B4DZdUK33.HMAo-/0/1749463858153?e=2147483647&t=K830ZULmWS-kZT4fkMgVh43OlVsh1DEVs8IxU3bB8Vk&v=beta") center 38%/cover
-          }
-
-          .student-hero-photo .grad-main div {
-               position: absolute;
-               left: 22px;
-               bottom: 18px;
-               color: white
-          }
-
-          .student-hero-photo .grad-main h3 {
-               font: 26px Georgia;
-               margin: 0 0 5px
-          }
-
-          .student-hero-photo .grad-side {
-               border-radius: 18px;
-               overflow: hidden;
-               min-height: 230px;
-               background: linear-gradient(0deg, #241018c9, transparent 80%), url("https://media.licdn.com/dms/image/v2/D5622AQHCPv-R3TMSag/feedshare-shrink_800/B56Zo5L6VVKEAg-/0/1761896029915?e=2147483647&t=cW8n0HeEw3uZAgX3lhzB3ftzrXkY81sYEENXW5LuwUQ&v=beta") center/cover;
-               position: relative
-          }
-
-          .student-hero-photo .grad-side span {
-               position: absolute;
-               bottom: 16px;
-               left: 16px;
-               color: white;
-               font-size: 12px;
-               font-weight: 700
-          }
-
-          .visual-card {
-               border-radius: 16px;
-               overflow: hidden;
-               position: relative;
-               min-height: 170px;
-               background: #eee
-          }
-
-          .visual-card img {
-               width: 100%;
-               height: 170px;
-               object-fit: cover;
-               display: block;
-               transition: transform .7s
-          }
-
-          .visual-card:hover img {
-               transform: scale(1.06)
-          }
-
-          .visual-card strong {
-               position: absolute;
-               left: 14px;
-               bottom: 12px;
-               color: #fff;
-               text-shadow: 0 2px 8px #000;
-               background: #34121c88;
-               padding: 6px 10px;
-               border-radius: 8px
-          }
-
-          .reveal {
-               animation: rise .65s both
-          }
-
-          @keyframes rise {
-               from {
-                    opacity: 0;
-                    transform: translateY(18px)
-               }
-
-               to {
-                    opacity: 1;
-                    transform: translateY(0)
-               }
-          }
-
-          .float {
-               animation: float 6s ease-in-out infinite
-          }
-
-          @keyframes float {
-
-               0%,
-               100% {
-                    transform: translateY(0)
-               }
-
-               50% {
-                    transform: translateY(-7px)
-               }
-          }
-
-          .shimmer {
-               position: relative;
-               overflow: hidden
-          }
-
-          .shimmer:after {
-               content: "";
-               position: absolute;
-               inset: 0;
-               transform: translateX(-120%);
-               background: linear-gradient(100deg, transparent, #ffffff25, transparent);
-               animation: shimmer 5s infinite
-          }
-
-          @keyframes shimmer {
-
-               60%,
-               100% {
-                    transform: translateX(120%)
-               }
-          }
+          * { box-sizing: border-box }
+          html { scroll-behavior: smooth }
+          body { margin: 0; background: var(--paper); color: var(--ink); font: 15px/1.55 Inter, Segoe UI, Arial, sans-serif }
+          button, input, select, textarea { font: inherit }
+          button { cursor: pointer }
+          a { color: inherit; text-decoration: none }
+          .hidden { display: none !important }
+          .brand { display: flex; align-items: center; gap: 12px }
+          .brand-logo { width: 54px; height: 54px; object-fit: contain; background: #fff; border-radius: 13px; padding: 4px; box-shadow: 0 8px 24px #0002 }
+          .logo-fallback { width: 54px; height: 54px; border-radius: 13px; background: #fff; display: grid; place-items: center; color: var(--wine); font: 900 21px Georgia; border: 2px solid var(--gold); box-shadow: 0 8px 24px #0002 }
+          .crest { width: 46px; height: 46px; border-radius: 15px; background: linear-gradient(145deg, var(--gold), #f2d58d); display: grid; place-items: center; color: var(--wine2); font-weight: 900; font-family: Georgia, serif; font-size: 20px; box-shadow: 0 5px 18px #0002 }
+          .brand strong { display: block; letter-spacing: .09em; font-size: 13px }
+          .brand small { display: block; color: #ffffffa8; font-size: 10px; letter-spacing: .15em }
+          .landing { min-height: 100vh; background: #24171b; color: white; position: relative; overflow: hidden }
+          .landing:before { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, #211318f2 0%, #28151bd9 42%, #21131855 100%), url("https://images.squarespace-cdn.com/content/v1/561f3483e4b0930b096cad9b/1630492599581-7R3G09ZFF220OIGJYP3Z/_DSC5721.jpg") center/cover; transform: scale(1.02) }
+          .landing:after { content: ""; position: absolute; width: 520px; height: 520px; border: 1px solid #d5a64a55; border-radius: 50%; right: -170px; top: 20%; box-shadow: 0 0 0 45px #d5a64a0b, 0 0 0 90px #d5a64a08 }
+          .landing-nav, .hero { position: relative; z-index: 1 }
+          .landing-nav { display: flex; justify-content: space-between; align-items: center; padding: 26px 6vw }
+          .landing-nav .brand small { color: #ffffff9c }
+          .nav-link { font-size: 13px; color: #fff; opacity: .85 }
+          .hero { max-width: 1280px; margin: auto; padding: 8vh 6vw 12vh; display: grid; grid-template-columns: 1.15fr .85fr; gap: 6vw; align-items: center }
+          .eyebrow { color: var(--gold); font-size: 11px; font-weight: 800; letter-spacing: .2em; text-transform: uppercase }
+          .hero h1 { font: clamp(42px, 6vw, 78px)/1.04 Georgia, serif; margin: 18px 0 22px; max-width: 720px }
+          .hero h1 span { color: #e5bd6b }
+          .hero p { max-width: 600px; color: #ffffffbf; font-size: 17px }
+          .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 30px }
+          .btn { border: 0; border-radius: 11px; padding: 12px 18px; background: var(--wine); color: white; font-weight: 700; transition: .2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px }
+          .btn:hover { transform: translateY(-2px); filter: brightness(1.08) }
+          .btn.gold { background: var(--gold); color: #35151b }
+          .btn.ghost { background: #ffffff16; border: 1px solid #ffffff55 }
+          .btn.light { background: #fff; color: var(--wine); border: 1px solid var(--line) }
+          .btn.small { padding: 8px 12px; font-size: 12px }
+          .hero-card { background: #fffefa; color: var(--ink); border-radius: 24px; padding: 28px; box-shadow: 0 30px 80px #0005; max-width: 420px; justify-self: end; width: 100% }
+          .hero-card h2 { font: 30px Georgia; margin: 0 0 5px }
+          .hero-card .muted { margin-bottom: 20px }
+          .mini-feature { display: flex; gap: 13px; padding: 13px 0; border-top: 1px solid var(--line) }
+          .mini-icon { width: 38px; height: 38px; border-radius: 12px; background: #f6e9e9; color: var(--wine); display: grid; place-items: center; font-size: 18px }
+          .mini-feature b { display: block; font-size: 13px }
+          .mini-feature small { color: var(--muted) }
+          .login-overlay { position: fixed; inset: 0; background: #160d10c9; z-index: 20; display: grid; place-items: center; padding: 18px; backdrop-filter: blur(8px) }
+          .login-box { background: white; border-radius: 22px; width: min(100%, 1040px); padding: 0; box-shadow: 0 25px 80px #0005; display: grid; grid-template-columns: 1.05fr .95fr; overflow: hidden }
+          .login-visual { min-height: 620px; position: relative; background: linear-gradient(180deg, #3c101bd9, #3c101b55), url("https://media.licdn.com/dms/image/v2/D5622AQHCPv-R3TMSag/feedshare-shrink_800/B56Zo5L6VVKEAg-/0/1761896029915?e=2147483647&t=cW8n0HeEw3uZAgX3lhzB3ftzrXkY81sYEENXW5LuwUQ&v=beta") center/cover; display: flex; flex-direction: column; justify-content: flex-end; padding: 38px; color: #fff }
+          .login-visual:after { content: ""; position: absolute; inset: 18px; border: 1px solid #ffffff65; border-radius: 16px; pointer-events: none }
+          .login-visual h2 { font: 42px/1.08 Georgia; margin: 0 0 12px; max-width: 440px }
+          .login-visual p { color: #ffffffd9; max-width: 420px }
+          .login-form { padding: 34px; max-height: 90vh; overflow: auto }
+          .login-box .brand { margin-bottom: 22px }
+          .login-box .brand small { color: var(--muted) }
+          .login-box h2 { font: 32px Georgia; margin: 14px 0 5px }
+          .login-box .crest { background: var(--wine); color: var(--gold) }
+          .field { margin: 13px 0 }
+          .field label { display: block; font-size: 12px; font-weight: 750; color: #555d68; margin-bottom: 6px }
+          .field input, .field select, .field textarea, .search { width: 100%; padding: 12px 13px; border: 1px solid #dedbd6; border-radius: 10px; background: #fff; outline: none }
+          .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--wine); box-shadow: 0 0 0 3px #741b2b13 }
+          .field textarea { min-height: 90px; resize: vertical }
+          .muted { color: var(--muted); font-size: 13px }
+          .demo-note { background: #fff5df; border: 1px solid #f0dba9; padding: 11px; border-radius: 10px; font-size: 12px; color: #76531a; margin: 15px 0 }
+          .app { min-height: 100vh }
+          .sidebar { position: fixed; inset: 0 auto 0 0; width: 255px; background: linear-gradient(180deg, #511321, #29151d); color: white; padding: 24px 17px; display: flex; flex-direction: column; z-index: 5 }
+          .sidebar .brand { padding: 0 9px 25px; border-bottom: 1px solid #ffffff20 }
+          .sidebar .brand small { color: #ffffff9b }
+          .nav-label { font-size: 10px; letter-spacing: .16em; color: #ffffff73; font-weight: 800; padding: 23px 12px 8px }
+          .nav-list { display: grid; gap: 5px; overflow: auto }
+          .nav-item { border: 0; background: transparent; color: #ffffffb8; text-align: left; padding: 11px 12px; border-radius: 10px; display: flex; align-items: center; gap: 12px; font-size: 13px }
+          .nav-item:hover, .nav-item.active { background: #ffffff18; color: white }
+          .nav-item.active { box-shadow: inset 3px 0 var(--gold) }
+          .nav-item span:first-child { width: 20px; text-align: center; font-size: 16px }
+          .side-bottom { margin-top: auto; border-top: 1px solid #ffffff20; padding-top: 15px }
+          .user-mini { display: flex; gap: 10px; align-items: center; padding: 10px }
+          .avatar { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; background: #e6c67f; color: #4b101d; font-weight: 800 }
+          .user-mini b { display: block; font-size: 12px }
+          .user-mini small { color: #ffffff9b; font-size: 11px }
+          .main { margin-left: 255px; min-height: 100vh }
+          .topbar { height: 76px; background: #fff; border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; padding: 0 34px; position: sticky; top: 0; z-index: 4 }
+          .crumb { font-size: 12px; color: var(--muted) }
+          .topbar h2 { font: 23px Georgia; margin: 0 }
+          .top-actions { display: flex; align-items: center; gap: 10px }
+          .icon-btn { width: 38px; height: 38px; border: 1px solid var(--line); background: white; border-radius: 11px }
+          .content { padding: 30px 34px; max-width: 1500px; margin: auto }
+          .welcome { background: linear-gradient(110deg, #541321, #8b2939); color: white; border-radius: 20px; padding: 27px 30px; display: flex; align-items: center; justify-content: space-between; gap: 20px; position: relative; overflow: hidden; margin-bottom: 22px }
+          .welcome:after { content: "AU"; position: absolute; right: 8%; top: -48px; font: 190px Georgia; color: #ffffff0b }
+          .welcome h1 { font: 32px Georgia; margin: 4px 0 }
+          .welcome p { margin: 0; color: #ffffffb8 }
+          .welcome .btn { position: relative; z-index: 1 }
+          .grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px }
+          .card { background: white; border: 1px solid var(--line); border-radius: 16px; padding: 20px; box-shadow: 0 5px 22px #24151b06; transition: transform .25s, box-shadow .25s }
+          .card:hover { transform: translateY(-3px); box-shadow: 0 14px 32px #24151b12 }
+          .stat { display: flex; justify-content: space-between; align-items: flex-start }
+          .stat .num { font: 34px Georgia; color: var(--wine); margin: 6px 0 }
+          .stat small { color: var(--muted) }
+          .stat-icon { width: 42px; height: 42px; border-radius: 13px; background: #f8eeee; display: grid; place-items: center; font-size: 19px }
+          .section-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 28px 0 14px }
+          .section-head h2 { font: 25px Georgia; margin: 0 }
+          .section-head p { margin: 3px 0 0; color: var(--muted); font-size: 12px }
+          .two-col { display: grid; grid-template-columns: 1.3fr .7fr; gap: 16px }
+          .three-col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px }
+          .panel-title { font: 20px Georgia; margin: 0 0 15px }
+          .list-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 13px 0; border-bottom: 1px solid var(--line) }
+          .list-row:last-child { border: 0 }
+          .list-row b { font-size: 13px }
+          .list-row small { display: block; color: var(--muted); font-size: 11px }
+          .badge { display: inline-flex; align-items: center; padding: 4px 9px; border-radius: 30px; font-size: 10px; font-weight: 800; background: #e7f4ec; color: #23744e; white-space: nowrap }
+          .badge.pending { background: #fff2d9; color: #956517 }
+          .badge.review { background: #fbe7e9; color: #a22b3d }
+          .badge.neutral { background: #edf0f3; color: #59616b }
+          .progress { height: 8px; background: #eee; border-radius: 20px; overflow: hidden; margin: 10px 0 }
+          .progress span { display: block; height: 100%; background: linear-gradient(90deg, var(--wine), var(--gold)); border-radius: 20px }
+          .page { display: none }
+          .page.active { display: block; animation: fade .25s ease }
+          @keyframes fade { from { opacity: 0; transform: translateY(5px) } to { opacity: 1; transform: none } }
+          .toolbar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 15px }
+          .toolbar .search { max-width: 300px }
+          .table-wrap { overflow: auto }
+          table { border-collapse: collapse; width: 100%; min-width: 600px }
+          th, td { text-align: left; padding: 13px 12px; border-bottom: 1px solid var(--line); font-size: 12px }
+          th { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; background: #faf9f7 }
+          td b { font-size: 12px }
+          .empty { padding: 25px; text-align: center; color: var(--muted); font-size: 13px }
+          .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 15px }
+          .form-grid .wide { grid-column: 1/-1 }
+          .notice { border-radius: 12px; padding: 13px 15px; background: #fff6e4; border: 1px solid #f0dfb9; color: #77571d; font-size: 12px; margin-bottom: 16px }
+          .success { background: #eaf6ef; border-color: #c9e5d2; color: #236044 }
+          .profile-cover { background: linear-gradient(110deg, #541321, #8b2939); color: white; padding: 25px; border-radius: 17px; display: flex; gap: 18px; align-items: center }
+          .profile-cover .avatar { width: 70px; height: 70px; font-size: 22px }
+          .profile-cover h2 { font: 28px Georgia; margin: 0 }
+          .profile-cover p { margin: 4px 0; color: #ffffffb5 }
+          .kv { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 16px }
+          .kv div { padding: 13px; background: #faf9f7; border-radius: 10px }
+          .kv small { display: block; color: var(--muted); font-size: 10px }
+          .kv b { font-size: 12px }
+          .toast { position: fixed; right: 25px; bottom: 25px; background: #24151b; color: white; padding: 13px 18px; border-radius: 12px; box-shadow: var(--shadow); z-index: 50; opacity: 0; transform: translateY(15px); transition: .25s; pointer-events: none }
+          .toast.show { opacity: 1; transform: none }
+          .modal { position: fixed; inset: 0; background: #160d10a8; z-index: 30; display: grid; place-items: center; padding: 18px }
+          .modal-box { width: min(100%, 650px); max-height: 90vh; overflow: auto; background: white; border-radius: 18px; padding: 24px }
+          .modal-head { display: flex; justify-content: space-between; align-items: center }
+          .modal-head h2 { font: 25px Georgia; margin: 0 }
+          .close { border: 0; background: #f2eeee; border-radius: 8px; width: 32px; height: 32px }
+          .footer-note { text-align: center; color: var(--muted); font-size: 11px; padding: 25px }
+          .campus-strip { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 10px; margin-top: 16px }
+          .campus-strip img { width: 100%; height: 130px; object-fit: cover; border-radius: 12px }
+          .campus-strip img:first-child { height: 270px; grid-row: span 2 }
+          .login-photo-credit { font-size: 10px; color: #ffffffb0; margin-top: 14px }
+          .student-hero-photo { display: grid; grid-template-columns: 1.35fr .65fr; gap: 16px; margin: 18px 0 }
+          .student-hero-photo .grad-main { min-height: 230px; border-radius: 18px; overflow: hidden; position: relative; background: linear-gradient(0deg, #241018d9, transparent 72%), url("https://media.licdn.com/dms/image/v2/D4D22AQGAAEAEk8TcXQ/feedshare-shrink_800/B4DZdUK33.HMAo-/0/1749463858153?e=2147483647&t=K830ZULmWS-kZT4fkMgVh43OlVsh1DEVs8IxU3bB8Vk&v=beta") center 38%/cover }
+          .student-hero-photo .grad-main div { position: absolute; left: 22px; bottom: 18px; color: white }
+          .student-hero-photo .grad-main h3 { font: 26px Georgia; margin: 0 0 5px }
+          .student-hero-photo .grad-side { border-radius: 18px; overflow: hidden; min-height: 230px; background: linear-gradient(0deg, #241018c9, transparent 80%), url("https://media.licdn.com/dms/image/v2/D5622AQHCPv-R3TMSag/feedshare-shrink_800/B56Zo5L6VVKEAg-/0/1761896029915?e=2147483647&t=cW8n0HeEw3uZAgX3lhzB3ftzrXkY81sYEENXW5LuwUQ&v=beta") center/cover; position: relative }
+          .student-hero-photo .grad-side span { position: absolute; bottom: 16px; left: 16px; color: white; font-size: 12px; font-weight: 700 }
+          .visual-card { border-radius: 16px; overflow: hidden; position: relative; min-height: 170px; background: #eee }
+          .visual-card img { width: 100%; height: 170px; object-fit: cover; display: block; transition: transform .7s }
+          .visual-card:hover img { transform: scale(1.06) }
+          .visual-card strong { position: absolute; left: 14px; bottom: 12px; color: #fff; text-shadow: 0 2px 8px #000; background: #34121c88; padding: 6px 10px; border-radius: 8px }
+          .reveal { animation: rise .65s both }
+          @keyframes rise { from { opacity: 0; transform: translateY(18px) } to { opacity: 1; transform: translateY(0) } }
+          .float { animation: float 6s ease-in-out infinite }
+          @keyframes float { 0%, 100% { transform: translateY(0) } 50% { transform: translateY(-7px) } }
+          .shimmer { position: relative; overflow: hidden }
+          .shimmer:after { content: ""; position: absolute; inset: 0; transform: translateX(-120%); background: linear-gradient(100deg, transparent, #ffffff25, transparent); animation: shimmer 5s infinite }
+          @keyframes shimmer { 60%, 100% { transform: translateX(120%) } }
 
           @media(max-width:1050px) {
-               .sidebar {
-                    width: 220px
-               }
-
-               .main {
-                    margin-left: 220px
-               }
-
-               .grid {
-                    grid-template-columns: repeat(2, 1fr)
-               }
-
-               .two-col {
-                    grid-template-columns: 1fr
-               }
-
-               .content {
-                    padding: 24px
-               }
+               .sidebar { width: 220px }
+               .main { margin-left: 220px }
+               .grid { grid-template-columns: repeat(2, 1fr) }
+               .two-col { grid-template-columns: 1fr }
+               .content { padding: 24px }
           }
 
           @media(max-width:720px) {
-               .login-box {
-                    grid-template-columns: 1fr;
-                    max-width: 520px
-               }
-
-               .login-visual {
-                    min-height: 210px;
-                    padding: 24px
-               }
-
-               .login-visual h2 {
-                    font-size: 28px
-               }
-
-               .login-form {
-                    padding: 23px
-               }
-
-               .student-hero-photo {
-                    grid-template-columns: 1fr
-               }
-
-               .student-hero-photo .grad-main,
-               .student-hero-photo .grad-side {
-                    min-height: 190px
-               }
-
-               .landing-nav {
-                    padding: 18px 5vw
-               }
-
-               .hero {
-                    grid-template-columns: 1fr;
-                    padding: 6vh 5vw 9vh
-               }
-
-               .hero-card {
-                    justify-self: stretch;
-                    max-width: none
-               }
-
-               .hero h1 {
-                    font-size: 48px
-               }
-
-               .sidebar {
-                    position: relative;
-                    width: 100%;
-                    height: auto;
-                    padding: 12px
-               }
-
-               .sidebar .brand {
-                    padding: 4px 8px 12px
-               }
-
-               .nav-label,
-               .side-bottom {
-                    display: none
-               }
-
-               .nav-list {
-                    display: flex;
-                    overflow-x: auto
-               }
-
-               .nav-item {
-                    white-space: nowrap;
-                    padding: 9px
-               }
-
-               .main {
-                    margin: 0
-               }
-
-               .topbar {
-                    height: 65px;
-                    padding: 0 16px
-               }
-
-               .content {
-                    padding: 18px 14px
-               }
-
-               .welcome {
-                    padding: 22px;
-                    align-items: flex-start;
-                    flex-direction: column
-               }
-
-               .grid {
-                    gap: 10px
-               }
-
-               .card {
-                    padding: 15px
-               }
-
-               .three-col {
-                    grid-template-columns: 1fr
-               }
-
-               .kv {
-                    grid-template-columns: 1fr 1fr
-               }
-
-               .campus-strip {
-                    grid-template-columns: 1fr 1fr
-               }
-
-               .campus-strip img:first-child {
-                    height: 150px;
-                    grid-row: auto
-               }
-
-               .topbar h2 {
-                    font-size: 19px
-               }
-
-               .form-grid {
-                    grid-template-columns: 1fr
-               }
-
-               .form-grid .wide {
-                    grid-column: auto
-               }
+               .login-box { grid-template-columns: 1fr; max-width: 520px }
+               .login-visual { min-height: 210px; padding: 24px }
+               .login-visual h2 { font-size: 28px }
+               .login-form { padding: 23px }
+               .student-hero-photo { grid-template-columns: 1fr }
+               .student-hero-photo .grad-main, .student-hero-photo .grad-side { min-height: 190px }
+               .landing-nav { padding: 18px 5vw }
+               .hero { grid-template-columns: 1fr; padding: 6vh 5vw 9vh }
+               .hero-card { justify-self: stretch; max-width: none }
+               .hero h1 { font-size: 48px }
+               .sidebar { position: relative; width: 100%; height: auto; padding: 12px }
+               .sidebar .brand { padding: 4px 8px 12px }
+               .nav-label, .side-bottom { display: none }
+               .nav-list { display: flex; overflow-x: auto }
+               .nav-item { white-space: nowrap; padding: 9px }
+               .main { margin: 0 }
+               .topbar { height: 65px; padding: 0 16px }
+               .content { padding: 18px 14px }
+               .welcome { padding: 22px; align-items: flex-start; flex-direction: column }
+               .grid { gap: 10px }
+               .card { padding: 15px }
+               .three-col { grid-template-columns: 1fr }
+               .kv { grid-template-columns: 1fr 1fr }
+               .campus-strip { grid-template-columns: 1fr 1fr }
+               .campus-strip img:first-child { height: 150px; grid-row: auto }
+               .topbar h2 { font-size: 19px }
+               .form-grid { grid-template-columns: 1fr }
+               .form-grid .wide { grid-column: auto }
           }
      /* Assessment enhancements */
 .opportunity-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:18px}
@@ -1581,160 +527,162 @@
           let db = loadDB(), currentRole = 'student', currentId = '', currentPage = 'home', activeFilter = 'All';
           let csrfToken = '';
           let authenticatedUser = null;
+
           function emptyAccountDB() {
-    return {
-        items: [],
-        letters: [],
-        placements: [],
-        integrity: [],
-        support: [],
-        users: [],
-        opportunities: [],
-        notifications: []
-    };
-}
+               return {
+                    items: [],
+                    letters: [],
+                    placements: [],
+                    integrity: [],
+                    support: [],
+                    users: [],
+                    opportunities: [],
+                    notifications: [],
+                    applications: []
+               };
+          }
 
-function accountStorageKey() {
-    return currentId
-        ? `${KEY}:account:${currentId}`
-        : KEY;
-}
+          function accountStorageKey() {
+               return currentId
+                    ? `${KEY}:account:${currentId}`
+                    : KEY;
+          }
 
-function loadDBForAccount(user) {
-    const accountKey = `${KEY}:account:${user.user_id}`;
-    const existing = localStorage.getItem(accountKey);
+          function loadDBForAccount(user) {
+               const accountKey = `${KEY}:account:${user.user_id}`;
+               const existing = localStorage.getItem(accountKey);
 
-    if (existing) {
-        try {
-            return JSON.parse(existing);
-        } catch (error) {
-            console.error('Account data could not be read.', error);
-        }
-    }
+               if (existing) {
+                    try {
+                         return JSON.parse(existing);
+                    } catch (error) {
+                         console.error('Account data could not be read.', error);
+                    }
+               }
 
-    // Preserve the original demonstration account and its records.
-    if (user.user_id === 'AU2201234') {
-        const legacy = localStorage.getItem(KEY);
+               // Preserve the original demonstration account and its records.
+               if (user.user_id === 'AU2201234') {
+                    const legacy = localStorage.getItem(KEY);
 
-        if (legacy) {
-            try {
-                localStorage.setItem(accountKey, legacy);
-                return JSON.parse(legacy);
-            } catch (error) {
-                console.error('Demo data migration failed.', error);
-            }
-        }
+                    if (legacy) {
+                         try {
+                              localStorage.setItem(accountKey, legacy);
+                              return JSON.parse(legacy);
+                         } catch (error) {
+                              console.error('Demo data migration failed.', error);
+                         }
+                    }
 
-        return JSON.parse(JSON.stringify(seed));
-    }
+                    return JSON.parse(JSON.stringify(seed));
+               }
 
-    // New accounts start with their own empty records.
-    return emptyAccountDB();
-}
+               // New accounts start with their own empty records.
+               return emptyAccountDB();
+          }
 
-function loadDB() {
-    try {
-        return JSON.parse(localStorage.getItem(KEY)) ||
-            JSON.parse(JSON.stringify(seed));
-    } catch (error) {
-        return JSON.parse(JSON.stringify(seed));
-    }
-}
+          function loadDB() {
+               try {
+                    return JSON.parse(localStorage.getItem(KEY)) ||
+                         JSON.parse(JSON.stringify(seed));
+               } catch (error) {
+                    return JSON.parse(JSON.stringify(seed));
+               }
+          }
 
-function save() {
-    localStorage.setItem(accountStorageKey(), JSON.stringify(db));
-}
+          function save() {
+               localStorage.setItem(accountStorageKey(), JSON.stringify(db));
+          }
 
-function currentStudentName() {
-    return authenticatedUser?.full_name || 'Student';
-}
+          function currentStudentName() {
+               return authenticatedUser?.full_name || 'Student';
+          }
 
-function currentStudentId() {
-    return authenticatedUser?.user_id || '';
-}
-function esc(s) { return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])) }
+          function currentStudentId() {
+               return authenticatedUser?.user_id || '';
+          }
+          function esc(s) { return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])) }
           function initials(n) { return (n || 'AU').split(/\s+/).slice(0, 2).map(x => x[0]).join('').toUpperCase() }
           function showLogin() { document.getElementById('loginOverlay').classList.remove('hidden') }
           function hideLogin() { document.getElementById('loginOverlay').classList.add('hidden') }
 
 
-function setLoginLoading(loading) {
-    const button = document.getElementById('loginButton');
-    if (!button) return;
+          function setLoginLoading(loading) {
+               const button = document.getElementById('loginButton');
+               if (!button) return;
 
-    if (!button.dataset.originalText) {
-        button.dataset.originalText = button.textContent.trim();
-    }
+               if (!button.dataset.originalText) {
+                    button.dataset.originalText = button.textContent.trim();
+               }
 
-    button.disabled = loading;
-    button.style.opacity = loading ? '0.7' : '1';
-    button.style.cursor = loading ? 'wait' : 'pointer';
-    button.textContent = loading ? 'Authenticating...' : button.dataset.originalText;
-}
-function togglePassword() {
-    const input = document.getElementById('loginPassword');
-    const button = document.getElementById('passwordToggle');
+               button.disabled = loading;
+               button.style.opacity = loading ? '0.7' : '1';
+               button.style.cursor = loading ? 'wait' : 'pointer';
+               button.textContent = loading ? 'Authenticating...' : button.dataset.originalText;
+          }
+          function togglePassword() {
+               const input = document.getElementById('loginPassword');
+               const button = document.getElementById('passwordToggle');
 
-    if (!input || !button) return;
+               if (!input || !button) return;
 
-    const showing = input.type === 'password';
-    input.type = showing ? 'text' : 'password';
-    button.textContent = showing ? 'Hide' : 'Show';
-    button.setAttribute('aria-label', showing ? 'Hide password' : 'Show password');
-}
+               const showing = input.type === 'password';
+               input.type = showing ? 'text' : 'password';
+               button.textContent = showing ? 'Hide' : 'Show';
+               button.setAttribute('aria-label', showing ? 'Hide password' : 'Show password');
+          }
           async function login() {
-    const id = document.getElementById('loginId').value.trim();
-    const password = document.getElementById('loginPassword').value;
+               const id = document.getElementById('loginId').value.trim();
+               const password = document.getElementById('loginPassword').value;
 
-    if (!id || !password) {
-        toast('Enter your university ID and password.');
-        return;
-    }
+               if (!id || !password) {
+                    toast('Enter your university ID and password.');
+                    return;
+               }
 
-    setLoginLoading(true);
+               setLoginLoading(true);
 
-    try {
-        const csrfResponse = await fetch('api/csrf.php', {
-            credentials: 'same-origin',
-            cache: 'no-store'
-        });
+               try {
+                    const csrfResponse = await fetch('api/csrf.php', {
+                         credentials: 'same-origin',
+                         cache: 'no-store'
+                    });
 
-        const csrfData = await csrfResponse.json();
+                    const csrfData = await csrfResponse.json();
 
-        if (!csrfResponse.ok || !csrfData.success) {
-            throw new Error('Unable to initialise secure login.');
-        }
+                    if (!csrfResponse.ok || !csrfData.success) {
+                         throw new Error('Unable to initialise secure login.');
+                    }
 
-        const response = await fetch('api/login.php', {
-            method: 'POST',
-            credentials: 'same-origin',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-Token': csrfData.csrf_token
-            },
-            body: JSON.stringify({
-                user_id: id,
-                password: password
-            })
-        });
+                    const response = await fetch('api/login.php', {
+                         method: 'POST',
+                         credentials: 'same-origin',
+                         headers: {
+                              'Content-Type': 'application/json',
+                              'X-CSRF-Token': csrfData.csrf_token
+                         },
+                         body: JSON.stringify({
+                              user_id: id,
+                              password: password
+                         })
+                    });
 
-        const data = await response.json();
+                    const data = await response.json();
 
-        if (!response.ok || !data.success) {
-            toast(data.message || 'Login failed.');
-            return;
-        }
+                    if (!response.ok || !data.success) {
+                         toast(data.message || 'Login failed.');
+                         return;
+                    }
 
-        csrfToken = data.csrf_token;
-        activateAuthenticatedUser(data.user);
+                    csrfToken = data.csrf_token;
+                    activateAuthenticatedUser(data.user);
 
-    } catch (error) {
-        console.error('Login error:', error);
-        toast('Authentication service unavailable. Check your connection.');
-    } finally {
-        setLoginLoading(false);
-    }
-}
+               } catch (error) {
+                    console.error('Login error:', error);
+                    toast('Authentication service unavailable. Check your connection.');
+               } finally {
+                    setLoginLoading(false);
+               }
+          }
 
 
           function activateAuthenticatedUser(user) {
@@ -1747,6 +695,7 @@ function togglePassword() {
                currentRole = user.role;
                currentId = user.user_id;
                db = loadDBForAccount(user);
+               if (window.ensureDbShape) window.ensureDbShape();
 
                const name = user.full_name;
 
@@ -2041,15 +990,15 @@ function togglePassword() {
                const verified = db.items.filter(x => x.status === 'Verified').length, pending = db.items.filter(x => x.status === 'Pending').length;
                return welcome('Welcome back, ' + esc(currentStudentName()) + '.', 'Your progress is more than grades. Keep building a record of your learning, leadership and impact.', `<button class="btn gold" onclick="openPage('achievements')">＋ Add an achievement</button>`) +
                     `<div class="student-hero-photo reveal"><div class="grad-main shimmer"><div><div class="eyebrow">THE ACACIAN JOURNEY</div><h3>Today a student.<br>Tomorrow a leader.</h3><span>Celebrating Africa University graduates and the next generation of changemakers.</span></div></div><div class="grad-side float"><span>Health sciences · Service · Impact</span></div></div>` +
-                    `<div class="grid">${stat('Verified portfolio records', verified, '✦', 'Approved by authorised staff')}${stat('Awaiting review', pending, '◷', 'Items in the verification queue')}${stat('Recommendation requests', db.letters.length, '✉', 'Requests and issued letters')}${stat('Attachment progress', (db.placements[0]?.progress ?? 0) + '%', '▣', 'Current placement record')}</div>` +
+                    `<div class="grid">${stat('Verified portfolio records', verified, '✦', 'Approved by authorised staff')}${stat('Awaiting review', pending, '◷', 'Items in the verification queue')}${stat('Recommendation requests', db.letters.length, '✉', 'Requests and issued letters')}${stat('Attachment progress', (db.placements[0] ? db.placements[0].progress : 0) + '%', '▣', 'Current placement record')}</div>` +
                     `<div class="two-col" style="margin-top:18px"><div class="card"><h3 class="panel-title">Your development journey</h3><p class="muted">Build a complete picture of your university experience.</p><div class="list-row"><div><b>Academic foundation</b><small>Academic record and Registry confirmation</small></div>${badge('In progress')}</div><div class="list-row"><div><b>Leadership & service</b><small>Activities, service and leadership evidence</small></div>${badge('Active')}</div><div class="list-row"><div><b>Career readiness</b><small>CV, professional profile and placement</small></div>${badge('In progress')}</div><div class="list-row"><div><b>Recommendation letters</b><small>Lecturer-reviewed recommendations</small></div>${badge(db.letters.some(x => x.status === 'Issued') ? 'Available' : 'Pending')}</div></div><div class="card"><h3 class="panel-title">Recent portfolio activity</h3>${db.items.slice(-4).reverse().map(x => `<div class="list-row"><div><b>${esc(x.title)}</b><small>${esc(x.type)} · ${esc(x.year)}</small></div>${badge(x.status)}</div>`).join('')}</div></div>
  <div class="card" style="margin-top:16px"><h3 class="panel-title">Build your career profile</h3><p class="muted">Add career information and evidence to prepare for opportunities.</p><button class="btn small" onclick="openPage('career')">Open career profile</button></div>`;
           }
           function profilePage() {
-    const name = currentStudentName();
-    const id = currentStudentId();
+               const name = currentStudentName();
+               const id = currentStudentId();
 
-    return `<div class="profile-cover">
+               return `<div class="profile-cover">
         <div class="avatar">${esc(initials(name))}</div>
         <div>
             <div class="eyebrow">STUDENT PROFILE</div>
@@ -2061,192 +1010,123 @@ function togglePassword() {
         <h3 class="panel-title">Account information</h3>
         <div class="kv">
             ${[
-                ['Full name', name],
-                ['University ID', id],
-                ['Account role', roles[currentRole].name],
-                ['Account status', 'Authenticated'],
-                ['Programme', 'Not yet linked to Registry'],
-                ['Academic year', 'Not yet linked to Registry']
-            ].map(x => `<div><small>${esc(x[0])}</small><b>${esc(x[1])}</b></div>`).join('')}
+                         ['Full name', name],
+                         ['University ID', id],
+                         ['Account role', roles[currentRole].name],
+                         ['Account status', 'Authenticated'],
+                         ['Programme', 'Computer Science'],
+                         ['Academic year', 'See Academic record']
+                    ].map(x => `<div><small>${esc(x[0])}</small><b>${esc(x[1])}</b></div>`).join('')}
         </div>
         <p class="muted" style="margin-top:14px">
             Your profile displays your authenticated account information.
             Official academic details must be supplied by authorised University systems.
         </p>
     </div>`;
-}
+          }
+
+          // ===== Computer Science curriculum (same courses for every student) =====
+          const csCurriculum = {
+               y1p1: {
+                    label: 'Year 1 · Part 1', courses: [
+                         ['CS101', 'Introduction to Computer Science', 4],
+                         ['CS102', 'Programming Fundamentals', 4],
+                         ['CS103', 'Mathematics for Computing', 3],
+                         ['CS104', 'Computer Systems & Organisation', 3],
+                         ['CS105', 'Communication Skills', 2]
+                    ]
+               },
+               y1p2: {
+                    label: 'Year 1 · Part 2', courses: [
+                         ['CS111', 'Object-Oriented Programming', 4],
+                         ['CS112', 'Database Fundamentals', 4],
+                         ['CS113', 'Discrete Mathematics', 3],
+                         ['CS114', 'Web Technologies I', 3],
+                         ['CS115', 'Introduction to Information Systems', 3]
+                    ]
+               },
+               y2p1: {
+                    label: 'Year 2 · Part 1', courses: [
+                         ['CS201', 'Data Structures & Algorithms', 4],
+                         ['CS202', 'Operating Systems', 4],
+                         ['CS203', 'Computer Networks', 3],
+                         ['CS204', 'Software Engineering', 3],
+                         ['CS205', 'Applied Statistics', 3]
+                    ]
+               }
+          };
+
+          let academicTerm = 'y1p1';
+          let registryStudentId = '';
+
+          // Same student ID + course always gives the same mark; different students get different marks.
+          function sampleMark(studentId, code) {
+               let h = 2166136261;
+               const s = studentId + '|' + code;
+               for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+               return 40 + ((h >>> 0) % 53);   // 40 to 92
+          }
+          function gradeFor(m) { return m >= 75 ? 'A' : m >= 65 ? 'B' : m >= 50 ? 'C' : 'D'; }
+          function termRows(studentId, key) {
+               return csCurriculum[key].courses.map(([code, title, credits]) => {
+                    const mark = sampleMark(studentId, code);
+                    return { code, title, credits, mark, grade: gradeFor(mark) };
+               });
+          }
+          function setAcademicTerm(k) { academicTerm = k; renderPage(); }
+          function setRegistryStudent(v) { registryStudentId = v.trim(); renderPage(); }
 
           function academicPage() {
-    const semesterOptions = Object.keys(courses).map(s =>
-        `<option value="${s}">Semester ${s}</option>`
-    ).join('');
+               const isRegistry = currentRole === 'registry';
+               const sid = isRegistry ? registryStudentId : currentStudentId();
 
-    setTimeout(renderCourses, 0);
+               const lookup = isRegistry ? `<div class="field" style="max-width:320px">
+        <label>STUDENT ID</label>
+        <input value="${esc(registryStudentId)}" placeholder="Enter a student ID" onchange="setRegistryStudent(this.value)">
+    </div>` : '';
 
-    return `<div class="notice">
-        <b>DEMONSTRATION DATA ONLY.</b>
-        These sample courses, grades, GPA and CGPA are illustrative
-        and are NOT official Africa University academic results.
-        Official academic records must be confirmed by the University Registry.
-        GPA calculations currently use equal course weighting because
-        official course credit hours have not been supplied.
-    </div>
+               if (!sid) {
+                    return `<div class="card"><h2 class="panel-title">Academic records</h2>${lookup}
+            <div class="empty">Enter a student ID to view their records.</div></div>`;
+               }
 
+               const rows = termRows(sid, academicTerm);
+               const credits = rows.reduce((a, r) => a + r.credits, 0);
+               const avg = rows.reduce((a, r) => a + r.mark * r.credits, 0) / credits;
+
+               const all = Object.keys(csCurriculum).flatMap(k => termRows(sid, k));
+               const allCredits = all.reduce((a, r) => a + r.credits, 0);
+               const cumulative = all.reduce((a, r) => a + r.mark * r.credits, 0) / allCredits;
+
+               return `<div class="notice">Sample results for demonstration. Official marks must come from the Academic Registry.</div>
     <div class="card">
-        <div class="section-head">
-            <div>
-                <h2 class="panel-title">Academic performance</h2>
-                <p class="muted">Monitor your semester GPA and cumulative academic performance.</p>
-            </div>
-            <span class="badge pending">DEMO SAMPLE</span>
+        <div class="section-head"><div><h2>Academic record</h2>
+            <p>Computer Science · Student ID ${esc(sid)}</p></div></div>
+        ${lookup}
+        <div class="toolbar">${Object.entries(csCurriculum).map(([k, t]) =>
+                    `<button class="btn small ${academicTerm === k ? '' : 'light'}" onclick="setAcademicTerm('${k}')">${t.label}</button>`).join('')}</div>
+        <div class="table-wrap"><table>
+            <thead><tr><th>Code</th><th>Course</th><th>Credits</th><th>Mark (%)</th><th>Grade</th><th>Result</th></tr></thead>
+            <tbody>${rows.map(r => `<tr><td><b>${r.code}</b></td><td>${r.title}</td><td>${r.credits}</td><td>${r.mark}</td><td><b>${r.grade}</b></td><td>${badge('Verified').replace('Verified', 'Pass')}</td></tr>`).join('')}</tbody>
+        </table></div>
+        <div class="grid" style="margin-top:16px">
+            ${stat('Term credits', credits, '▤', csCurriculum[academicTerm].label)}
+            ${stat('Term average', avg.toFixed(1) + '%', '✦', 'Weighted by credits')}
+            ${stat('Cumulative average', cumulative.toFixed(1) + '%', '◎', 'Year 1 Part 1 to Year 2 Part 1')}
         </div>
-
-        <div class="field">
-            <label>SELECT SEMESTER</label>
-            <select id="semesterSelect" onchange="renderCourses()">
-                ${semesterOptions}
-            </select>
-        </div>
-
-        <div id="gpaSummary" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;margin:20px 0;">
-        </div>
-
-        <div id="courseTable"></div>
     </div>`;
-}
-const courses = {
-    '1': [
-        ['Introduction to Hospitality', 'A'],
-        ['Food & Beverage Basics', 'B+'],
-        ['Business Communication', 'A-'],
-        ['Tourism Studies', 'B'],
-        ['Computer Applications', 'A']
-    ],
-    '2': [
-        ['Front Office Operations', 'B+'],
-        ['Housekeeping Management', 'A-'],
-        ['Principles of Accounting', 'B'],
-        ['Customer Service', 'A'],
-        ['Hospitality Law', 'B+']
-    ]
-};
+          }
 
-// Illustrative 4.0 grading scale.
-// Confirm the official Africa University grading scale before
-// using these calculations as actual academic results.
-const gradePoints = {
-    'A': 4.0,
-    'A-': 3.7,
-    'B+': 3.3,
-    'B': 3.0,
-    'B-': 2.7,
-    'C+': 2.3,
-    'C': 2.0,
-    'C-': 1.7,
-    'D': 1.0,
-    'F': 0.0
-};
-
-function calculateSemesterGPA(semester) {
-    const records = courses[semester] || [];
-
-    if (!records.length) return 0;
-
-    const totalPoints = records.reduce(
-        (sum, course) => sum + (gradePoints[course[1]] ?? 0),
-        0
-    );
-
-    return totalPoints / records.length;
-}
-
-function calculateCGPA() {
-    const allCourses = Object.values(courses).flat();
-
-    if (!allCourses.length) return 0;
-
-    const totalPoints = allCourses.reduce(
-        (sum, course) => sum + (gradePoints[course[1]] ?? 0),
-        0
-    );
-
-    return totalPoints / allCourses.length;
-}
-
-function renderCourses() {
-    const selector = document.getElementById('semesterSelect');
-    const target = document.getElementById('courseTable');
-    const summary = document.getElementById('gpaSummary');
-
-    if (!target || !summary) return;
-
-    const semester = selector?.value || '1';
-    const records = courses[semester] || [];
-
-    const semesterGPA = calculateSemesterGPA(semester);
-    const cumulativeGPA = calculateCGPA();
-
-    summary.innerHTML = `
-        <div class="card" style="margin:0;border-left:4px solid var(--primary);">
-            <small class="muted">SEMESTER ${semester} GPA</small>
-            <div style="font-size:34px;font-weight:800;margin:8px 0;">
-                ${semesterGPA.toFixed(2)}
-            </div>
-            <small class="muted">Out of 4.00</small>
-        </div>
-
-        <div class="card" style="margin:0;border-left:4px solid var(--success,#16a34a);">
-            <small class="muted">CUMULATIVE GPA (CGPA)</small>
-            <div style="font-size:34px;font-weight:800;margin:8px 0;">
-                ${cumulativeGPA.toFixed(2)}
-            </div>
-            <small class="muted">Out of 4.00 · Semesters 1–2</small>
-        </div>
-    `;
-
-    target.innerHTML = `
-        <h3 style="margin:20px 0 12px;">Semester ${semester} course results</h3>
-        <div class="table-wrap">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Course</th>
-                        <th>Grade</th>
-                        <th>Grade points</th>
-                        <th>Record status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${records.map(course => `
-                        <tr>
-                            <td>${course[0]}</td>
-                            <td><b>${course[1]}</b></td>
-                            <td>${(gradePoints[course[1]] ?? 0).toFixed(1)}</td>
-                            <td>${badge('Sample')}</td>
-                        </tr>
-                    `).join('')}
-                </tbody>
-            </table>
-        </div>
-
-        <p class="muted" style="margin-top:12px;">
-            GPA = total grade points divided by the number of courses.
-            CGPA = total grade points across all displayed semesters
-            divided by the total number of courses.
-            These are illustrative equal-weighted calculations.
-        </p>
-    `;
-}
-function achievementsPage() { let filtered = db.items.filter(x => activeFilter === 'All' || x.type === activeFilter); return `<div class="notice">Submit achievements with supporting evidence. Only authorised staff can change a submission to Verified. Your submissions are synchronised with the shared university portal.</div><div class="toolbar">${['All', 'Achievement', 'Leadership', 'Activity', 'Service'].map(f => `<button class="btn ${activeFilter === f ? '' : 'light'} small" onclick="activeFilter='${f}';renderPage()">${f}</button>`).join('')}<button class="btn small" style="margin-left:auto" onclick="achievementForm()">＋ Add record</button></div><div class="card"><div class="table-wrap"><table><thead><tr><th>Record</th><th>Category</th><th>Year</th><th>Submitted</th><th>Status</th></tr></thead><tbody>${filtered.map(x => `<tr><td><b>${esc(x.title)}</b><small style="display:block;color:var(--muted)">${esc(x.detail)}</small></td><td>${esc(x.type)}</td><td>${esc(x.year)}</td><td>${esc(x.date)}</td><td>${badge(x.status)}</td></tr>`).join('') || '<tr><td colspan="5" class="empty">No records in this category yet.</td></tr>'}</tbody></table></div></div>` }
-          function achievementForm() { openModal('Submit a portfolio record', `<form onsubmit="addAchievement(event)"><div class="form-grid"><div class="field"><label>RECORD CATEGORY</label><select name="type"><option>Achievement</option><option>Leadership</option><option>Activity</option><option>Service</option></select></div><div class="field"><label>YEAR OF STUDY</label><select name="year"><option>Year 1</option><option>Year 2</option><option>Year 3</option><option>Year 4</option><option>Year 5</option></select></div><div class="field wide"><label>TITLE</label><input name="title" required maxlength="100" placeholder="e.g. Community outreach volunteer"></div><div class="field wide"><label>DESCRIPTION</label><textarea name="detail" required placeholder="Describe your contribution and what you learned."></textarea></div><div class="field wide"><label>EVIDENCE REFERENCE</label><input name="evidence" placeholder="Document name or evidence reference"></div></div><label class="muted"><input type="checkbox" name="share_activity"> Share this achievement in the student activity feed after it is approved</label><p></p><button class="btn">Submit for verification</button></form>`) }
+          function achievementsPage() { let filtered = db.items.filter(x => activeFilter === 'All' || x.type === activeFilter); return `<div class="notice">Submit achievements with supporting evidence. Only authorised staff can change a submission to Verified. Your submissions are synchronised with the shared university portal.</div><div class="toolbar">${['All', 'Achievement', 'Leadership', 'Activity', 'Service'].map(f => `<button class="btn ${activeFilter === f ? '' : 'light'} small" onclick="activeFilter='${f}';renderPage()">${f}</button>`).join('')}<button class="btn small" style="margin-left:auto" onclick="achievementForm()">＋ Add record</button></div><div class="card"><div class="table-wrap"><table><thead><tr><th>Record</th><th>Category</th><th>Year</th><th>Submitted</th><th>Status</th></tr></thead><tbody>${filtered.map(x => `<tr><td><b>${esc(x.title)}</b><small style="display:block;color:var(--muted)">${esc(x.detail)}</small></td><td>${esc(x.type)}</td><td>${esc(x.year)}</td><td>${esc(x.date)}</td><td>${badge(x.status)}</td></tr>`).join('') || '<tr><td colspan="5" class="empty">No records in this category yet.</td></tr>'}</tbody></table></div></div>` }
+          function achievementForm() { openModal('Submit a portfolio record', `<form onsubmit="addAchievement(event)"><div class="form-grid"><div class="field"><label>RECORD CATEGORY</label><select name="type"><option>Achievement</option><option>Leadership</option><option>Activity</option><option>Service</option></select></div><div class="field"><label>YEAR OF STUDY</label><select name="year"><option>Year 1</option><option>Year 2</option><option>Year 3</option><option>Year 4</option><option>Year 5</option></select></div><div class="field wide"><label>TITLE</label><input name="title" required maxlength="100" placeholder="e.g. Community outreach volunteer"></div><div class="field wide"><label>DESCRIPTION</label><textarea name="detail" required placeholder="Describe your contribution and what you learned."></textarea></div><div class="field wide"><label>EVIDENCE REFERENCE</label><input name="evidence" placeholder="Document name or evidence reference"></div></div><p class="muted">This prototype records an evidence reference only; secure file uploads require the PHP backend.</p><button class="btn">Submit for verification</button></form>`) }
           function addAchievement(e) { e.preventDefault(); const f = new FormData(e.target); db.items.push({ id: Date.now(), type: f.get('type'), year: f.get('year'), title: f.get('title').trim(), detail: f.get('detail').trim() + ' Evidence: ' + (f.get('evidence') || 'Not supplied'), status: 'Pending', student: currentStudentName(), date: new Date().toISOString().slice(0, 10) }); save(); closeModal(); toast('Record submitted to the review queue.'); renderPage() }
           function recommendationsPage() { return `<div class="notice">A recommendation is only issued after the lecturer reviews the request and approves the final letter. AI-assisted drafting, if added, will remain a draft for lecturer approval.</div><div class="card"><div class="section-head"><div><h2>My recommendation requests</h2><p>Track requests and access letters approved for release.</p></div><button class="btn small" onclick="recommendationForm()">＋ Request a letter</button></div>${db.letters.filter(x => x.student === currentStudentName()).map(x => `<div class="list-row"><div><b>${esc(x.to)} · ${esc(x.purpose)}</b><small>Requested for ${esc(x.student)} ${x.note ? ' · ' + esc(x.note) : ''}</small></div><div>${badge(x.status)} ${x.status === 'Issued' ? `<button class="btn light small" onclick="viewLetter(${x.id})">View letter</button>` : ''}</div></div>`).join('') || '<div class="empty">You have not requested a letter yet.</div>'}</div>` }
           function recommendationForm() { openModal('Request a recommendation', `<form onsubmit="addLetter(event)"><div class="field"><label>LECTURER</label><select name="to"><option>Dr. Chikwanha</option><option>Mrs. Ncube</option><option>Assigned Academic Adviser</option></select></div><div class="field"><label>PURPOSE</label><select name="purpose"><option>Internship application</option><option>Employment application</option><option>Scholarship application</option><option>Further studies</option><option>Other professional opportunity</option></select></div><div class="field"><label>ADDITIONAL CONTEXT</label><textarea name="context" placeholder="Tell the lecturer about the opportunity and deadline."></textarea></div><button class="btn">Send request</button></form>`) }
           function addLetter(e) { e.preventDefault(); const f = new FormData(e.target); db.letters.push({ id: Date.now(), to: f.get('to'), purpose: f.get('purpose'), status: 'Pending', student: currentStudentName(), note: f.get('context') }); save(); closeModal(); toast('Recommendation request sent.'); renderPage() }
           function careerPage() {
-    const name = currentStudentName();
+               const name = currentStudentName();
 
-    return `<div class="card">
+               return `<div class="card">
         <div class="profile-cover">
             <div class="avatar">${esc(initials(name))}</div>
             <div>
@@ -2257,10 +1137,10 @@ function achievementsPage() { let filtered = db.items.filter(x => activeFilter =
         </div>
         <div class="kv">
             ${[
-                ['Verified portfolio items', db.items.filter(x => x.status === 'Verified' && x.student === name).length],
-                ['Recommendation letters', db.letters.filter(x => x.status === 'Issued' && x.student === name).length],
-                ['Profile visibility', 'Private by default']
-            ].map(x => `<div><small>${esc(x[0])}</small><b>${esc(x[1])}</b></div>`).join('')}
+                         ['Verified portfolio items', db.items.filter(x => x.status === 'Verified' && x.student === name).length],
+                         ['Recommendation letters', db.letters.filter(x => x.status === 'Issued' && x.student === name).length],
+                         ['Profile visibility', 'Private by default']
+                    ].map(x => `<div><small>${esc(x[0])}</small><b>${esc(x[1])}</b></div>`).join('')}
         </div>
         <div class="field" style="margin-top:18px">
             <label>CAREER SUMMARY</label>
@@ -2268,14 +1148,14 @@ function achievementsPage() { let filtered = db.items.filter(x => activeFilter =
         </div>
         <button class="btn" onclick="downloadCV()">Generate CV</button>
     </div>`;
-}
+          }
 
           function downloadCV() {
-    const name = currentStudentName();
-    const studentId = currentStudentId();
-    const verified = db.items.filter(x => x.status === 'Verified' && x.student === name);
-    const summary = document.getElementById('careerSummary')?.value || '';
-    const txt = `${name}
+               const name = currentStudentName();
+               const studentId = currentStudentId();
+               const verified = db.items.filter(x => x.status === 'Verified' && x.student === name);
+               const summary = document.getElementById('careerSummary')?.value || '';
+               const txt = `${name}
 Africa University | Student Career Profile
 Student ID: ${studentId}
 
@@ -2289,13 +1169,13 @@ ACADEMIC RECORD
 Academic information should be confirmed by the Africa University Registry before formal use.
 
 Generated from the Africa University Student Success Portal.`;
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(new Blob([txt], { type: 'text/plain' }));
-    a.download = `${studentId || 'student'}_Career_Profile.txt`;
-    a.click();
-    URL.revokeObjectURL(a.href);
-    toast('Your career profile has been generated.');
-}
+               const a = document.createElement('a');
+               a.href = URL.createObjectURL(new Blob([txt], { type: 'text/plain' }));
+               a.download = `${studentId || 'student'}_Career_Profile.txt`;
+               a.click();
+               URL.revokeObjectURL(a.href);
+               toast('Your career profile has been generated.');
+          }
           function attachmentPage() { return `<div class="notice">Industrial attachment information shown here is illustrative. Official placement approvals and supervisor assessments require authenticated staff workflows.</div><div class="card"><h3 class="panel-title">Current attachment</h3>${db.placements.map(p => `<div class="list-row"><div><b>${esc(p.role)} · ${esc(p.organisation)}</b><small>${esc(p.period)}</small></div>${badge(p.status)}</div><div style="margin-top:18px;display:flex;justify-content:space-between"><b>Placement progress</b><b>${p.progress}%</b></div><div class="progress"><span style="width:${p.progress}%"></span></div><p class="muted">Progress is a sample indicator, not a verified attendance or performance score.</p>`).join('')}<button class="btn small" onclick="openAttachmentModal()">＋ Add / update placement</button></div>` }
           function openAttachmentModal() { openModal('Attachment update', `<form onsubmit="savePlacement(event)"><div class="field"><label>ORGANISATION</label><input name="org" required></div><div class="field"><label>ROLE / DEPARTMENT</label><input name="role" required></div><div class="field"><label>PERIOD</label><input name="period" required></div><button class="btn">Save placement</button></form>`) }
           function savePlacement(e) { e.preventDefault(); let f = new FormData(e.target); db.placements = [{ id: Date.now(), organisation: f.get('org'), role: f.get('role'), period: f.get('period'), status: 'Pending approval', student: currentStudentName(), progress: 0 }]; save(); closeModal(); renderPage() }
@@ -2376,9 +1256,15 @@ Generated from the Africa University Student Success Portal.`;
         }
     ];
 
-    db.opportunities = (Array.isArray(db.opportunities) && db.opportunities.length) ? db.opportunities : opportunitySeeds;
-    db.notifications = Array.isArray(db.notifications) ? db.notifications : [];
-    db.applications = Array.isArray(db.applications) ? db.applications : [];
+    // Make sure the current account's data has every list this feature needs.
+    // Called at start-up and again after each login (when db is swapped per account).
+    function ensureDbShape() {
+        if (!Array.isArray(db.opportunities) || db.opportunities.length === 0) db.opportunities = JSON.parse(JSON.stringify(opportunitySeeds));
+        if (!Array.isArray(db.notifications)) db.notifications = [];
+        if (!Array.isArray(db.applications)) db.applications = [];
+    }
+    window.ensureDbShape = ensureDbShape;
+    ensureDbShape();
 
     // Add role-appropriate navigation without replacing the existing menus.
     Object.keys(roles).forEach(roleKey => {
@@ -2398,11 +1284,11 @@ Generated from the Africa University Student Success Portal.`;
     function addPortalNotification(recipientRole, title, message, type = "Update", reference = "") {
         db.notifications.unshift({
             id: "NTF-" + Date.now() + "-" + Math.floor(Math.random() * 1000),
-            RecipientRole,
-            Title,
-            Message,
-            Type,
-            Reference,
+            recipientRole,
+            title,
+            message,
+            type,
+            reference,
             createdAt: new Date().toISOString(),
             read: false
         });
