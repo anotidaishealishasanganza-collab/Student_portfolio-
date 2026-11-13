@@ -1294,6 +1294,39 @@
 .notification-copy small{color:var(--muted);font-size:10px}
 @media(max-width:900px){.opportunity-grid{grid-template-columns:1fr}}
 @media(max-width:520px){.notification-item{flex-wrap:wrap}.notification-item .btn{margin-left:51px}}
+.nav-item .nav-feature-icon{display:inline-grid;place-items:center;width:25px;height:25px;flex:0 0 25px;border-radius:8px;background:#ffffff12;color:var(--gold);font-size:15px}
+.nav-item .nav-count{margin-left:auto;min-width:20px;padding:1px 6px;border-radius:999px;background:var(--gold);color:var(--wine2);font-size:10px;font-weight:800;text-align:center}
+.hub-toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:16px 0}
+.hub-toolbar input,.hub-toolbar select{max-width:230px}
+.hub-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.hub-card{position:relative;overflow:hidden}
+.hub-card-top{display:flex;align-items:center;gap:9px;margin-bottom:10px}
+.hub-icon{width:42px;height:42px;display:grid;place-items:center;border-radius:13px;background:#f8eeee;color:var(--wine);font-size:20px;flex:0 0 42px}
+.hub-card h3{margin:0;color:var(--wine);font:20px Georgia,serif}
+.hub-card p{white-space:pre-wrap}
+.hub-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:12px}
+.hub-meta strong{color:var(--ink)}
+.hub-card-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:14px}
+.hub-pill{display:inline-flex;align-items:center;padding:4px 9px;border-radius:99px;background:#f1eee8;color:#654e27;font-size:11px;font-weight:700}
+.hub-pill.urgent{background:#fff0e8;color:#a33f19}
+.hub-pill.done{background:#e8f4ec;color:#23744e}
+.hub-feed-item{display:grid;grid-template-columns:42px 1fr;gap:12px;padding:16px 0;border-bottom:1px solid var(--line)}
+.hub-feed-item:last-child{border-bottom:0}
+.hub-message{padding:14px;border:1px solid var(--line);border-radius:14px;background:#fff;margin:10px 0}
+.hub-message.unread{border-left:4px solid var(--gold);background:#fffdf8}
+.hub-message-meta{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+.hub-chart-row{display:grid;grid-template-columns:minmax(130px,190px) 1fr 46px;gap:10px;align-items:center;margin:14px 0;font-size:13px}
+.hub-chart-track{height:10px;border-radius:99px;background:#f0ece7;overflow:hidden}
+.hub-chart-track span{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--wine),var(--gold))}
+.hub-stat .num{font-variant-numeric:tabular-nums}
+.hub-new{position:absolute;right:16px;top:16px}
+.hub-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.hub-form-grid .wide{grid-column:1/-1}
+.hub-actions{display:flex;gap:8px;flex-wrap:wrap}
+.hub-icon-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px}
+.hub-progress{height:8px;background:#eee9e4;border-radius:99px;overflow:hidden}
+.hub-progress span{display:block;height:100%;background:var(--wine);border-radius:inherit}
+@media(max-width:720px){.hub-grid{grid-template-columns:1fr}.hub-form-grid{grid-template-columns:1fr}.hub-form-grid .wide{grid-column:auto}.hub-toolbar input,.hub-toolbar select{max-width:none;flex:1 1 100%}.hub-chart-row{grid-template-columns:115px 1fr 36px}}
 </style>
 </head>
 
@@ -1371,13 +1404,13 @@
                          <div><strong style="color:var(--wine)">AFRICA UNIVERSITY</strong><small>STUDENT SUCCESS
                                    PORTAL</small></div>
                     </div>
-                    <h2>Welcome back.</h2>
-                    <p class="muted">Sign in with your Africa University account. Your authorised workspace opens automatically.</p>
-                    <div class="field">
-    <label>UNIVERSITY EMAIL OR STUDENT / STAFF ID</label>
+                    <h2 id="loginHeading">Welcome back.</h2>
+                    <p class="muted" id="loginIntro">Sign in with your Africa University account. Your authorised workspace opens automatically.</p>
+                    <div class="field" id="loginIdField">
+    <label>UNIVERSITY ID</label>
     <input id="loginId" placeholder="Enter your university ID">
 </div>
-<div class="field">
+<div class="field" id="loginPasswordField">
     <label>PASSWORD</label>
     <div class="password-wrap" style="position:relative">
     <input id="loginPassword" type="password"
@@ -1391,13 +1424,88 @@
     </button>
 </div>
 </div>
-<div class="demo-note">
+<div style="text-align:right;margin:8px 0 15px">
+    <button type="button" id="forgotPasswordLink"
+        onclick="showForgotPassword()"
+        style="border:0;background:none;color:var(--wine);font-weight:750;cursor:pointer">
+        Forgot Password?
+    </button>
+</div>
+
+<div id="forgotPasswordPanel" class="hidden"
+     style="margin:18px 0;padding:20px;border:1px solid #eadde0;border-radius:14px;background:#fffafa">
+
+    <h2 style="font-size:25px;margin-top:0">Recover your account</h2>
+
+    <p class="muted">
+        Enter the email address registered with your AU Student Success Hub account.
+        We will send you a secure password recovery link.
+    </p>
+
+    <div class="field">
+        <label>REGISTERED EMAIL ADDRESS</label>
+        <input id="recoveryEmail" type="email"
+               placeholder="Enter your registered email"
+               autocomplete="email">
+    </div>
+
+    <div id="recoveryRequestMessage" role="status"
+         style="font-size:13px;margin:10px 0"></div>
+
+    <button type="button" class="btn" id="recoveryRequestButton"
+            onclick="requestPasswordReset()" style="width:100%">
+        Send Recovery Link
+    </button>
+
+    <button type="button" class="btn light"
+            onclick="showNormalLogin()" style="width:100%;margin-top:9px">
+        Back to Login
+    </button>
+</div>
+
+<div id="resetPasswordPanel" class="hidden"
+     style="margin:18px 0;padding:20px;border:1px solid #eadde0;border-radius:14px;background:#fffafa">
+
+    <h2 style="font-size:25px;margin-top:0">Create a new password</h2>
+
+    <p class="muted">
+        Choose a new password for your AU Student Success Hub account.
+    </p>
+
+    <div class="field">
+        <label>NEW PASSWORD</label>
+        <input id="newPassword" type="password"
+               placeholder="At least 10 characters"
+               autocomplete="new-password">
+    </div>
+
+    <div class="field">
+        <label>CONFIRM NEW PASSWORD</label>
+        <input id="confirmNewPassword" type="password"
+               placeholder="Enter your new password again"
+               autocomplete="new-password">
+    </div>
+
+    <div id="resetPasswordMessage" role="status"
+         style="font-size:13px;margin:10px 0"></div>
+
+    <button type="button" class="btn" id="resetPasswordButton"
+            onclick="submitNewPassword()" style="width:100%">
+        Update Password Securely
+    </button>
+
+    <button type="button" class="btn light"
+            onclick="showNormalLogin()" style="width:100%;margin-top:9px">
+        Back to Login
+    </button>
+</div>
+<div class="demo-note" id="loginDemoNote">
     Sign in using your registered Africa University account credentials.
     Your role-based workspace will open automatically after secure authentication.
 </div>
                     <button class="btn" id="loginButton" style="width:100%" onclick="login()">Continue securely to workspace</button>
-<button type="button" class="btn light" onclick="showCreateAccount()" style="width:100%;margin-top:10px">Create Student Account</button>
-                    <button class="btn light" style="width:100%;margin-top:9px" onclick="hideLogin()">Back to welcome
+<button type="button" class="btn light" id="createAccountButton" onclick="showCreateAccount()" style="width:100%;margin-top:10px">Create Student Account</button>
+                    <button class="btn light" id="backButton" style="width:100%;margin-top:9px" onclick="hideLogin()">Back to welcome
                          page</button>
                </div>
           </div>
@@ -1432,8 +1540,7 @@
                     </div>
                </header>
                <div class="content" id="pageContent"></div>
-               <div class="footer-note">Africa University Student Success Portal · Demonstration build · Not an official
-                    university service · Images credited to their respective publishers</div>
+               <div class="footer-note">Africa University Student Success Hub · Learning, opportunity and community</div>
           </main>
      </div>
      <div class="toast" id="toast"></div>
@@ -1457,6 +1564,7 @@
                supervisor: { name: 'Attachment Supervisor', nav: [['staffhome', '⌂', 'Overview'], ['placements', '▣', 'Placement reviews']] },
                chaplaincy: { name: 'Chaplaincy', nav: [['staffhome', '⌂', 'Overview'], ['support', '♡', 'Support requests']] },
                dean: { name: 'Dean of Students', nav: [['staffhome', '⌂', 'Overview'], ['support', '♡', 'Student support'], ['reports', '▥', 'Student affairs reports']] },
+               career_advisor: { name: 'Career Advising', nav: [['staffhome', '⌂', 'Overview']] },
                admin: { name: 'Administrator', nav: [['adminhome', '⌂', 'Overview'], ['users', '♙', 'User management'], ['reports', '▥', 'Institutional reports']] },
                alumni: { name: 'Alumni', nav: [['career', '▱', 'My career profile'], ['community', '◎', 'Alumni community']] }
           };
@@ -1680,6 +1788,227 @@ function togglePassword() {
                document.getElementById('loginPassword').value = '';
           }
 
+          let passwordResetToken = '';
+
+          function setRecoveryMessage(elementId, message, success = false) {
+              const element = document.getElementById(elementId);
+              if (!element) return;
+
+              element.textContent = message;
+              element.style.color = success ? '#187044' : '#a32636';
+          }
+
+          function showForgotPassword() {
+              const normalIds = [
+                  'loginHeading', 'loginIntro', 'loginIdField',
+                  'loginPasswordField', 'loginDemoNote', 'loginButton',
+                  'createAccountButton', 'backButton', 'forgotPasswordLink'
+              ];
+
+              normalIds.forEach(id => {
+                  const element = document.getElementById(id);
+                  if (element) element.classList.add('hidden');
+              });
+
+              document.getElementById('resetPasswordPanel').classList.add('hidden');
+              document.getElementById('forgotPasswordPanel').classList.remove('hidden');
+              document.getElementById('recoveryEmail').focus();
+          }
+
+          function showNormalLogin() {
+              document.getElementById('forgotPasswordPanel').classList.add('hidden');
+              document.getElementById('resetPasswordPanel').classList.add('hidden');
+
+              const normalIds = [
+                  'loginHeading', 'loginIntro', 'loginIdField',
+                  'loginPasswordField', 'loginDemoNote', 'loginButton',
+                  'createAccountButton', 'backButton', 'forgotPasswordLink'
+              ];
+
+              normalIds.forEach(id => {
+                  const element = document.getElementById(id);
+                  if (element) element.classList.remove('hidden');
+              });
+
+              setRecoveryMessage('recoveryRequestMessage', '');
+              setRecoveryMessage('resetPasswordMessage', '');
+
+              document.getElementById('newPassword').value = '';
+              document.getElementById('confirmNewPassword').value = '';
+
+              passwordResetToken = '';
+              history.replaceState(null, '', location.pathname + location.search);
+          }
+
+          async function getRecoveryCsrfToken() {
+              const response = await fetch('api/csrf.php', {
+                  credentials: 'same-origin',
+                  cache: 'no-store'
+              });
+
+              const data = await response.json();
+
+              if (!response.ok || !data.success || !data.csrf_token) {
+                  throw new Error('Unable to initialise secure recovery.');
+              }
+
+              return data.csrf_token;
+          }
+
+          async function requestPasswordReset() {
+              const email = document.getElementById('recoveryEmail').value.trim();
+              const button = document.getElementById('recoveryRequestButton');
+
+              if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                  setRecoveryMessage('recoveryRequestMessage',
+                      'Please enter a valid email address.');
+                  return;
+              }
+
+              button.disabled = true;
+              button.textContent = 'Sending...';
+
+              try {
+                  const csrf = await getRecoveryCsrfToken();
+
+                  const response = await fetch('api/request_password_reset.php', {
+                      method: 'POST',
+                      credentials: 'same-origin',
+                      headers: {
+                          'Content-Type': 'application/json',
+                          'X-CSRF-Token': csrf
+                      },
+                      body: JSON.stringify({ email: email })
+                  });
+
+                  const data = await response.json();
+
+                  if (!response.ok || !data.success) {
+                      throw new Error(data.message || 'Unable to request password recovery.');
+                  }
+
+                  setRecoveryMessage(
+                      'recoveryRequestMessage',
+                      'If an active account uses that email address, a recovery link will be sent shortly. Check your inbox and spam folder.',
+                      true
+                  );
+
+                  button.textContent = 'Request Sent';
+
+              } catch (error) {
+                  console.error('Password recovery request failed:', error);
+
+                  setRecoveryMessage(
+                      'recoveryRequestMessage',
+                      error.message || 'Password recovery is temporarily unavailable.'
+                  );
+
+                  button.disabled = false;
+                  button.textContent = 'Send Recovery Link';
+              }
+          }
+
+          async function submitNewPassword() {
+              const password = document.getElementById('newPassword').value;
+              const confirmation = document.getElementById('confirmNewPassword').value;
+              const button = document.getElementById('resetPasswordButton');
+
+              if (!passwordResetToken) {
+                  setRecoveryMessage('resetPasswordMessage',
+                      'The recovery link is missing or invalid. Request a new link.');
+                  return;
+              }
+
+              if (password.length < 10) {
+                  setRecoveryMessage('resetPasswordMessage',
+                      'Your new password must contain at least 10 characters.');
+                  return;
+              }
+
+              if (password !== confirmation) {
+                  setRecoveryMessage('resetPasswordMessage',
+                      'The passwords do not match. Please check them.');
+                  return;
+              }
+
+              button.disabled = true;
+              button.textContent = 'Updating Password...';
+
+              try {
+                  const csrf = await getRecoveryCsrfToken();
+
+                  const response = await fetch('api/reset_password.php', {
+                      method: 'POST',
+                      credentials: 'same-origin',
+                      headers: {
+                          'Content-Type': 'application/json',
+                          'X-CSRF-Token': csrf
+                      },
+                      body: JSON.stringify({
+                          token: passwordResetToken,
+                          password: password
+                      })
+                  });
+
+                  const data = await response.json();
+
+                  if (!response.ok || !data.success) {
+                      throw new Error(data.message || 'Unable to update your password.');
+                  }
+
+                  passwordResetToken = '';
+
+                  document.getElementById('newPassword').value = '';
+                  document.getElementById('confirmNewPassword').value = '';
+
+                  showNormalLogin();
+
+                  setRecoveryMessage(
+                      'recoveryRequestMessage',
+                      'Your password has been changed successfully. Sign in using your University ID and new password.',
+                      true
+                  );
+
+                  document.getElementById('loginId').focus();
+
+              } catch (error) {
+                  console.error('Password update failed:', error);
+
+                  setRecoveryMessage(
+                      'resetPasswordMessage',
+                      error.message || 'Unable to update your password.'
+                  );
+
+              } finally {
+                  button.disabled = false;
+                  button.textContent = 'Update Password Securely';
+              }
+          }
+
+          function openPasswordResetFromFragment() {
+              const match = location.hash.match(/^#password-reset=([a-f0-9]{64})$/i);
+
+              if (!match) return;
+
+              passwordResetToken = match[1];
+
+              showLogin();
+
+              const landing = document.getElementById('landing');
+              if (landing) landing.classList.add('hidden');
+
+              showForgotPassword();
+
+              document.getElementById('forgotPasswordPanel').classList.add('hidden');
+              document.getElementById('resetPasswordPanel').classList.remove('hidden');
+
+              history.replaceState(
+                  null,
+                  '',
+                  location.pathname + location.search
+              );
+          }
+
           async function restoreAuthenticatedSession() {
                try {
                     const response = await fetch('api/me.php', {
@@ -1712,9 +2041,9 @@ function togglePassword() {
                const verified = db.items.filter(x => x.status === 'Verified').length, pending = db.items.filter(x => x.status === 'Pending').length;
                return welcome('Welcome back, ' + esc(currentStudentName()) + '.', 'Your progress is more than grades. Keep building a record of your learning, leadership and impact.', `<button class="btn gold" onclick="openPage('achievements')">＋ Add an achievement</button>`) +
                     `<div class="student-hero-photo reveal"><div class="grad-main shimmer"><div><div class="eyebrow">THE ACACIAN JOURNEY</div><h3>Today a student.<br>Tomorrow a leader.</h3><span>Celebrating Africa University graduates and the next generation of changemakers.</span></div></div><div class="grad-side float"><span>Health sciences · Service · Impact</span></div></div>` +
-                    `<div class="grid">${stat('Verified portfolio records', verified, '✦', 'Approved by authorised staff')}${stat('Awaiting review', pending, '◷', 'Items in the verification queue')}${stat('Recommendation requests', db.letters.length, '✉', 'Requests and issued letters')}${stat('Attachment progress', db.placements[0]?.progress + '%' || '0%', '▣', 'Current placement record')}</div>` +
+                    `<div class="grid">${stat('Verified portfolio records', verified, '✦', 'Approved by authorised staff')}${stat('Awaiting review', pending, '◷', 'Items in the verification queue')}${stat('Recommendation requests', db.letters.length, '✉', 'Requests and issued letters')}${stat('Attachment progress', (db.placements[0]?.progress ?? 0) + '%', '▣', 'Current placement record')}</div>` +
                     `<div class="two-col" style="margin-top:18px"><div class="card"><h3 class="panel-title">Your development journey</h3><p class="muted">Build a complete picture of your university experience.</p><div class="list-row"><div><b>Academic foundation</b><small>Academic record and Registry confirmation</small></div>${badge('In progress')}</div><div class="list-row"><div><b>Leadership & service</b><small>Activities, service and leadership evidence</small></div>${badge('Active')}</div><div class="list-row"><div><b>Career readiness</b><small>CV, professional profile and placement</small></div>${badge('In progress')}</div><div class="list-row"><div><b>Recommendation letters</b><small>Lecturer-reviewed recommendations</small></div>${badge(db.letters.some(x => x.status === 'Issued') ? 'Available' : 'Pending')}</div></div><div class="card"><h3 class="panel-title">Recent portfolio activity</h3>${db.items.slice(-4).reverse().map(x => `<div class="list-row"><div><b>${esc(x.title)}</b><small>${esc(x.type)} · ${esc(x.year)}</small></div>${badge(x.status)}</div>`).join('')}</div></div>
- <div class="card" style="margin-top:16px"><h3 class="panel-title">Your profile completeness</h3><div style="display:flex;justify-content:space-between"><b>68% complete</b><small class="muted">Add evidence and career information</small></div><div class="progress"><span style="width:68%"></span></div><button class="btn small" onclick="openPage('career')">Complete career profile</button></div>`;
+ <div class="card" style="margin-top:16px"><h3 class="panel-title">Build your career profile</h3><p class="muted">Add career information and evidence to prepare for opportunities.</p><button class="btn small" onclick="openPage('career')">Open career profile</button></div>`;
           }
           function profilePage() {
     const name = currentStudentName();
@@ -1748,19 +2077,168 @@ function togglePassword() {
 }
 
           function academicPage() {
-    return `<div class="card">
-        <h2 class="panel-title">Academic record</h2>
-        <div class="empty">
-            No official academic records are linked to this account yet.
-            Academic information must come from the authorised University Registry.
+    const semesterOptions = Object.keys(courses).map(s =>
+        `<option value="${s}">Semester ${s}</option>`
+    ).join('');
+
+    setTimeout(renderCourses, 0);
+
+    return `<div class="notice">
+        <b>DEMONSTRATION DATA ONLY.</b>
+        These sample courses, grades, GPA and CGPA are illustrative
+        and are NOT official Africa University academic results.
+        Official academic records must be confirmed by the University Registry.
+        GPA calculations currently use equal course weighting because
+        official course credit hours have not been supplied.
+    </div>
+
+    <div class="card">
+        <div class="section-head">
+            <div>
+                <h2 class="panel-title">Academic performance</h2>
+                <p class="muted">Monitor your semester GPA and cumulative academic performance.</p>
+            </div>
+            <span class="badge pending">DEMO SAMPLE</span>
         </div>
+
+        <div class="field">
+            <label>SELECT SEMESTER</label>
+            <select id="semesterSelect" onchange="renderCourses()">
+                ${semesterOptions}
+            </select>
+        </div>
+
+        <div id="gpaSummary" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;margin:20px 0;">
+        </div>
+
+        <div id="courseTable"></div>
     </div>`;
 }
+const courses = {
+    '1': [
+        ['Introduction to Hospitality', 'A'],
+        ['Food & Beverage Basics', 'B+'],
+        ['Business Communication', 'A-'],
+        ['Tourism Studies', 'B'],
+        ['Computer Applications', 'A']
+    ],
+    '2': [
+        ['Front Office Operations', 'B+'],
+        ['Housekeeping Management', 'A-'],
+        ['Principles of Accounting', 'B'],
+        ['Customer Service', 'A'],
+        ['Hospitality Law', 'B+']
+    ]
+};
 
-          const courses = { '1': [['Introduction to Hospitality', 'A'], ['Food & Beverage Basics', 'B+'], ['Business Communication', 'A-'], ['Tourism Studies', 'B'], ['Computer Applications', 'A']], '2': [['Front Office Operations', 'B+'], ['Housekeeping Management', 'A-'], ['Principles of Accounting', 'B'], ['Customer Service', 'A'], ['Hospitality Law', 'B+']], '3': [['Hospitality Operations', 'A-'], ['Research Methods', 'B+'], ['Marketing Principles', 'B'], ['Events Management', 'A'], ['Entrepreneurship', 'B+']] };
-          function renderCourses() { const s = document.getElementById('semesterSelect')?.value || '1'; document.getElementById('courseTable').innerHTML = `<div class="table-wrap"><table><thead><tr><th>Course</th><th>Grade</th><th>Record status</th></tr></thead><tbody>${courses[s].map(c => `<tr><td>${c[0]}</td><td><b>${c[1]}</b></td><td>${badge('Sample')}</td></tr>`).join('')}</tbody></table></div>` }
-          function achievementsPage() { let filtered = db.items.filter(x => activeFilter === 'All' || x.type === activeFilter); return `<div class="notice">Submit achievements with supporting evidence. Only authorised staff can change a submission to Verified. Your submissions are synchronised with the shared university portal.</div><div class="toolbar">${['All', 'Achievement', 'Leadership', 'Activity', 'Service'].map(f => `<button class="btn ${activeFilter === f ? '' : 'light'} small" onclick="activeFilter='${f}';renderPage()">${f}</button>`).join('')}<button class="btn small" style="margin-left:auto" onclick="achievementForm()">＋ Add record</button></div><div class="card"><div class="table-wrap"><table><thead><tr><th>Record</th><th>Category</th><th>Year</th><th>Submitted</th><th>Status</th></tr></thead><tbody>${filtered.map(x => `<tr><td><b>${esc(x.title)}</b><small style="display:block;color:var(--muted)">${esc(x.detail)}</small></td><td>${esc(x.type)}</td><td>${esc(x.year)}</td><td>${esc(x.date)}</td><td>${badge(x.status)}</td></tr>`).join('') || '<tr><td colspan="5" class="empty">No records in this category yet.</td></tr>'}</tbody></table></div></div>` }
-          function achievementForm() { openModal('Submit a portfolio record', `<form onsubmit="addAchievement(event)"><div class="form-grid"><div class="field"><label>RECORD CATEGORY</label><select name="type"><option>Achievement</option><option>Leadership</option><option>Activity</option><option>Service</option></select></div><div class="field"><label>YEAR OF STUDY</label><select name="year"><option>Year 1</option><option>Year 2</option><option>Year 3</option><option>Year 4</option><option>Year 5</option></select></div><div class="field wide"><label>TITLE</label><input name="title" required maxlength="100" placeholder="e.g. Community outreach volunteer"></div><div class="field wide"><label>DESCRIPTION</label><textarea name="detail" required placeholder="Describe your contribution and what you learned."></textarea></div><div class="field wide"><label>EVIDENCE REFERENCE</label><input name="evidence" placeholder="Document name or evidence reference"></div></div><p class="muted">This prototype records an evidence reference only; secure file uploads require the PHP backend.</p><button class="btn">Submit for verification</button></form>`) }
+// Illustrative 4.0 grading scale.
+// Confirm the official Africa University grading scale before
+// using these calculations as actual academic results.
+const gradePoints = {
+    'A': 4.0,
+    'A-': 3.7,
+    'B+': 3.3,
+    'B': 3.0,
+    'B-': 2.7,
+    'C+': 2.3,
+    'C': 2.0,
+    'C-': 1.7,
+    'D': 1.0,
+    'F': 0.0
+};
+
+function calculateSemesterGPA(semester) {
+    const records = courses[semester] || [];
+
+    if (!records.length) return 0;
+
+    const totalPoints = records.reduce(
+        (sum, course) => sum + (gradePoints[course[1]] ?? 0),
+        0
+    );
+
+    return totalPoints / records.length;
+}
+
+function calculateCGPA() {
+    const allCourses = Object.values(courses).flat();
+
+    if (!allCourses.length) return 0;
+
+    const totalPoints = allCourses.reduce(
+        (sum, course) => sum + (gradePoints[course[1]] ?? 0),
+        0
+    );
+
+    return totalPoints / allCourses.length;
+}
+
+function renderCourses() {
+    const selector = document.getElementById('semesterSelect');
+    const target = document.getElementById('courseTable');
+    const summary = document.getElementById('gpaSummary');
+
+    if (!target || !summary) return;
+
+    const semester = selector?.value || '1';
+    const records = courses[semester] || [];
+
+    const semesterGPA = calculateSemesterGPA(semester);
+    const cumulativeGPA = calculateCGPA();
+
+    summary.innerHTML = `
+        <div class="card" style="margin:0;border-left:4px solid var(--primary);">
+            <small class="muted">SEMESTER ${semester} GPA</small>
+            <div style="font-size:34px;font-weight:800;margin:8px 0;">
+                ${semesterGPA.toFixed(2)}
+            </div>
+            <small class="muted">Out of 4.00</small>
+        </div>
+
+        <div class="card" style="margin:0;border-left:4px solid var(--success,#16a34a);">
+            <small class="muted">CUMULATIVE GPA (CGPA)</small>
+            <div style="font-size:34px;font-weight:800;margin:8px 0;">
+                ${cumulativeGPA.toFixed(2)}
+            </div>
+            <small class="muted">Out of 4.00 · Semesters 1–2</small>
+        </div>
+    `;
+
+    target.innerHTML = `
+        <h3 style="margin:20px 0 12px;">Semester ${semester} course results</h3>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Course</th>
+                        <th>Grade</th>
+                        <th>Grade points</th>
+                        <th>Record status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${records.map(course => `
+                        <tr>
+                            <td>${course[0]}</td>
+                            <td><b>${course[1]}</b></td>
+                            <td>${(gradePoints[course[1]] ?? 0).toFixed(1)}</td>
+                            <td>${badge('Sample')}</td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        </div>
+
+        <p class="muted" style="margin-top:12px;">
+            GPA = total grade points divided by the number of courses.
+            CGPA = total grade points across all displayed semesters
+            divided by the total number of courses.
+            These are illustrative equal-weighted calculations.
+        </p>
+    `;
+}
+function achievementsPage() { let filtered = db.items.filter(x => activeFilter === 'All' || x.type === activeFilter); return `<div class="notice">Submit achievements with supporting evidence. Only authorised staff can change a submission to Verified. Your submissions are synchronised with the shared university portal.</div><div class="toolbar">${['All', 'Achievement', 'Leadership', 'Activity', 'Service'].map(f => `<button class="btn ${activeFilter === f ? '' : 'light'} small" onclick="activeFilter='${f}';renderPage()">${f}</button>`).join('')}<button class="btn small" style="margin-left:auto" onclick="achievementForm()">＋ Add record</button></div><div class="card"><div class="table-wrap"><table><thead><tr><th>Record</th><th>Category</th><th>Year</th><th>Submitted</th><th>Status</th></tr></thead><tbody>${filtered.map(x => `<tr><td><b>${esc(x.title)}</b><small style="display:block;color:var(--muted)">${esc(x.detail)}</small></td><td>${esc(x.type)}</td><td>${esc(x.year)}</td><td>${esc(x.date)}</td><td>${badge(x.status)}</td></tr>`).join('') || '<tr><td colspan="5" class="empty">No records in this category yet.</td></tr>'}</tbody></table></div></div>` }
+          function achievementForm() { openModal('Submit a portfolio record', `<form onsubmit="addAchievement(event)"><div class="form-grid"><div class="field"><label>RECORD CATEGORY</label><select name="type"><option>Achievement</option><option>Leadership</option><option>Activity</option><option>Service</option></select></div><div class="field"><label>YEAR OF STUDY</label><select name="year"><option>Year 1</option><option>Year 2</option><option>Year 3</option><option>Year 4</option><option>Year 5</option></select></div><div class="field wide"><label>TITLE</label><input name="title" required maxlength="100" placeholder="e.g. Community outreach volunteer"></div><div class="field wide"><label>DESCRIPTION</label><textarea name="detail" required placeholder="Describe your contribution and what you learned."></textarea></div><div class="field wide"><label>EVIDENCE REFERENCE</label><input name="evidence" placeholder="Document name or evidence reference"></div></div><label class="muted"><input type="checkbox" name="share_activity"> Share this achievement in the student activity feed after it is approved</label><p></p><button class="btn">Submit for verification</button></form>`) }
           function addAchievement(e) { e.preventDefault(); const f = new FormData(e.target); db.items.push({ id: Date.now(), type: f.get('type'), year: f.get('year'), title: f.get('title').trim(), detail: f.get('detail').trim() + ' Evidence: ' + (f.get('evidence') || 'Not supplied'), status: 'Pending', student: currentStudentName(), date: new Date().toISOString().slice(0, 10) }); save(); closeModal(); toast('Record submitted to the review queue.'); renderPage() }
           function recommendationsPage() { return `<div class="notice">A recommendation is only issued after the lecturer reviews the request and approves the final letter. AI-assisted drafting, if added, will remain a draft for lecturer approval.</div><div class="card"><div class="section-head"><div><h2>My recommendation requests</h2><p>Track requests and access letters approved for release.</p></div><button class="btn small" onclick="recommendationForm()">＋ Request a letter</button></div>${db.letters.filter(x => x.student === currentStudentName()).map(x => `<div class="list-row"><div><b>${esc(x.to)} · ${esc(x.purpose)}</b><small>Requested for ${esc(x.student)} ${x.note ? ' · ' + esc(x.note) : ''}</small></div><div>${badge(x.status)} ${x.status === 'Issued' ? `<button class="btn light small" onclick="viewLetter(${x.id})">View letter</button>` : ''}</div></div>`).join('') || '<div class="empty">You have not requested a letter yet.</div>'}</div>` }
           function recommendationForm() { openModal('Request a recommendation', `<form onsubmit="addLetter(event)"><div class="field"><label>LECTURER</label><select name="to"><option>Dr. Chikwanha</option><option>Mrs. Ncube</option><option>Assigned Academic Adviser</option></select></div><div class="field"><label>PURPOSE</label><select name="purpose"><option>Internship application</option><option>Employment application</option><option>Scholarship application</option><option>Further studies</option><option>Other professional opportunity</option></select></div><div class="field"><label>ADDITIONAL CONTEXT</label><textarea name="context" placeholder="Tell the lecturer about the opportunity and deadline."></textarea></div><button class="btn">Send request</button></form>`) }
@@ -1824,9 +2302,9 @@ Generated from the Africa University Student Success Portal.`;
           function supportPage() { return `<div class="notice">Support requests are visible only to authorised support personnel in a production deployment. Do not enter emergency information into this demonstration.</div><div class="card"><h3 class="panel-title">Student support services</h3><div class="three-col"><div class="card"><div class="visual-card"><img src="https://images.squarespace-cdn.com/content/v1/561f3483e4b0930b096cad9b/1630492599581-7R3G09ZFF220OIGJYP3Z/_DSC5721.jpg" alt="Africa University nursing and health sciences community"><strong>Health & wellbeing</strong></div><h3>Student welfare</h3><p class="muted">Guidance and student wellbeing support.</p><button class="btn light small" onclick="supportForm('Student welfare')">Request support</button></div><div class="card"><div class="visual-card"><img src="https://images.squarespace-cdn.com/content/v1/561f3483e4b0930b096cad9b/1630492693464-L7O64VCS1VUVGOVBT3C3/_DSC5752.jpg" alt="Africa University campus library building"><strong>Learning & reflection</strong></div><h3>Chaplaincy</h3><p class="muted">Spiritual care and pastoral support.</p><button class="btn light small" onclick="supportForm('Chaplaincy')">Request support</button></div><div class="card"><div class="visual-card"><img src="https://images.squarespace-cdn.com/content/v1/561f3483e4b0930b096cad9b/1630492718834-NO2R0BP44WWAA1936KCS/_DSC6001.jpg" alt="Africa University students learning in a classroom"><strong>Learning together</strong></div><h3>Mentorship</h3><p class="muted">Connect with a mentor or adviser.</p><button class="btn light small" onclick="supportForm('Mentorship')">Request support</button></div></div><h3 class="panel-title" style="margin-top:25px">My support requests</h3>${db.support.map(x => `<div class="list-row"><div><b>${esc(x.service)}</b><small>${esc(x.message)}</small></div>${badge(x.status)}</div>`).join('') || '<p class="muted">No support requests recorded.</p>'}</div>` }
           function supportForm(service) { openModal('Request ' + service, `<form onsubmit="addSupport(event,'${service}')"><div class="field"><label>HOW CAN WE HELP?</label><textarea name="message" required></textarea></div><button class="btn">Submit request</button></form>`) }
           function addSupport(e, service) { e.preventDefault(); let msg = new FormData(e.target).get('message'); db.support.push({ id: Date.now(), service, message: msg, status: 'Pending' }); save(); closeModal(); toast('Support request recorded in this browser.'); renderPage() }
-          function staffHome() { let pending = db.items.filter(x => x.status === 'Pending').length, requests = db.letters.filter(x => x.status === 'Pending').length; return welcome(`Good day, ${roles[currentRole].name}.`, 'Your workspace brings together the records and requests assigned to your role.') + `<div class="grid">${stat('Pending achievement reviews', pending, '✓', 'Awaiting authorised review')}${stat('Recommendation requests', requests, '✉', 'Awaiting lecturer action')}${stat('Total portfolio records', db.items.length, '▤', 'Across demonstration student records')}${stat('Integrity cases', db.integrity.length, '⚑', 'Flagged for human review')}</div><div class="two-col" style="margin-top:18px"><div class="card"><h3 class="panel-title">Priority actions</h3><div class="list-row"><div><b>Review submitted achievements</b><small>Check evidence and add a decision comment.</small></div><button class="btn small" onclick="openPage('review')">Open</button></div><div class="list-row"><div><b>Review recommendation requests</b><small>Lecturers must approve final letters.</small></div><button class="btn small" onclick="openPage('letters')">Open</button></div><div class="list-row"><div><b>Academic integrity cases</b><small>Review flagged work fairly and confidentially.</small></div><button class="btn small" onclick="openPage('integrity')">Open</button></div></div><div class="card"><h3 class="panel-title">Workflow principles</h3><p class="muted">• Students cannot verify their own submissions.</p><p class="muted">• Decisions must be attributable to an authorised staff account.</p><p class="muted">• Similarity flags are not proof of misconduct.</p><p class="muted">• Recommendation letters require lecturer approval.</p></div></div>` }
-          function reviewPage() { let rows = db.items.filter(x => x.status === 'Pending'); return `<div class="notice">Review the description and evidence reference. In a production system, staff must inspect uploaded evidence and the system must record the reviewer identity and audit trail.</div><div class="card"><h3 class="panel-title">Achievement verification queue</h3>${rows.map(x => `<div class="list-row"><div style="flex:1"><b>${esc(x.title)}</b><small>${esc(x.student)} · ${esc(x.type)} · ${esc(x.year)}</small><small>${esc(x.detail)}</small></div><div class="toolbar"><button class="btn small" onclick="decision(${x.id},'Verified')">Verify</button><button class="btn light small" onclick="decision(${x.id},'Needs changes')">Return</button></div></div>`).join('') || '<div class="empty">No submissions are awaiting review.</div>'}</div>` }
-          function decision(id, status) { const x = db.items.find(x => x.id === id); if (!x) return; openModal(status === 'Verified' ? 'Confirm verification' : 'Return submission', `<p>Record: <b>${esc(x.title)}</b></p><form onsubmit="saveDecision(event,${id},'${status}')"><div class="field"><label>REVIEW COMMENT</label><textarea name="comment" required placeholder="Explain the decision and any evidence reviewed."></textarea></div><button class="btn">${status === 'Verified' ? 'Confirm verification' : 'Return to student'}</button></form>`) }
+          function staffHome() { return welcome(`Good day, ${roles[currentRole].name}.`, 'Your workspace brings together the records and requests assigned to your role.') + (window.hubDashboardStats ? window.hubDashboardStats() : '<div class="card">Loading live role metrics...</div>') + `<div class="two-col" style="margin-top:18px"><div class="card"><h3 class="panel-title">Priority actions</h3><div class="list-row"><div><b>Review submitted achievements</b><small>Check evidence and add a decision comment.</small></div><button class="btn small" onclick="openPage('review')">Open</button></div><div class="list-row"><div><b>Review recommendation requests</b><small>Lecturers must approve final letters.</small></div><button class="btn small" onclick="openPage('letters')">Open</button></div><div class="list-row"><div><b>Academic integrity cases</b><small>Review flagged work fairly and confidentially.</small></div><button class="btn small" onclick="openPage('integrity')">Open</button></div></div><div class="card"><h3 class="panel-title">Workflow principles</h3><p class="muted">• Students cannot verify their own submissions.</p><p class="muted">• Decisions must be attributable to an authorised staff account.</p><p class="muted">• Similarity flags are not proof of misconduct.</p><p class="muted">• Recommendation letters require lecturer approval.</p></div></div>` }
+          function reviewPage() { let rows = db.items.filter(x => x.status === 'Pending'); return `<div class="notice">Review the description and evidence reference. Rejected achievements require a clear reason. Authorised staff decisions are recorded in the shared university portal.</div><div class="card"><h3 class="panel-title">Achievement verification queue</h3>${rows.map(x => `<div class="list-row"><div style="flex:1"><b>${esc(x.title)}</b><small>${esc(x.student)} · ${esc(x.type)} · ${esc(x.year)}</small><small>${esc(x.detail)}</small></div><div class="toolbar"><button class="btn small" onclick="decision(${x.id},'Verified')">Approve</button><button class="btn light small" onclick="decision(${x.id},'Needs changes')">Return</button><button class="btn light small" onclick="decision(${x.id},'Rejected')">Reject</button></div></div>`).join('') || '<div class="empty">No submissions are awaiting review.</div>'}</div>` }
+          function decision(id, status) { const x = db.items.find(x => x.id === id); if (!x) return; const rejected = status === 'Rejected'; openModal(status === 'Verified' ? 'Confirm approval' : (rejected ? 'Reject achievement' : 'Return submission'), `<p>Record: <b>${esc(x.title)}</b></p><form onsubmit="saveDecision(event,${id},'${status}')"><div class="field"><label>${rejected ? 'REJECTION REASON' : 'REVIEW COMMENT'}</label><textarea name="comment" required placeholder="${rejected ? 'Explain why this achievement is being rejected.' : 'Explain the decision and any evidence reviewed.'}"></textarea></div><button class="btn">${status === 'Verified' ? 'Approve achievement' : (rejected ? 'Confirm rejection' : 'Return to student')}</button></form>`) }
           function saveDecision(e, id, status) { e.preventDefault(); const x = db.items.find(x => x.id === id); x.status = status; x.comment = new FormData(e.target).get('comment'); x.reviewer = roles[currentRole].name; save(); closeModal(); toast('Review decision saved.'); renderPage() }
           function lettersPage() { let rows = db.letters.filter(x => x.status === 'Pending'); return `<div class="notice">Only lecturers (or a specifically authorised delegate under university policy) should approve and issue recommendation letters. This prototype stores a draft and status only.</div><div class="card"><h3 class="panel-title">Recommendation requests</h3>${rows.map(x => `<div class="list-row"><div style="flex:1"><b>${esc(x.student)} · ${esc(x.purpose)}</b><small>Requested lecturer: ${esc(x.to)}</small><small>${esc(x.note || 'No additional context supplied')}</small></div><button class="btn small" onclick="draftLetter(${x.id})">Review & draft</button></div>`).join('') || '<div class="empty">No pending recommendation requests.</div>'}<h3 class="panel-title" style="margin-top:24px">Issued letters</h3>${db.letters.filter(x => x.status === 'Issued').map(x => `<div class="list-row"><div><b>${esc(x.student)} · ${esc(x.purpose)}</b><small>Approved by ${esc(x.approvedBy || 'Authorised lecturer')}</small></div><button class="btn light small" onclick="viewLetter(${x.id})">View</button></div>`).join('') || '<p class="muted">No letters issued in this demonstration.</p>'}</div>` }
           function draftLetter(id) { let x = db.letters.find(x => x.id === id); openModal('Lecturer review & letter draft', `<div class="notice">The following is an editable draft. It is not issued until the lecturer explicitly approves it.</div><form onsubmit="issueLetter(event,${id})"><div class="field"><label>LETTER DRAFT</label><textarea name="body" style="min-height:260px">To Whom It May Concern,\n\nI am pleased to provide this recommendation for ${x.student}, who has requested a letter in support of ${x.purpose.toLowerCase()}.\n\nBased on my direct academic and professional knowledge of the student, I can provide further comments on their performance, character and suitability. The final letter should be completed with specific, verified examples before issue.\n\nYours faithfully,\n${x.to}\nAfrica University</textarea></div><label class="muted"><input type="checkbox" required> I have reviewed this draft and confirm that I am authorised to approve and issue it.</label><p></p><button class="btn">Approve & issue letter</button></form>`) }
@@ -1838,7 +2316,7 @@ Generated from the Africa University Student Success Portal.`;
           function addIntegrity(e) { e.preventDefault(); let f = new FormData(e.target); db.integrity.push({ id: Date.now(), student: f.get('student'), course: f.get('course'), reason: f.get('reason'), date: new Date().toISOString().slice(0, 10), status: 'Under review' }); save(); closeModal(); renderPage(); toast('Referral recorded for human review.') }
           function placementsPage() { return `<div class="card"><h3 class="panel-title">Placement records requiring review</h3>${db.placements.map(x => `<div class="list-row"><div><b>${esc(x.student)} · ${esc(x.organisation)}</b><small>${esc(x.role)} · ${esc(x.period)}</small></div>${badge(x.status)}</div>`).join('') || '<div class="empty">No placements submitted.</div>'}</div>` }
           function reportsPage() { return `<div class="grid">${stat('Portfolio records', db.items.length, '▤', 'All statuses')}${stat('Verified records', db.items.filter(x => x.status === 'Verified').length, '✓', 'Approved records')}${stat('Pending reviews', db.items.filter(x => x.status === 'Pending').length, '◷', 'Awaiting review')}${stat('Issued recommendations', db.letters.filter(x => x.status === 'Issued').length, '✉', 'Approved letters')}</div><div class="card" style="margin-top:16px"><h3 class="panel-title">Data governance summary</h3><p class="muted">This demonstration stores sample data in the current browser. It does not provide institution-wide analytics, identity management, access logs or secure audit trails.</p><button class="btn small" onclick="exportData()">Export demonstration data (JSON)</button></div>` }
-          function adminHome() { return welcome('Institutional overview.', 'Monitor the demonstration workspace and explore the records currently stored in this browser.') + `<div class="grid">${stat('Demo accounts', db.users.length, '♙', 'Sample users only')}${stat('Portfolio submissions', db.items.length, '✦', 'All students in demo data')}${stat('Open support requests', db.support.filter(x => x.status === 'Pending').length, '♡', 'Pending')}${stat('Integrity referrals', db.integrity.length, '⚑', 'Human review required')}</div><div class="card" style="margin-top:18px"><h3 class="panel-title">Administration centre</h3><div class="list-row"><div><b>User management</b><small>View demonstration accounts and statuses.</small></div><button class="btn small" onclick="openPage('users')">Manage users</button></div><div class="list-row"><div><b>Institutional reports</b><small>Review prototype metrics and export sample data.</small></div><button class="btn small" onclick="openPage('reports')">View reports</button></div></div>` }
+          function adminHome() { return welcome('Institutional overview.', 'Monitor live student-success records and the activity available to your administrator role.') + (window.hubDashboardStats ? window.hubDashboardStats() : '<div class="card">Loading live institutional metrics...</div>') + `<div class="card" style="margin-top:18px"><h3 class="panel-title">Administration centre</h3><div class="list-row"><div><b>User management</b><small>Provision accounts and manage administrator access.</small></div><button class="btn small" onclick="openPage('users')">Manage users</button></div><div class="list-row"><div><b>Institutional analytics</b><small>Review live university-wide metrics and engagement.</small></div><button class="btn small" onclick="openPage('analytics')">View live analytics</button></div></div>` }
           function usersPage() { return `<div class="card"><div class="section-head"><div><h2>Account directory</h2><p>Sample accounts only. Production accounts must be provisioned through a secure administrator workflow.</p></div><button class="btn small" onclick="openAddUserModal()">＋ Add sample account</button></div><div class="table-wrap"><table><thead><tr><th>Name</th><th>ID</th><th>Role</th><th>Status</th></tr></thead><tbody>${db.users.map(u => `<tr><td><b>${esc(u.name)}</b></td><td>${esc(u.id)}</td><td>${esc(u.role)}</td><td>${badge(u.status)}</td></tr>`).join('')}</tbody></table></div></div>` }
           function openAddUserModal() { openModal('Add demo account', `<form onsubmit="addUser(event)"><div class="field"><label>FULL NAME</label><input name="name" required></div><div class="field"><label>UNIVERSITY ID</label><input name="id" required></div><div class="field"><label>ROLE</label><select name="role"><option>Student</option><option>Lecturer</option><option>Administrator</option></select></div><button class="btn">Add sample account</button></form>`) }
           function addUser(e) { e.preventDefault(); let f = new FormData(e.target); db.users.push({ name: f.get('name'), id: f.get('id'), role: f.get('role'), status: 'Active' }); save(); closeModal(); renderPage(); toast('Sample account added.') }
@@ -1847,6 +2325,7 @@ Generated from the Africa University Student Success Portal.`;
           function closeModal() { document.getElementById('modal').classList.add('hidden') }
           function exportData() { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(db, null, 2)], { type: 'application/json' })); a.download = 'AU_portal_demo_data.json'; a.click(); URL.revokeObjectURL(a.href) }
           document.getElementById('modal').addEventListener('click', e => { if (e.target.id === 'modal') closeModal() });
+          openPasswordResetFromFragment();
           restoreAuthenticatedSession();
 
 /* AU_ASSESSMENT_ENHANCEMENTS_V1
@@ -1897,7 +2376,7 @@ Generated from the Africa University Student Success Portal.`;
         }
     ];
 
-    db.opportunities = Array.isArray(db.opportunities) ? db.opportunities : opportunitySeeds;
+    db.opportunities = (Array.isArray(db.opportunities) && db.opportunities.length) ? db.opportunities : opportunitySeeds;
     db.notifications = Array.isArray(db.notifications) ? db.notifications : [];
     db.applications = Array.isArray(db.applications) ? db.applications : [];
 
@@ -2161,6 +2640,7 @@ async function submitRegistration(event) {
             body: JSON.stringify({
                 user_id: document.getElementById('registerId').value.trim(),
                 full_name: document.getElementById('registerName').value.trim(),
+                email: document.getElementById('registerEmail').value.trim(),
                 password: document.getElementById('registerPassword').value
             })
         });
@@ -2216,6 +2696,13 @@ document.addEventListener('submit', function(event) {
                 </div>
 
                 <div class="field">
+                    <label>EMAIL ADDRESS</label>
+                    <input id="registerEmail" type="email" required maxlength="254"
+                           autocomplete="email"
+                           placeholder="Enter your email address">
+                </div>
+
+                <div class="field">
                     <label>CREATE PASSWORD</label>
                     <input id="registerPassword" type="password"
                            required minlength="10" maxlength="4096"
@@ -2239,7 +2726,7 @@ document.addEventListener('submit', function(event) {
             </form>
         </div>
     </div>
-</div><script src="workflow-bridge.js?v=1"></script>
+</div><script src="workflow-bridge.js?v=3"></script><script src="engagement-bridge.js?v=1"></script>
 </body>
 
 </html>

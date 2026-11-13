@@ -2,7 +2,7 @@
 
 A web portal where Africa University students build a **digital portfolio** and use it to apply for jobs and attachments, before or after graduation. Lecturers, career staff and alumni support them from the same site.
 
-> **Status: demonstration build.** Sign-in and accounts use a real MySQL database. Portfolio records (achievements, letters, placements) are still sample data stored in the browser. Please do not enter real student data.
+> **Status: demonstration build.** Sign-in, accounts, shared portfolio workflows and in-app notifications use MySQL. Use test data unless the installation has completed its institutional privacy and security review.
 
 ---
 
@@ -21,6 +21,22 @@ The university needed one place where every student can create and keep a portfo
 - **Academic integrity review** for lecturers.
 - **Account directory and user management** for the Administrator.
 - **Security basics**: prepared statements, lock-out after 5 wrong passwords, role checks on the server, one Administrator account only.
+- **Workflow notifications**: achievement submissions and decisions, recommendation requests and submitted letters are saved to the shared portal and create in-app notifications; email notices use the private Gmail SMTP configuration.
+- **Student Engagement Hub**: role-scoped deadlines and reminders, searchable opportunities, secure resource downloads, private staff/student messages, a consent-based activity feed and database-backed staff analytics.
+
+### Workflow email configuration
+
+The workflow API uses the same private mail configuration as password recovery. Keep `mail_config.php` outside the web project at `%USERPROFILE%\aussh_private\mail_config.php`; it returns an array containing `host`, `port`, `username`, `password`, `from_email`, and optionally `from_name`. The default SMTP host is Gmail with STARTTLS on port 587. Use a Gmail app password where required. Never add SMTP credentials to this repository or expose the private configuration file.
+
+Email is sent only to active account addresses selected from MySQL: verification-capable staff for achievement submissions, the selected lecturer for recommendation requests, and the submitting student's account for decisions and issued letters. Database commits and in-app notifications happen before delivery; a delivery failure is logged and shown as a warning without undoing a saved workflow record.
+
+### Student Engagement Hub
+
+The hub provisions its additional MySQL tables when the authenticated engagement API is first used. It reuses `portal_records` for opportunities and achievements and `portal_notifications` for the shared notification centre. New tables are `portal_engagement_items` (deadlines, announcements and resource metadata), `portal_engagement_tracks` (student reminders, bookmarks, completions and application participation), and `portal_messages` (private message conversations). Existing notification tables receive a nullable unique deduplication key without removing notification history.
+
+Staff permissions are checked in PHP on every write. Students/alumni can track deadlines, bookmark opportunities, mark application participation and message active university staff. Private activity-feed achievement entries appear only after verification and only when the student opted in at submission. Institutional analytics are limited to authorised management roles; other staff see workflow workload totals. When Career Advising is first used or an administrator provisions a `career_advisor`, an idempotent migration adds that role to an existing MySQL `users.role` ENUM while preserving its existing roles and default.
+
+Resource files are limited to PDF, DOCX, XLSX, PPTX and TXT (10 MB maximum), stored under `%USERPROFILE%\aussh_private\resources` outside the web root, and streamed through the authenticated `api/resource_download.php` endpoint. Keep this directory private and backed up. Career Advising accounts use the `career_advisor` role and must be provisioned by an administrator.
 
 ## Built with
 
@@ -95,17 +111,20 @@ Open **http://localhost/phpmyadmin**, then the `au_student_portal` database, the
 | Data | Where |
 | ---- | ----- |
 | Accounts (name, ID, role, status, password hash) and sessions | MySQL |
-| Achievements, letters, placements and other portfolio records | Browser `localStorage` (sample data) |
+| Shared achievements, recommendation requests, placements, support records and opportunities | MySQL (`portal_records`) |
+| Deadlines, announcements, and resource metadata | MySQL (`portal_engagement_items`) |
+| Reminders, saved opportunities, completion and application participation | MySQL (`portal_engagement_tracks`) |
+| Private staff/student messages | MySQL (`portal_messages`) |
+| In-app workflow notifications and review audit history | MySQL (`portal_notifications`, `portal_audit`) |
+| Private resource file contents | `%USERPROFILE%\aussh_private\resources` (outside the web root) |
+| Personal profile and academic demonstration content | Browser `localStorage` |
 
-## Roadmap
+## Next steps before institutional deployment
 
-- Move portfolio records into the database with role-based permissions
-- Password change and recovery
-- Secure document uploads (CVs, certificates)
-- Notifications for announcements and recommendation requests
-- Audit logs and backups
-- Better mobile experience
-- Integration with existing university systems
+- Configure production SMTP and verify institution-owned email addresses.
+- Review student privacy, retention, access, and operational backup policies.
+- Connect authoritative academic records and institution-approved identity and career-advising processes.
+- Conduct institution-specific security and accessibility testing.
 
 ## Hosting note
 

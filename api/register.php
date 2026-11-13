@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/bootstrap.php';
+require_once __DIR__ . '/role_migrations.php';
 
 requirePost();
 verifyCsrf();
@@ -14,12 +15,14 @@ if (!is_array($input)) {
 
 $userId = trim((string)($input['user_id'] ?? ''));
 $fullName = trim((string)($input['full_name'] ?? ''));
+$email = strtolower(trim((string)($input['email'] ?? '')));
 $password = (string)($input['password'] ?? '');
 
 $requestedRole = strtolower(trim((string)($input['role'] ?? 'student')));
+
 $allowedRoles = [
     'student', 'lecturer', 'verifier', 'hod', 'registry',
-    'supervisor', 'chaplaincy', 'dean', 'admin', 'alumni'
+    'supervisor', 'chaplaincy', 'dean', 'career_advisor', 'admin', 'alumni'
 ];
 
 $sessionUser = $_SESSION['user'] ?? null;
@@ -40,33 +43,76 @@ if ($requestedRole !== 'student' && !$isAdmin) {
     ], 403);
 }
 
-$role = $requestedRole;
-
 if (
     !preg_match('/^[A-Za-z0-9._-]{3,64}$/', $userId) ||
     strlen($fullName) < 2 ||
     strlen($fullName) > 120 ||
+    strlen($email) > 254 ||
+    !filter_var($email, FILTER_VALIDATE_EMAIL) ||
     strlen($password) < 10 ||
     strlen($password) > 4096
 ) {
     jsonResponse([
         'success' => false,
-        'message' => 'Enter a valid university ID, full name and password of at least 10 characters.'
+        'message' => 'Enter a valid university ID, full name, email address and password of at least 10 characters.'
     ], 422);
 }
 
 try {
     $pdo = database();
+    if ($requestedRole !== 'student') {
+        $sessionUser = requireAuthentication();
+        $authorisation = $pdo->prepare(
+            "SELECT role FROM users
+             WHERE user_id = ? AND status = 'Active' LIMIT 1"
+        );
+        $authorisation->execute([$sessionUser['user_id']]);
+        if ($authorisation->fetchColumn() !== 'admin' || ($sessionUser['role'] ?? '') !== 'admin') {
+            jsonResponse([
+                'success' => false,
+                'message' => 'Only an active administrator can create staff accounts.'
+            ], 403);
+        }
+    }
+
+    if ($requestedRole === 'career_advisor') {
+        ensureCareerAdvisorRole($pdo);
+    }
+
+    $check = $pdo->prepare(
+        'SELECT user_id, email FROM users
+         WHERE user_id = ? OR email = ?
+         LIMIT 1'
+    );
+
+    $check->execute([$userId, $email]);
+    $existing = $check->fetch(PDO::FETCH_ASSOC);
+
+    if ($existing) {
+        if ($existing['user_id'] === $userId) {
+            jsonResponse([
+                'success' => false,
+                'message' => 'This university ID already has an account.'
+            ], 409);
+        }
+
+        jsonResponse([
+            'success' => false,
+            'message' => 'This email address is already registered.'
+        ], 409);
+    }
 
     $statement = $pdo->prepare(
-        'INSERT INTO users (user_id, full_name, role, password_hash, status)
-         VALUES (?, ?, ?, ?, ?)'
+        'INSERT INTO users
+            (user_id, full_name, email, role, password_hash, status)
+         VALUES (?, ?, ?, ?, ?, ?)'
     );
 
     $statement->execute([
         $userId,
         $fullName,
-        $role,
+        $email,
+        $requestedRole,
         password_hash($password, PASSWORD_DEFAULT),
         'Active'
     ]);
@@ -76,18 +122,18 @@ try {
         'message' => 'Account created successfully. You can now sign in.'
     ], 201);
 
-} catch (PDOException $e) {
-    if ($e->getCode() === '23000') {
+}catch (PDOException $e) {
+    if ((string) $e->getCode() === '23000') {
         jsonResponse([
             'success' => false,
-            'message' => 'This university ID already has an account.'
+            'message' => 'This university ID or email address is already registered.'
         ], 409);
     }
 
-    error_log('Student registration error: ' . $e->getMessage());
+    error_log('Registration database error: ' . $e->getMessage());
 
     jsonResponse([
         'success' => false,
-        'message' => 'Account registration is temporarily unavailable.'
+        'message' => 'Registration could not be completed. Please try again.'
     ], 500);
 }

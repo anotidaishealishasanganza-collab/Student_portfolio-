@@ -1,4 +1,4 @@
-﻿/api/config.local.php
+/api/config.local.php
 /api/config.local.php.bak
 *.authentication-backup
 *.pre-auth-backup
@@ -7,3 +7,20 @@
 *.backup-*
 *.before-*
 backup_account_isolation_*/
+
+# Private email configuration
+C:\Users\USER\aussh_private\
+
+# AUSSH local development files
+/vendor/
+*.log
+*.before_*
+*.before-*
+*.bak
+*.backup
+*-backup-*/
+*_backup_*/
+before_recovery_ui_*/
+password-recovery-backup-*/
+integration-backup-*/
+verified-repair-*/
