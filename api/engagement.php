@@ -492,7 +492,7 @@ if ($action === 'save_item') {
     engagementNotifyUsers(
         $pdo,
         $audienceRoles,
-        $type === 'deadline' ? 'New deadline or event' : 'New AU Student Success Hub announcement',
+        $type === 'deadline' ? 'New deadline or event' : 'New AU Student Success Hub (AUSSH) announcement',
         $data['title'] . ' — ' . $data['description'],
         $type,
         $id,
@@ -753,9 +753,9 @@ if ($action === 'send_message') {
     $pdo->commit();
     $emailSent = engagementMail(
         $recipient,
-        'New AU Student Success Hub message',
+        'New AU Student Success Hub (AUSSH) message',
         'You have a new message from ' . $user['full_name'] . ".\n\n"
-            . mb_substr($body, 0, 500) . "\n\nSign in to the AU Student Success Hub to reply.",
+            . mb_substr($body, 0, 500) . "\n\nSign in to the AU Student Success Hub (AUSSH) to reply.",
         'message',
         $id
     );

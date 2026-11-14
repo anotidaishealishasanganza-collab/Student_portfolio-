@@ -215,7 +215,7 @@
     const filter = state.filters.feed;
     const rows = state.feed.filter(row => (filter === 'All' || row.category === filter)
       && [row.payload.title, row.payload.description, row.owner_name, row.category].join(' ').toLowerCase().includes(search));
-    const feed = rows.map(row => `<article class="hub-feed-item"><span class="hub-icon">${row.feed_type === 'achievement' ? '✦' : row.feed_type === 'event' ? '◷' : '✧'}</span><div><div class="hub-meta">${statusPill(row.category)}<span>${dateLabel(row.created_at)}</span></div><h3 style="margin:6px 0;color:var(--wine)">${esc(row.payload.title || row.category)}</h3><p>${esc(row.payload.description || '')}</p>${row.feed_type === 'achievement' ? `<small class="muted">Shared by ${esc(row.owner_name)} · Approved achievement</small>` : `<small class="muted">Africa University Student Success Hub · ${esc(row.owner_name)}</small>`}</div></article>`).join('');
+    const feed = rows.map(row => `<article class="hub-feed-item"><span class="hub-icon">${row.feed_type === 'achievement' ? '✦' : row.feed_type === 'event' ? '◷' : '✧'}</span><div><div class="hub-meta">${statusPill(row.category)}<span>${dateLabel(row.created_at)}</span></div><h3 style="margin:6px 0;color:var(--wine)">${esc(row.payload.title || row.category)}</h3><p>${esc(row.payload.description || '')}</p>${row.feed_type === 'achievement' ? `<small class="muted">Shared by ${esc(row.owner_name)} · Approved achievement</small>` : `<small class="muted">AU Student Success Hub (AUSSH) · ${esc(row.owner_name)}</small>`}</div></article>`).join('');
     const announcements = state.items.filter(item => item.item_type === 'announcement');
     const management = staffManagement()
       ? `<div class="card" style="margin-top:16px"><div class="section-head"><div><h2 class="panel-title">Manage announcements</h2><p>Publish, edit or remove updates shared with the AU community.</p></div><button class="btn small" onclick="hubAnnouncementForm()">＋ Publish announcement</button></div>${announcements.map(item => `<div class="list-row"><div><b>${esc(item.title)}</b><small>${esc(item.category)} · ${dateLabel(item.created_at)}</small></div><div class="hub-actions"><button class="btn light small" onclick="hubEditAnnouncement(${Number(item.id)})">Edit</button><button class="btn light small" onclick="hubDeleteItem(${Number(item.id)})">Delete</button></div></div>`).join('') || '<p class="muted">No announcements published yet.</p>'}</div>`
@@ -413,23 +413,8 @@
   };
   window.hubCareerAdvisorForm = function () {
     if (currentRole !== 'admin') return toast('Only an administrator can provision Career Advising accounts.');
-    openModal('Create Career Advising account', `<form onsubmit="hubCreateCareerAdvisor(event)"><div class="field"><label>UNIVERSITY ID</label><input name="user_id" maxlength="64" pattern="[A-Za-z0-9._-]{3,64}" required></div><div class="field"><label>FULL NAME</label><input name="full_name" maxlength="120" required></div><div class="field"><label>EMAIL ADDRESS</label><input name="email" type="email" maxlength="254" required></div><div class="field"><label>TEMPORARY PASSWORD</label><input name="password" type="password" minlength="10" maxlength="4096" required></div><p class="muted">Share the temporary password securely and ask the account holder to change it.</p><button class="btn">Create account</button></form>`);
-  };
-  window.hubCreateCareerAdvisor = async function (event) {
-    event.preventDefault();
-    const form = Object.fromEntries(new FormData(event.target));
-    try {
-      const response = await fetch('api/register.php', {
-        method: 'POST',
-        credentials: 'same-origin',
-        cache: 'no-store',
-        headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken },
-        body: JSON.stringify({ ...form, role: 'career_advisor' })
-      });
-      const result = await response.json();
-      if (!response.ok || !result.success) throw new Error(result.message || 'Account creation failed.');
-      await reloadAndRender('Career Advising account created.');
-    } catch (error) { toast(error.message); }
+    if (typeof window.accountCreateForm === 'function') window.accountCreateForm('career_advisor');
+    else toast('Account management is loading. Try again shortly.');
   };
 
   const originalRender = window.renderPage;
@@ -473,13 +458,6 @@
     });
     updateUnreadCounts();
   };
-  if (typeof window.usersPage === 'function') {
-    const originalUsersPage = window.usersPage;
-    window.usersPage = function () {
-      return originalUsersPage()
-        + `<div class="card" style="margin-top:16px"><div class="section-head"><div><h2 class="panel-title">Career Advising access</h2><p>Create a real Career Advising account to publish opportunities and view career engagement analytics.</p></div><button class="btn small" onclick="hubCareerAdvisorForm()">＋ Create Career Advisor account</button></div></div>`;
-    };
-  }
   const originalActivate = window.activateAuthenticatedUser;
   window.activateAuthenticatedUser = function (user) {
     originalActivate(user);

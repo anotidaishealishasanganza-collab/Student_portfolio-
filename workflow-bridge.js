@@ -3,11 +3,15 @@
   const apiUrl = 'api/workflows.php';
   let refreshTimer = null;
   let availableLecturers = [];
+  let selectedAchievementFiles = [];
   const toLocalRecord = r => ({
     id: Number(r.id), type: r.payload.type || (r.record_type === 'achievement' ? 'Achievement' : r.record_type),
     year: r.payload.year || '', title: r.payload.title || r.payload.organisation || r.record_type,
     detail: r.payload.detail || r.payload.message || '', evidence: r.payload.evidence || '',
+    evidence_submissions: Array.isArray(r.payload.evidence_submissions) ? r.payload.evidence_submissions : [],
+    attachments: Array.isArray(r.attachments) ? r.attachments : [],
     status: r.status, student: r.owner_name, studentId: r.owner_user_id,
+    ownerCollege: r.owner_college || '',
     date: String(r.created_at || '').slice(0,10), comment: r.payload.review_comment || '',
     reviewer: r.payload.reviewer || '', to: r.payload.to || '', purpose: r.payload.purpose || '',
     note: r.payload.note || r.payload.context || '', body: r.payload.body || '',
@@ -33,6 +37,7 @@
       const response = await fetch(apiUrl, { credentials: 'same-origin', cache: 'no-store' });
       const data = await response.json();
       if (!response.ok || !data.success) throw new Error(data.message || 'Could not load shared records.');
+      if (data.current_user && authenticatedUser) Object.assign(authenticatedUser, data.current_user);
       availableLecturers = Array.isArray(data.lecturers) ? data.lecturers : [];
       const rows = data.records.map(toLocalRecord);
       db.items = rows.filter((x, i) => x.studentId && data.records[i].record_type === 'achievement');
@@ -70,10 +75,127 @@
       refreshTimer = setInterval(() => refreshSharedRecords(false), 12000);
     };
   }
-  window.addAchievement = async function (e) {
-    e.preventDefault(); const f = new FormData(e.target);
-    try { const result = await createRecord('achievement', { type:f.get('type'), year:f.get('year'), title:String(f.get('title')).trim(), detail:String(f.get('detail')).trim(), evidence:String(f.get('evidence')||'').trim(), share_activity:f.get('share_activity') === 'on' }); closeModal(); toast('Achievement submitted to the shared verifier queue.' + emailDeliveryMessage(result)); }
-    catch(err){ toast(err.message); }
+  const allowedEvidenceExtensions = new Set(['pdf', 'jpg', 'jpeg', 'png', 'doc', 'docx']);
+  function displayEvidenceFiles() {
+    const list = document.getElementById('achievementSelectedFiles');
+    if (!list) return;
+    list.innerHTML = selectedAchievementFiles.map((file, index) =>
+      `<div class="list-row"><span>${esc(file.name)} · ${(file.size / 1048576).toFixed(2)} MB</span><button type="button" class="btn light small" onclick="achievementRemoveSelectedFile(${index})">Remove</button></div>`
+    ).join('') || '<small class="muted">No files selected.</small>';
+  }
+  window.resetAchievementEvidenceSelection = function () {
+    selectedAchievementFiles = [];
+    displayEvidenceFiles();
+  };
+  function validateEvidenceFiles(files, existingCount = 0) {
+    if (files.length + existingCount > 5) return 'An achievement can have no more than five evidence files.';
+    for (const file of files) {
+      const extension = file.name.split('.').pop().toLowerCase();
+      if (!allowedEvidenceExtensions.has(extension)) return `${file.name}: select a PDF, JPG/JPEG, PNG, DOC or DOCX file.`;
+      if (file.size < 1) return `${file.name}: empty files cannot be uploaded.`;
+      if (file.size > 10 * 1024 * 1024) return `${file.name}: each file must be 10 MB or smaller.`;
+    }
+    return '';
+  }
+  window.achievementFilesChanged = function (input) {
+    selectedAchievementFiles = Array.from(input.files || []);
+    const error = validateEvidenceFiles(selectedAchievementFiles);
+    if (error) {
+      selectedAchievementFiles = [];
+      input.value = '';
+      toast(error);
+    }
+    displayEvidenceFiles();
+  };
+  window.achievementRemoveSelectedFile = function (index) {
+    selectedAchievementFiles.splice(index, 1);
+    const list = document.getElementById('achievementSelectedFiles');
+    const picker = list && list.parentElement.querySelector('input[type="file"]');
+    if (picker) picker.value = '';
+    displayEvidenceFiles();
+  };
+  function sendAchievementEvidence(form, action, fields, existingCount = 0) {
+    const error = validateEvidenceFiles(selectedAchievementFiles, existingCount);
+    if (error) { toast(error); return; }
+    const progress = form.querySelector('#achievementUploadProgress');
+    const progressBar = form.querySelector('#achievementUploadProgressBar');
+    const progressText = form.querySelector('#achievementUploadProgressText');
+    const submit = form.querySelector('button[type="submit"]');
+    const body = new FormData();
+    body.append('action', action);
+    if (action === 'create') {
+      body.append('type', 'achievement');
+      body.append('payload', JSON.stringify(fields));
+    } else {
+      Object.entries(fields).forEach(([key, value]) => body.append(key, value));
+    }
+    selectedAchievementFiles.forEach(file => body.append('evidence_files[]', file, file.name));
+    if (progress) progress.style.display = 'block';
+    if (submit) submit.disabled = true;
+    const request = new XMLHttpRequest();
+    request.open('POST', apiUrl);
+    request.withCredentials = true;
+    request.setRequestHeader('X-CSRF-Token', csrfToken);
+    request.upload.onprogress = event => {
+      if (!event.lengthComputable || !progressBar || !progressText) return;
+      const percent = Math.round(event.loaded / event.total * 100);
+      progressBar.value = percent;
+      progressText.textContent = `Uploading evidence: ${percent}%`;
+    };
+    request.onload = async () => {
+      let result;
+      try { result = JSON.parse(request.responseText); }
+      catch (_) { result = null; }
+      if (request.status < 200 || request.status >= 300 || !result || !result.success) {
+        if (submit) submit.disabled = false;
+        if (progressText) progressText.textContent = result && result.message ? result.message : 'The evidence upload failed. Try again.';
+        toast(result && result.message ? result.message : 'The evidence upload failed. Try again.');
+        return;
+      }
+      if (progressBar) progressBar.value = 100;
+      if (progressText) progressText.textContent = 'Upload complete.';
+      selectedAchievementFiles = [];
+      await refreshSharedRecords(true);
+      closeModal();
+      toast(action === 'create'
+        ? 'Achievement and evidence submitted to the shared verifier queue.' + emailDeliveryMessage(result)
+        : 'Additional evidence uploaded and the achievement resubmitted for verification.');
+    };
+    request.onerror = () => {
+      if (submit) submit.disabled = false;
+      if (progressText) progressText.textContent = 'The upload could not reach the server. Try again.';
+      toast('The upload could not reach the server. Try again.');
+    };
+    request.send(body);
+  }
+  window.addAchievement = function (event) {
+    event.preventDefault();
+    if (!csrfToken) { toast('Security token missing. Please sign in again.'); return; }
+    const form = event.target;
+    const values = new FormData(form);
+    sendAchievementEvidence(form, 'create', {
+      type: values.get('type'),
+      year: values.get('year'),
+      title: String(values.get('title') || '').trim(),
+      detail: String(values.get('detail') || '').trim(),
+      evidence: String(values.get('evidence') || '').trim(),
+      share_activity: values.get('share_activity') === 'on'
+    });
+  };
+  window.addAchievementEvidence = function (event, id) {
+    event.preventDefault();
+    if (!csrfToken) { toast('Security token missing. Please sign in again.'); return; }
+    const record = db.items.find(item => Number(item.id) === Number(id));
+    if (!record || record.status !== 'Needs changes') {
+      toast('Additional evidence can only be uploaded to an achievement returned for changes.');
+      return;
+    }
+    const form = event.target;
+    const values = new FormData(form);
+    sendAchievementEvidence(form, 'add_evidence', {
+      id: String(Number(id)),
+      evidence_description: String(values.get('evidence_description') || '').trim()
+    }, (record.attachments || []).length);
   };
   window.saveDecision = async function (e,id,status) {
     e.preventDefault(); const comment = new FormData(e.target).get('comment') || '';

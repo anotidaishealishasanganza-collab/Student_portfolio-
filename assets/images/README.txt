@@ -1,4 +1,3 @@
-Place the authorised official Africa University logo here as:
-africa-university-logo.png
+The application currently uses aussh-favicon.svg, a custom AU Student Success Hub monogram, for its favicon and interface mark.
 
-The page is configured to load this exact path. Until the file is supplied, it displays an AU fallback monogram and does not misrepresent that monogram as the official logo.
+The official Africa University logo is not included in this repository. Do not treat the custom AUSSH monogram as the official university logo. If an authorised official logo is supplied, keep its identity clear and use it only as the university mark.

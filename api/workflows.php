@@ -3,9 +3,12 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/bootstrap.php';
 require_once __DIR__ . '/mailer.php';
+require_once __DIR__ . '/achievement_evidence_lib.php';
+require_once __DIR__ . '/account_management_lib.php';
 
 $user = requireAuthentication();
 $pdo = database();
+ensureAccountCollegeSchema($pdo);
 $account = $pdo->prepare(
     "SELECT user_id, full_name, role
      FROM users
@@ -56,6 +59,7 @@ $pdo->exec("CREATE TABLE IF NOT EXISTS portal_audit (
  INDEX idx_record (record_type, record_id), INDEX idx_actor (actor_user_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
 
+ensureAchievementEvidenceSchema($pdo);
 ensureNotificationDedupeSchema($pdo);
 
 function ensureNotificationDedupeSchema(PDO $pdo): void
@@ -208,7 +212,9 @@ if ($method === 'GET') {
     }
 
     $statement = $pdo->prepare(
-        "SELECT r.* FROM portal_records r
+        "SELECT r.*, COALESCE(p.college, '') AS owner_college
+         FROM portal_records r
+         LEFT JOIN portal_account_profiles p ON p.user_id = r.owner_user_id
          WHERE $where
          ORDER BY r.created_at DESC LIMIT 1000"
     );
@@ -217,8 +223,37 @@ if ($method === 'GET') {
     foreach ($rows as &$row) {
         $row['payload'] = json_decode((string)$row['payload'], true) ?: [];
         $row['id'] = (int)$row['id'];
+        $row['attachments'] = [];
     }
     unset($row);
+    $achievementIds = array_values(array_map(
+        static fn(array $row): int => (int)$row['id'],
+        array_filter($rows, static fn(array $row): bool => $row['record_type'] === 'achievement')
+    ));
+    if ($achievementIds) {
+        $placeholders = implode(',', array_fill(0, count($achievementIds), '?'));
+        $attachmentQuery = $pdo->prepare(
+            "SELECT id, record_id, original_filename, mime_type, file_size, uploaded_at
+             FROM portal_achievement_evidence
+             WHERE record_id IN ($placeholders)
+             ORDER BY uploaded_at, id"
+        );
+        $attachmentQuery->execute($achievementIds);
+        $attachmentsByRecord = [];
+        foreach ($attachmentQuery->fetchAll(PDO::FETCH_ASSOC) as $attachment) {
+            $recordId = (int)$attachment['record_id'];
+            unset($attachment['record_id']);
+            $attachment['id'] = (int)$attachment['id'];
+            $attachment['file_size'] = (int)$attachment['file_size'];
+            $attachmentsByRecord[$recordId][] = $attachment;
+        }
+        foreach ($rows as &$row) {
+            if ($row['record_type'] === 'achievement') {
+                $row['attachments'] = $attachmentsByRecord[$row['id']] ?? [];
+            }
+        }
+        unset($row);
+    }
 
     $notifications = $pdo->prepare(
         'SELECT id, title, message, record_type, record_id, is_read, created_at
@@ -232,6 +267,16 @@ if ($method === 'GET') {
         'success' => true,
         'records' => $rows,
         'notifications' => $notifications->fetchAll(PDO::FETCH_ASSOC),
+    ];
+    $profile = $pdo->prepare(
+        'SELECT COALESCE(college, \'\') AS college, programme, study_year
+         FROM portal_account_profiles WHERE user_id = ? LIMIT 1'
+    );
+    $profile->execute([$user['user_id']]);
+    $response['current_user'] = $profile->fetch(PDO::FETCH_ASSOC) ?: [
+        'college' => '',
+        'programme' => '',
+        'study_year' => '',
     ];
     if ($user['role'] === 'student') {
         $lecturers = $pdo->query(
@@ -250,7 +295,21 @@ if ($method !== 'POST') {
     jsonResponse(['success' => false, 'message' => 'Method not allowed.'], 405);
 }
 verifyCsrf();
-$input = json_decode((string)file_get_contents('php://input'), true);
+$contentType = strtolower((string)($_SERVER['CONTENT_TYPE'] ?? ''));
+if (str_starts_with($contentType, 'multipart/form-data')) {
+    $input = $_POST;
+    if (isset($input['payload']) && is_string($input['payload'])) {
+        $payloadInput = json_decode($input['payload'], true);
+        if (is_array($payloadInput)) {
+            $input['payload'] = $payloadInput;
+        }
+    }
+    if (!$input && !$_FILES && (int)($_SERVER['CONTENT_LENGTH'] ?? 0) > 0) {
+        jsonResponse(['success' => false, 'message' => 'The evidence upload exceeds the server request limit. Reduce file sizes or contact support.'], 413);
+    }
+} else {
+    $input = json_decode((string)file_get_contents('php://input'), true);
+}
 if (!is_array($input)) {
     jsonResponse(['success' => false, 'message' => 'Invalid request.'], 400);
 }
@@ -294,6 +353,11 @@ if ($action === 'create') {
             'evidence' => trim($evidence),
             'share_activity' => ($payload['share_activity'] ?? false) === true,
         ];
+        try {
+            $evidenceUploads = collectAchievementEvidenceUploads();
+        } catch (AchievementEvidenceException $error) {
+            jsonResponse(['success' => false, 'message' => $error->getMessage()], $error->httpStatus);
+        }
     } elseif ($type === 'recommendation') {
         $lecturerId = requiredText($payload['lecturer_user_id'] ?? null, 64);
         $purpose = requiredText($payload['purpose'] ?? null, 120);
@@ -350,6 +414,9 @@ if ($action === 'create') {
             'deadline' => $deadline,
         ];
     }
+    if ($type !== 'achievement' && !empty($_FILES)) {
+        jsonResponse(['success' => false, 'message' => 'Evidence files can only be attached to achievement submissions.'], 422);
+    }
 
     $assignedRole = [
         'achievement' => 'verifier',
@@ -360,6 +427,7 @@ if ($action === 'create') {
     ][$type];
     $status = $type === 'opportunity' ? 'Published' : 'Pending';
     $recipients = [];
+    $storedEvidencePaths = [];
     $pdo->beginTransaction();
     try {
         $statement = $pdo->prepare(
@@ -376,6 +444,20 @@ if ($action === 'create') {
             $assignedRole,
         ]);
         $recordId = (int)$pdo->lastInsertId();
+        $storedAttachments = $type === 'achievement'
+            ? storeAchievementEvidence($pdo, $recordId, (string)$user['user_id'], $evidenceUploads, $storedEvidencePaths)
+            : [];
+        if ($type === 'achievement') {
+            $payload['evidence_submissions'] = [[
+                'description' => $payload['evidence'],
+                'submitted_at' => date(DATE_ATOM),
+                'attachment_ids' => array_column($storedAttachments, 'id'),
+            ]];
+            $pdo->prepare('UPDATE portal_records SET payload = ? WHERE id = ?')->execute([
+                json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR),
+                $recordId,
+            ]);
+        }
         $pdo->prepare(
             'INSERT INTO portal_audit(actor_user_id, action, record_type, record_id, details)
              VALUES (?, ?, ?, ?, ?)'
@@ -384,7 +466,10 @@ if ($action === 'create') {
             'created',
             $type,
             $recordId,
-            json_encode(['status' => $status], JSON_THROW_ON_ERROR),
+            json_encode([
+                'status' => $status,
+                'attachment_count' => count($storedAttachments),
+            ], JSON_THROW_ON_ERROR),
         ]);
 
         if ($type === 'recommendation') {
@@ -441,6 +526,10 @@ if ($action === 'create') {
         if ($pdo->inTransaction()) {
             $pdo->rollBack();
         }
+        removeStoredAchievementEvidence($storedEvidencePaths);
+        if ($error instanceof AchievementEvidenceException) {
+            jsonResponse(['success' => false, 'message' => $error->getMessage()], $error->httpStatus);
+        }
         throw $error;
     }
 
@@ -449,7 +538,7 @@ if ($action === 'create') {
         $emailsSent = workflowEmails(
             $recipients,
             'Achievement submitted for verification',
-            $user['full_name'] . ' submitted "' . $payload['title'] . '" for verification in the AU Student Success Hub.',
+            $user['full_name'] . ' submitted "' . $payload['title'] . '" for verification in the AU Student Success Hub (AUSSH).',
             'achievement-submitted',
             $recordId
         );
@@ -471,6 +560,110 @@ if ($action === 'create') {
         'email_count' => in_array($type, ['achievement', 'recommendation'], true)
             ? max(1, count($recipients))
             : 0,
+    ], 201);
+}
+
+if ($action === 'add_evidence') {
+    $recordId = filter_var($input['id'] ?? null, FILTER_VALIDATE_INT);
+    $description = $input['evidence_description'] ?? null;
+    if (
+        $recordId === false || $recordId === null || $recordId < 1 ||
+        !is_string($description) || mb_strlen(trim($description), 'UTF-8') > 500
+    ) {
+        jsonResponse(['success' => false, 'message' => 'Enter a valid evidence description and achievement.'], 422);
+    }
+    if ($user['role'] !== 'student') {
+        jsonResponse(['success' => false, 'message' => 'Only the student who owns an achievement can add evidence.'], 403);
+    }
+
+    $storedEvidencePaths = [];
+    $pdo->beginTransaction();
+    try {
+        $recordQuery = $pdo->prepare('SELECT * FROM portal_records WHERE id = ? FOR UPDATE');
+        $recordQuery->execute([$recordId]);
+        $record = $recordQuery->fetch(PDO::FETCH_ASSOC);
+        if (
+            !$record || $record['record_type'] !== 'achievement' ||
+            !hash_equals((string)$record['owner_user_id'], (string)$user['user_id'])
+        ) {
+            $pdo->rollBack();
+            jsonResponse(['success' => false, 'message' => 'Achievement not found or not authorised.'], 404);
+        }
+        if ($record['status'] !== 'Needs changes') {
+            $pdo->rollBack();
+            jsonResponse(['success' => false, 'message' => 'Additional evidence can only be submitted after a correction request.'], 409);
+        }
+        $countQuery = $pdo->prepare('SELECT COUNT(*) FROM portal_achievement_evidence WHERE record_id = ?');
+        $countQuery->execute([$recordId]);
+        $existingCount = (int)$countQuery->fetchColumn();
+        $evidenceUploads = collectAchievementEvidenceUploads(true, $existingCount);
+        $storedAttachments = storeAchievementEvidence(
+            $pdo,
+            (int)$recordId,
+            (string)$user['user_id'],
+            $evidenceUploads,
+            $storedEvidencePaths
+        );
+
+        $payload = json_decode((string)$record['payload'], true) ?: [];
+        $payload['evidence_submissions'] = is_array($payload['evidence_submissions'] ?? null)
+            ? $payload['evidence_submissions']
+            : [[
+                'description' => (string)($payload['evidence'] ?? ''),
+                'submitted_at' => $record['created_at'],
+                'attachment_ids' => [],
+            ]];
+        $payload['evidence_submissions'][] = [
+            'description' => trim($description),
+            'submitted_at' => date(DATE_ATOM),
+            'attachment_ids' => array_column($storedAttachments, 'id'),
+        ];
+        $pdo->prepare('UPDATE portal_records SET status = ?, payload = ? WHERE id = ?')->execute([
+            'Pending',
+            json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR),
+            $recordId,
+        ]);
+        $pdo->prepare(
+            'INSERT INTO portal_audit(actor_user_id, action, record_type, record_id, details)
+             VALUES (?, ?, ?, ?, ?)'
+        )->execute([
+            $user['user_id'],
+            'evidence_resubmitted',
+            'achievement',
+            $recordId,
+            json_encode([
+                'status' => 'Pending',
+                'attachment_ids' => array_column($storedAttachments, 'id'),
+                'evidence_description' => trim($description),
+            ], JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR),
+        ]);
+        $nextSubmission = count($payload['evidence_submissions']);
+        foreach (usersForRoles($pdo, allowedRolesForType('achievement')) as $recipient) {
+            addWorkflowNotification(
+                $pdo,
+                (string)$recipient['user_id'],
+                'Achievement evidence resubmitted',
+                $user['full_name'] . ' added evidence to "' . ($payload['title'] ?? 'Achievement') . '".',
+                'achievement',
+                (int)$recordId,
+                'evidence-resubmitted-' . $nextSubmission
+            );
+        }
+        $pdo->commit();
+    } catch (Throwable $error) {
+        if ($pdo->inTransaction()) {
+            $pdo->rollBack();
+        }
+        removeStoredAchievementEvidence($storedEvidencePaths);
+        if ($error instanceof AchievementEvidenceException) {
+            jsonResponse(['success' => false, 'message' => $error->getMessage()], $error->httpStatus);
+        }
+        throw $error;
+    }
+    jsonResponse([
+        'success' => true,
+        'status' => 'Pending',
+        'attachment_count' => count($storedAttachments),
     ], 201);
 }
 

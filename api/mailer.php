@@ -45,13 +45,13 @@ function sendPasswordResetEmail(string $recipient, string $name, string $resetLi
 
     $mail->setFrom(
         $mailConfig['from_email'],
-        $mailConfig['from_name'] ?? 'AU Student Success Hub'
+        'AU Student Success Hub (AUSSH)'
     );
 
     $mail->addAddress($recipient, $name);
 
     $mail->isHTML(true);
-    $mail->Subject = 'Reset your AU Student Success Hub password';
+    $mail->Subject = 'Reset your AU Student Success Hub (AUSSH) password';
 
     $safeName = htmlspecialchars($name, ENT_QUOTES, 'UTF-8');
     $safeLink = htmlspecialchars($resetLink, ENT_QUOTES, 'UTF-8');
@@ -59,13 +59,14 @@ function sendPasswordResetEmail(string $recipient, string $name, string $resetLi
     $mail->Body = '
         <div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;padding:28px;color:#333">
             <div style="background:#641c32;color:white;padding:24px;border-radius:12px">
-                <h2 style="margin:0">AU Student Success Hub</h2>
+                <h2 style="margin:0">AU Student Success Hub (AUSSH)</h2>
+                <p style="margin:6px 0 0">Africa University Student Success Portal</p>
                 <p style="margin-bottom:0">Account security and password recovery</p>
             </div>
 
             <h2>Hello ' . $safeName . ',</h2>
 
-            <p>We received a request to reset the password for your AU Student Success Hub account.</p>
+            <p>We received a request to reset the password for your AU Student Success Hub (AUSSH) account.</p>
 
             <p>Use the button below to create a new password.</p>
 
@@ -82,7 +83,7 @@ function sendPasswordResetEmail(string $recipient, string $name, string $resetLi
             <p>If you did not request this change, you can safely ignore this email.</p>
 
             <hr>
-            <small>AU Student Success Hub (AUSSH)</small>
+            <small>AU Student Success Hub (AUSSH) · Africa University Student Success Portal</small>
         </div>
     ';
 
@@ -137,7 +138,7 @@ function sendWorkflowEmail(string $recipient, string $name, string $subject, str
     $mail->Timeout = 12;
     $mail->setFrom(
         $mailConfig['from_email'],
-        $mailConfig['from_name'] ?? 'AU Student Success Hub'
+        'AU Student Success Hub (AUSSH)'
     );
     $safeHeaderName = preg_replace('/[\r\n\x00-\x1F\x7F]/u', ' ', $name) ?? '';
     $safeHeaderSubject = preg_replace('/[\r\n\x00-\x1F\x7F]/u', ' ', $subject) ?? '';
@@ -151,15 +152,15 @@ function sendWorkflowEmail(string $recipient, string $name, string $subject, str
     $mail->Body = '
         <div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;padding:28px;color:#333">
             <div style="background:#641c32;color:#fff;padding:22px;border-radius:12px">
-                <h2 style="margin:0">Africa University</h2>
-                <p style="margin:8px 0 0">Student Success Hub</p>
+                <h2 style="margin:0">AU Student Success Hub (AUSSH)</h2>
+                <p style="margin:8px 0 0">Africa University Student Success Portal</p>
             </div>
             <h2>Hello ' . $safeName . ',</h2>
             <h3>' . $safeSubject . '</h3>
             <p>' . $safeMessage . '</p>
             <hr>
-            <small>Africa University Student Success Hub (AUSSH)</small>
+            <small>AU Student Success Hub (AUSSH) · Africa University Student Success Portal</small>
         </div>';
-    $mail->AltBody = "Hello {$safeHeaderName},\n\n{$message}\n\nAfrica University Student Success Hub (AUSSH)";
+    $mail->AltBody = "Hello {$safeHeaderName},\n\n{$message}\n\nAU Student Success Hub (AUSSH)\nAfrica University Student Success Portal";
     $mail->send();
 }
