@@ -13,7 +13,7 @@ The university needed one place where every student can create and keep a portfo
 ## Features
 
 - **Sign in and sign up**: accounts are saved in MySQL, passwords are hashed (bcrypt), and sessions are kept on the server.
-- **Role-based dashboards**: Student, Alumni, Lecturer, Verifier, HOD, Registry, Supervisor, Chaplaincy, Dean, Career Advisor and Administrator each have role-appropriate workspaces.
+- **Role-based dashboards**: Student, Alumni, Lecturer, Verifier, HOD, Registry, academic and workplace supervisors, Chaplaincy, Dean, Career Advisor and Administrator each have role-appropriate workspaces.
 - **Student portfolio**: achievements, skills and a personal journey ("Beyond the transcript").
 - **Recommendation letters**: students request them, lecturers respond.
 - **Career and placement support**: opportunities, attachments and graduate placements.
@@ -36,7 +36,7 @@ The existing University ID login and `users` table remain in place. Apply `datab
 
 Students register only as students and must select one of the five required College / School values: College of Business and Management Sciences; College of Engineering and Applied Sciences; College of Health, Agriculture and Natural Sciences; College of Social Sciences, Theology, Humanities and Education; or School of Law. They also provide their programme and study year. Their identity record remains `Pending` until Registry verifies it; registration does not assert verified academic status. Registry's **Student Verification** queue supports verification or reason-required rejection (which disables the account) and records the reviewer, date, audit event and in-app notification. Optionally set `AUSSH_UNIVERSITY_EMAIL_DOMAINS` to a comma-separated institutional email-domain allow-list; no domain is guessed by the application.
 
-Administrators use **User Management → Account Management** to invite lecturer, verifier, HOD, Registry, attachment supervisor, Chaplaincy, Dean, Career Advisor and alumni accounts, assign one of the five College / School values, deactivate accounts, resend invitations and review account audit history. Invited staff stay `Disabled` until they use a single-use 24-hour activation link sent to their email and choose their own password. Passwords are never emailed; activation tokens are stored only as hashes and are never returned by the management API. The activation link is delivered using the existing private mail configuration and `app_url`.
+Administrators use **User Management → Account Management** to invite lecturer, verifier, HOD, Registry, attachment supervisor, workplace supervisor, Industrial Attachment Coordinator, Chaplaincy, Dean, Career Advisor and alumni accounts, assign one of the five College / School values, deactivate accounts, resend invitations and review account audit history. Invited staff stay `Disabled` until they use a single-use 24-hour activation link sent to their email and choose their own password. Passwords are never emailed; activation tokens are stored only as hashes and are never returned by the management API. The activation link is delivered using the existing private mail configuration and `app_url`.
 
 The College / School value is stored as `portal_account_profiles.college`. Existing `faculty` and `department` columns and values are retained; only an exact legacy match to one of the five approved names is copied into an empty `college` field. For a manual migration, apply `database/account_management_migration.sql` first, then `database/account_college_migration.sql`. The authenticated account, workflow and results APIs also run the same additive, idempotent column migration automatically. Existing non-matching legacy values are preserved in their original columns and are not guessed or converted.
 
@@ -69,6 +69,34 @@ The existing student achievement form keeps its evidence description and now acc
 Import `database/achievement_evidence_migration.sql` into the configured database, or use the authenticated workflow API, which applies the same idempotent table creation automatically. DOCX package inspection requires PHP's Zip extension (`ext-zip`). Keep the private evidence directory access-limited to the application service account and include it in protected backups. The `api/achievement_evidence_download.php` endpoint checks the active account and record ownership/authorized staff role on every request; PDF and image previews use that endpoint too. Uploads and evidence views/downloads are added to `portal_audit` (repeated previews are throttled to one audit event per user/file per hour). Evidence is append-only: after a verifier requests changes, the owning student can add files and resubmit; earlier files, descriptions, reviewer feedback and submission history remain available.
 
 Configure PHP with `upload_max_filesize=10M`, `post_max_size=55M` (or larger), and `max_file_uploads` of at least 5 so the per-file and multi-file limits can be reached. The application rejects oversized individual files and reports when the server's total request limit prevents receiving the upload.
+
+### Industrial Attachment Management and Monitoring
+
+The attachment module is integrated into the existing authenticated dashboards and uses the existing `portal_notifications` and `portal_audit` tables. Apply `database/industrial_attachment_migration.sql` after the account-management migration has created `users` and `portal_account_profiles`. For example, select the configured AUSSH database in phpMyAdmin and import the SQL file. The migration is additive and uses `CREATE TABLE IF NOT EXISTS`; it does not delete or rewrite existing student accounts or legacy `portal_records` attachment submissions.
+
+Administrators and accounts invited as an Industrial Attachment Coordinator register and edit placements by selecting an existing active student account, assigning an active lecturer or attachment supervisor, and entering the organisation, dates and supervisor details. Each student can have one current placement. Coordinators manage records and announcements but cannot make academic approval decisions. The assigned academic supervisor sees only their own students, reviews placements and weekly reports, and submits the final academic assessment. Students see only their own placement, progress, announcements, reports and feedback. Workplace supervisors can be invited as `workplace_supervisor` accounts through **User Management**; their access is restricted to placements whose workplace supervisor email matches their active account email. They can record attendance and submit the separate workplace assessment.
+
+The module stores placements, approval history, weekly reports and submission versions, report decisions, documents, attendance, final assessments and announcements in `portal_industrial_attachment_*` tables. Attachments are limited to PDF, JPG/JPEG and PNG (10 MB each), validated by server-side file inspection, and stored outside the web root under `%USERPROFILE%\aussh_private\industrial_attachment`. Downloads require an authenticated account authorized for the placement. The account manager adds the coordinator role to a legacy MySQL `users.role` ENUM when one of these accounts is invited. Configure PHP with `upload_max_filesize=10M`, `post_max_size=35M` (or larger) and `max_file_uploads` of at least 3. Back up the private storage directory with appropriate access controls.
+
+The student progress indicator is calculated from the placement dates and refreshes while the attachment page is open. The administrator analytics and supervisor workload summaries use database records; no sample placements are used by the module. Legacy `portal_records` attachment submissions remain untouched and are not automatically converted because their old payloads do not contain the new required placement dates and supervisor fields.
+
+Focused, database-independent checks can be run with:
+
+```powershell
+php tests\industrial_attachment_validation_test.php
+node tests\industrial_attachment_progress_test.js
+```
+
+### Demonstration data seeding
+
+Run the idempotent demo seeder to populate the configured local AUSSH database with realistic role-based records without deleting the existing institutional accounts or historic workflow data.
+
+```powershell
+$env:AUSSH_DEMO_PASSWORD = 'DemoAccess!2026'
+php database\demo_seed.php
+```
+
+The seeder adds demo users and rows only when they are missing, marks every seeded record with a `demo_marker` payload value, and keeps existing production accounts intact. It creates 8 demonstration students, 3 lecturers, 1 admin, 1 career advisor, 1 attachment coordinator and 1 workplace supervisor, plus realistic achievement, recommendation, engagement-opportunity, notification and industrial-attachment records. Use the generated user IDs for local testing; the shared demo password is kept in the local shell environment instead of committing it to the repository.
 
 ### Academic results workflow
 

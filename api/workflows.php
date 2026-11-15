@@ -325,6 +325,12 @@ if ($action === 'create') {
     ) {
         jsonResponse(['success' => false, 'message' => 'Invalid record.'], 422);
     }
+    if ($type === 'attachment') {
+        jsonResponse([
+            'success' => false,
+            'message' => 'Industrial attachment placements must be registered by an authorised coordinator in the Industrial Attachment Management workspace.',
+        ], 410);
+    }
     if ($user['role'] !== 'student' && !($type === 'opportunity' && in_array($user['role'], ['admin', 'hod', 'registry', 'career_advisor'], true))) {
         jsonResponse(['success' => false, 'message' => 'Only authorised accounts can submit this record.'], 403);
     }

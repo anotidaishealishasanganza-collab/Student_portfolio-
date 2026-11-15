@@ -161,6 +161,7 @@ if (!$isAdmin) {
 $ordinaryRoles = [
     'lecturer', 'verifier', 'hod', 'registry', 'supervisor',
     'chaplaincy', 'dean', 'career_advisor', 'alumni',
+    'workplace_supervisor', 'attachment_coordinator',
 ];
 $lookupAccount = static function (PDO $pdo, string $userId): array|false {
     $query = $pdo->prepare('SELECT id, user_id, full_name, email, role, status FROM users WHERE user_id = ? LIMIT 1');
@@ -197,6 +198,12 @@ if ($action === 'create_account') {
     }
     if ($role === 'career_advisor') {
         ensureCareerAdvisorRole($pdo);
+    }
+    if ($role === 'workplace_supervisor') {
+        ensureWorkplaceSupervisorRole($pdo);
+    }
+    if ($role === 'attachment_coordinator') {
+        ensureAttachmentCoordinatorRole($pdo);
     }
     $duplicate = $pdo->prepare('SELECT user_id, email FROM users WHERE user_id = ? OR email = ? LIMIT 1');
     $duplicate->execute([$userId, $email]);
@@ -404,6 +411,12 @@ if ($action === 'change_role') {
     $newRole = strtolower(trim((string)($input['role'] ?? '')));
     if (!in_array($newRole, array_merge($ordinaryRoles, ['admin']), true)) {
         jsonResponse(['success' => false, 'message' => 'Invalid account role.'], 422);
+    }
+    if ($newRole === 'workplace_supervisor') {
+        ensureWorkplaceSupervisorRole($pdo);
+    }
+    if ($newRole === 'attachment_coordinator') {
+        ensureAttachmentCoordinatorRole($pdo);
     }
     $pdo->beginTransaction();
     try {

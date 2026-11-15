@@ -11,7 +11,9 @@
     ['chaplaincy', 'Chaplaincy'],
     ['dean', 'Dean of Students'],
     ['career_advisor', 'Career Advisor'],
-    ['alumni', 'Alumni']
+    ['alumni', 'Alumni'],
+    ['attachment_coordinator', 'Industrial Attachment Coordinator'],
+    ['workplace_supervisor', 'Workplace Supervisor']
   ];
   const colleges = [
     'College of Business and Management Sciences',
