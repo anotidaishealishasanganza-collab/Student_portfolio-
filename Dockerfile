@@ -19,4 +19,4 @@ RUN chown -R www-data:www-data /var/www/html
 
 EXPOSE 10000
 
-CMD ["apache2-foreground"]
+CMD ["/bin/sh", "-c", "echo '--- AUSSH STARTUP DIAGNOSTICS ---'; pwd; ls -la /var/www/html; apache2ctl -t || exit 1; echo '--- STARTING APACHE ---'; exec apache2-foreground"]
